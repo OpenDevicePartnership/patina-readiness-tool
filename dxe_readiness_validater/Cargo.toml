@@ -1,0 +1,18 @@
+[package]
+name = "dxe_readiness_validater"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+log = { workspace = true }
+# cfg-if = { workspace = true }
+# dxe_core = { workspace = true }
+# section_extractor = { workspace = true }
+# spin = { workspace = true }
+# stacktrace = { workspace = true }
+# uefi_sdk = { workspace = true }
+
+[features]
+default = []
+x64 = []
+aarch64 = []

@@ -1,0 +1,85 @@
+[config]
+default_to_workspace = false
+
+[env]
+# This is needed due to uefi-sdk
+RUSTC_BOOTSTRAP = 1
+
+[tasks.build-x64-uefi]
+description = "Builds the x64 Dxe Readiness Capture UEFI binary."
+command = "cargo"
+args = ["build", "-p", "dxe_readiness_capture", "--target", "x86_64-unknown-uefi"]
+
+[tasks.build-aarch64-uefi]
+description = "Builds the aarch64 Dxe Readiness Capture UEFI binary."
+command = "cargo"
+args = ["build", "-p", "dxe_readiness_capture", "--target", "aarch64-unknown-uefi"]
+
+[tasks.build-x64-windows]
+description = "Builds the x64 Dxe Readiness Validation binary."
+command = "cargo"
+args = ["build", "-p", "dxe_readiness_validater", "--target", "x86_64-pc-windows-msvc"]
+
+[tasks.build-aarch64-windows]
+description = "Builds the aarch64 Dxe Readiness Validation binary."
+command = "cargo"
+args = ["build", "-p", "dxe_readiness_validater", "--target", "aarch64-pc-windows-msvc"]
+
+[tasks.build]
+description = "Run all binaries."
+clear = true
+dependencies = [
+    "build-x64-uefi",
+    "build-aarch64-uefi",
+    "build-x64-windows",
+    "build-aarch64-windows",
+]
+
+# TODO: Some of the tasks need to be fixed to work.
+[tasks.test]
+description = "Builds all rust tests in the workspace. Example `cargo make test`"
+clear = true
+command = "cargo"
+args = ["test"]
+
+[tasks.coverage]
+description = "Build and run all tests and calculate coverage."
+clear = true
+command = "cargo"
+args = ["tarpaulin", "--output-dir", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target"]
+
+[tasks.clippy]
+description = "Run cargo clippy."
+clear = true
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
+
+[tasks.doc]
+env = { RUSTDOCFLAGS = "-D warnings"}
+description = "Builds all rust documentation in the workspace. Example `cargo make doc`"
+command = "cargo"
+args = ["doc", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "--features", "doc", "--open"]
+
+[tasks.fmt]
+description = "Run cargo format."
+clear = true
+command = "cargo"
+args = ["fmt", "--all"]
+
+[tasks.cspell]
+description = "Run cspell for spell checking." # npm install -g cspell@latest
+script = "cspell --quiet  --no-progress --no-summary  --dot --gitignore -e \"{.git/**,.github/**,.vscode/**}\" ."
+
+[tasks.all]
+description = "Run all tasks for PR readiness."
+dependencies = [
+    "clippy",
+    "cspell",
+    "build",
+    "build-x64",
+    "build-aarch64",
+    "test",
+    "coverage",
+    "fmt",
+    "doc",
+]
