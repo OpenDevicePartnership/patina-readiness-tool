@@ -206,6 +206,7 @@ dependencies = [
  "cfg-if",
  "dxe_core",
  "log",
+ "mu_pi",
  "section_extractor",
  "spin",
  "stacktrace",
