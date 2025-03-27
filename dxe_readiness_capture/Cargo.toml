@@ -8,10 +8,8 @@ log = { workspace = true }
 cfg-if = { workspace = true }
 mu_pi = { version = ">=5.2.1" }
 section_extractor = { workspace = true }
-spin = { workspace = true }
 stacktrace = { workspace = true }
 uefi_sdk = { workspace = true }
-
 
 [features]
 default = []

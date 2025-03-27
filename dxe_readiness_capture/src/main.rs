@@ -21,6 +21,7 @@ cfg_if::cfg_if! {
     // Below code is meant to be compiled as an EFI application. So it should be
     // discarded when the crate is compiling for tests.
     if #[cfg(not(test))] {
+        extern crate alloc;
         use core::{ffi::c_void, panic::PanicInfo};
         use stacktrace::StackTrace;
         mod logger;
@@ -44,11 +45,14 @@ cfg_if::cfg_if! {
         pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
             init_logger();
 
+            log::info!("Hello from Dxe Readiness Capture Tool!");
+
             let (free_memory_bottom, free_memory_top) = read_phit_hob(physical_hob_list).expect("PHIT HOB was not found.");
             ALLOCATOR.init(free_memory_bottom, free_memory_top);
+            log::info!("Free Memory Bottom: 0x{:X}", free_memory_bottom);
+            log::info!("Free Memory Top: 0x{:X}", free_memory_top);
 
-            log::info!("Hello from Dxe Readiness Capture Tool!\n");
-            log::info!("Dead Loop Time\n");
+            log::info!("Dead Loop");
             loop {}
         }
     }
