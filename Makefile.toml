@@ -2,9 +2,10 @@
 default_to_workspace = false
 
 [env]
-# This is needed due to uefi-sdk
+# This is needed due to uefi-sdk's use of unstable features.
 RUSTC_BOOTSTRAP = 1
 
+# Builds binaries for all supported targets.
 [tasks.build-x64-uefi]
 description = "Builds the x64 Dxe Readiness Capture UEFI binary."
 command = "cargo"
@@ -35,13 +36,26 @@ dependencies = [
     "build-aarch64-windows",
 ]
 
-# TODO: Some of the tasks need to be fixed to work.
-[tasks.test]
-description = "Builds all rust tests in the workspace. Example `cargo make test`"
-clear = true
+# Tests will be built and run based on the host platform.
+[tasks.test-capture-binary]
+description = "Build and run tests for Dxe Readiness Capture UEFI binary."
 command = "cargo"
-args = ["test"]
+args = ["test", "-p", "dxe_readiness_capture"]
 
+[tasks.test-validation-binary]
+description = "Build and run tests for Dxe Readiness Validation binary."
+command = "cargo"
+args = ["test", "-p", "dxe_readiness_validater"]
+
+[tasks.test]
+description = "Build and run tests for all binaries."
+clear = true
+dependencies = [
+    "test-capture-binary",
+    "test-validation-binary",
+]
+
+# TODO: Some of the tasks need to be fixed to work.
 [tasks.coverage]
 description = "Build and run all tests and calculate coverage."
 clear = true
@@ -76,8 +90,6 @@ dependencies = [
     "clippy",
     "cspell",
     "build",
-    "build-x64",
-    "build-aarch64",
     "test",
     "coverage",
     "fmt",

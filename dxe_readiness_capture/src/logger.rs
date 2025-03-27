@@ -4,12 +4,12 @@ use uefi_sdk::serial::SerialIO;
 
 cfg_if::cfg_if! {
     if #[cfg(all(target_os = "uefi", target_arch = "aarch64"))] {
-        use uefi_sdk::serial::UartPl011;
+        use uefi_sdk::serial::uart::UartPl011;
         struct SimpleLogger {
             uart: UartPl011,
         }
     } else {
-        use uefi_sdk::serial::Uart16550;
+        use uefi_sdk::serial::uart::Uart16550;
         struct SimpleLogger {
             uart: Uart16550,
         }
@@ -40,7 +40,7 @@ pub fn init_logger() {
                 uart.init();
                 SimpleLogger { uart }
             } else {
-                let uart = Uart16550::new(uefi_sdk::serial::Interface::Io(0x402));
+                let uart = Uart16550::Io { base: 0x402 };
                 uart.init();
                 SimpleLogger { uart }
             }
