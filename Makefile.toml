@@ -19,12 +19,12 @@ args = ["build", "-p", "dxe_readiness_capture", "--target", "aarch64-unknown-uef
 [tasks.build-x64-windows]
 description = "Builds the x64 Dxe Readiness Validation binary."
 command = "cargo"
-args = ["build", "-p", "dxe_readiness_validater", "--target", "x86_64-pc-windows-msvc"]
+args = ["build", "-p", "dxe_readiness_validator", "--target", "x86_64-pc-windows-msvc"]
 
 [tasks.build-aarch64-windows]
 description = "Builds the aarch64 Dxe Readiness Validation binary."
 command = "cargo"
-args = ["build", "-p", "dxe_readiness_validater", "--target", "aarch64-pc-windows-msvc"]
+args = ["build", "-p", "dxe_readiness_validator", "--target", "aarch64-pc-windows-msvc"]
 
 [tasks.build]
 description = "Run all binaries."
@@ -45,7 +45,7 @@ args = ["test", "-p", "dxe_readiness_capture"]
 [tasks.test-validation-binary]
 description = "Build and run tests for Dxe Readiness Validation binary."
 command = "cargo"
-args = ["test", "-p", "dxe_readiness_validater"]
+args = ["test", "-p", "dxe_readiness_validator"]
 
 [tasks.test]
 description = "Build and run tests for all binaries."

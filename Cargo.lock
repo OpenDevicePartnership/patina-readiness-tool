@@ -125,7 +125,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dxe_readiness_validater"
+name = "dxe_readiness_validator"
 version = "0.1.0"
 dependencies = [
  "log",

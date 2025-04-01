@@ -4,7 +4,7 @@ use uefi_sdk::log::SerialLogger;
 cfg_if::cfg_if! {
     if #[cfg(all(target_os = "uefi", target_arch = "aarch64"))] {
         use uefi_sdk::{log::Format, serial::uart::UartPl011};
-        static LOGGER: AdvancedLogger<UartPl011> = AdvancedLogger::new(
+        static LOGGER: SerialLogger<UartPl011> = SerialLogger::new(
             Format::Standard,
             &[],
             log::LevelFilter::Trace,

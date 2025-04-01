@@ -3,7 +3,7 @@ resolver = "2"
 
 members = [
   "dxe_readiness_capture",
-  "dxe_readiness_validater",
+  "dxe_readiness_validator",
 ]
 
 [workspace.package]
