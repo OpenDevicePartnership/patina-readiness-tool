@@ -96,7 +96,7 @@ mod tests {
 
     #[test]
     fn test_basic_alloc() {
-        let mut allocator = BumpAllocator::new();
+        let allocator = BumpAllocator::new();
         allocator.init(0x1000, 0x2000);
 
         let layout = Layout::from_size_align(16, 8).unwrap();
@@ -104,11 +104,4 @@ mod tests {
         assert!(!ptr.is_null(), "Allocation failed");
         assert_eq!(ptr as usize, 0x1000, "Unexpected allocation address");
     }
-
-    // other things that would be good to test
-    // Box
-    // consecutive allocs
-    // diff alignments
-    // out of memory
-    // uninitialized (should panic)
 }

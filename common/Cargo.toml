@@ -1,0 +1,17 @@
+[package]
+name = "common"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+mu_pi = { workspace = true }
+serde = { version = "1", default-features = false, features = ["alloc", "derive"] }
+r-efi = { version = "5.0.0", default-features = false }
+
+[dev-dependencies]
+serde_json = "1.0"
+
+[features]
+default = []
+x64 = []
+aarch64 = []

@@ -10,6 +10,13 @@ log = { workspace = true }
 # section_extractor = { workspace = true }
 # stacktrace = { workspace = true }
 # uefi_sdk = { workspace = true }
+mu_pi = { workspace = true }
+r-efi = { version = "5.0.0", default-features = false }
+serde = { version = "1", default-features = false, features = ["alloc", "derive"] }
+uuid = { version = "1.10.0", default-features = false}
+
+[dev-dependencies]
+serde_json = "1.0"
 
 [features]
 default = []
