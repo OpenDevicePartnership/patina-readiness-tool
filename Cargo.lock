@@ -148,12 +148,14 @@ name = "dxe_readiness_capture"
 version = "0.1.0"
 dependencies = [
  "cfg-if",
+ "common",
  "heapless",
  "log",
  "mu_pi",
  "r-efi",
  "section_extractor",
  "serde",
+ "serde-json-core",
  "serde_json",
  "spin",
  "stacktrace",
@@ -401,6 +403,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5f0e2c6ed6606019b4e29e69dbaba95b11854410e5347d525002456dbbb786b6"
 dependencies = [
  "serde_derive",
+]
+
+[[package]]
+name = "serde-json-core"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c9e1ab533c0bc414c34920ec7e5f097101d126ed5eac1a1aac711222e0bbb33"
+dependencies = [
+ "heapless",
+ "ryu",
+ "serde",
 ]
 
 [[package]]
