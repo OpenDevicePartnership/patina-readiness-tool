@@ -10,7 +10,7 @@ cfg_if::cfg_if! {
             log::LevelFilter::Trace,
             UartPl011::new(0x6000_0000),
         );
-    } else {
+    } else if #[cfg(all(target_os = "uefi", target_arch = "x86_64"))] {
         use uefi_sdk::{log::Format, serial::uart::Uart16550};
         static LOGGER: SerialLogger<Uart16550> = SerialLogger::new(
             Format::Standard,
@@ -22,5 +22,9 @@ cfg_if::cfg_if! {
 }
 
 pub fn init_logger() {
-    let _ = log::set_logger(&LOGGER).map(|()| log::set_max_level(LevelFilter::Info));
+    cfg_if::cfg_if! {
+        if #[cfg(not(test))] {
+            let _ = log::set_logger(&LOGGER).map(|()| log::set_max_level(LevelFilter::Info));
+        }
+    }
 }

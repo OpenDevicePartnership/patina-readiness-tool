@@ -1,15 +1,23 @@
+// Clippy runs with "--all-targets," which includes "--tests." This module is
+// marked to allow dead code to suppress Clippy warnings. Remove this once
+// enough tests have been added.
+#![allow(dead_code)]
+#![allow(unused)]
+
 use core::{ffi::c_void, mem, str};
 
-use common::serializable_hob::DeserializableHobList;
-use mu_pi::hob::{header, HobList, PhaseHandoffInformationTable, HANDOFF};
+use common::serializable_fv::FirmwareVolumeSerDe;
+use common::serializable_hob::HobListSerDe;
+use common::DxeReadinessCaptureSerDe;
+use mu_pi::fw_fs::FirmwareVolume;
+use mu_pi::hob::{header, Hob, HobList, PhaseHandoffInformationTable, HANDOFF};
 
 extern crate alloc;
-use alloc::string::String;
+use alloc::string::{String, ToString};
+use alloc::vec;
 use alloc::vec::Vec;
 
-use serde_json_core::to_slice;
-
-pub fn read_phit_hob(physical_hob_list: *const c_void) -> Option<(usize, usize)> {
+pub(crate) fn read_phit_hob(physical_hob_list: *const c_void) -> Option<(usize, usize)> {
     if physical_hob_list.is_null() {
         panic!("HOB list pointer is null!");
     }
@@ -27,43 +35,30 @@ pub fn read_phit_hob(physical_hob_list: *const c_void) -> Option<(usize, usize)>
     None
 }
 
-pub const NOT_NULL: &str = "Ptr should not be NULL";
+pub(crate) const NOT_NULL: &str = "Ptr should not be NULL";
 
-pub fn assert_hob_size<T>(hob: &header::Hob) {
+pub(crate) fn assert_hob_size<T>(hob: &header::Hob) {
     let hob_len = hob.length as usize;
     let hob_size = mem::size_of::<T>();
     assert_eq!(hob_len, hob_size, "Trying to cast hob of length {hob_len} into a pointer of size {hob_size}");
 }
 
-// i wrote this (possibly over-complicated) function because
-// in no_std, we don't have access to serde_json::to_string
-// we CAN use serde_json_core::to_slice and then convert it to a string,
-// but to_slice requires a fix-sized slice, so we use a vec::with capacity and resize it as necessary
-// i also choose to use a heap-allocated Vec because i'm concerened about running out of stack space
-// (the resulting JSON can be quite large)
-// this is not a particularly efficient way to do things but idk how else to do it
-pub fn dump_hobs(hob_list: &HobList) -> Option<String> {
-    let serializable_list = DeserializableHobList::from(hob_list);
-
-    let mut capacity = 0x1000;
-    const MAX_CAPACITY: usize = 0x10000000; // we may need to experiment with these values
-
-    loop {
-        let mut buffer = Vec::with_capacity(capacity);
-        buffer.resize(capacity, 0);
-
-        match to_slice(&serializable_list, &mut buffer[..]) {
-            Ok(size) => {
-                buffer.truncate(size);
-                let s = str::from_utf8(&buffer).expect("Hob list serialization corrupted");
-                return Some(String::from(s));
+pub(crate) fn dump(hob_list: &HobList) -> Option<String> {
+    let serializable_hob_list = HobListSerDe::from(hob_list);
+    let serializable_fv_list = hob_list
+        .iter()
+        .filter_map(|hob| {
+            if let Hob::FirmwareVolume(&fv) = hob {
+                let mut fv_serde =
+                    FirmwareVolumeSerDe::from(unsafe { FirmwareVolume::new_from_address(fv.base_address) }.unwrap());
+                fv_serde.fv_base_address = fv.base_address;
+                Some(fv_serde)
+            } else {
+                None
             }
-            Err(_) => {
-                capacity *= 2;
-                if capacity > MAX_CAPACITY {
-                    return None;
-                }
-            }
-        }
-    }
+        })
+        .collect::<Vec<_>>();
+
+    let serializable_list = DxeReadinessCaptureSerDe { hob_list: serializable_hob_list, fv_list: serializable_fv_list };
+    serde_json::to_string_pretty(&serializable_list).ok()
 }

@@ -7,20 +7,22 @@
 // for internal validation purposes
 
 use mu_pi::hob::{EfiPhysicalAddress, Hob, HobList};
-use r_efi::efi::Guid;
 use serde::{Deserialize, Serialize};
 
 use alloc::string::String;
 use alloc::vec::Vec;
 
+use crate::format_guid;
+
+// This is the serialized version of the HOB list.
 #[derive(Serialize, Deserialize, Debug)]
-pub struct DeserializableHobList {
-    pub hobs: Vec<DeserializableHob>,
+pub struct HobListSerDe {
+    pub hobs: Vec<HobSerDe>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
-pub enum DeserializableHob {
+pub enum HobSerDe {
     Handoff {
         version: u32,
         memory_top: EfiPhysicalAddress,
@@ -30,16 +32,15 @@ pub enum DeserializableHob {
         end_of_hob_list: EfiPhysicalAddress,
     },
     MemoryAllocation {
-        alloc_descriptor: DeserializableMemAllocDescriptor,
+        alloc_descriptor: MemAllocDescriptorSerDe,
     },
-    ResourceDescriptor(DeserializableResourceDescriptor),
+    ResourceDescriptor(ResourceDescriptorSerDe),
     ResourceDescriptorV2 {
-        v1: DeserializableResourceDescriptor,
+        v1: ResourceDescriptorSerDe,
         attributes: u64,
     },
     GuidExtension {
         name: String,
-        data: Vec<u8>,
     },
     FirmwareVolume {
         base_address: EfiPhysicalAddress,
@@ -48,22 +49,20 @@ pub enum DeserializableHob {
     Cpu {
         size_of_memory_space: u8,
         size_of_io_space: u8,
-        reserved: [u8; 6],
     },
     UnknownHob,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct DeserializableMemAllocDescriptor {
+pub struct MemAllocDescriptorSerDe {
     name: String, // GUID as a string
     memory_base_address: u64,
     memory_length: u64,
     memory_type: u32,
-    reserved: [u8; 4],
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct DeserializableResourceDescriptor {
+pub struct ResourceDescriptorSerDe {
     owner: String, // GUID as a string
     resource_type: u32,
     resource_attribute: u32,
@@ -71,33 +70,13 @@ pub struct DeserializableResourceDescriptor {
     resource_length: u64,
 }
 
-fn format_guid(g: Guid) -> String {
-    // we need this because refi::Guid has private fields
-    // and we can't make it derive Serialize (can't modify efi::Guid directly)
-    let (time_low, time_mid, time_hi_and_version, clk_seq_hi_res, clk_seq_low, node) = g.as_fields();
-    format!(
-        "{:08x}-{:04x}-{:04x}-{:02x}{:02x}-{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}",
-        time_low,
-        time_mid,
-        time_hi_and_version,
-        clk_seq_hi_res,
-        clk_seq_low,
-        node[0],
-        node[1],
-        node[2],
-        node[3],
-        node[4],
-        node[5]
-    )
-}
-
-impl From<&HobList<'_>> for DeserializableHobList {
+impl From<&HobList<'_>> for HobListSerDe {
     fn from(hob_list: &HobList) -> Self {
-        DeserializableHobList { hobs: hob_list.iter().map(DeserializableHob::from).collect() }
+        HobListSerDe { hobs: hob_list.iter().map(HobSerDe::from).collect() }
     }
 }
 
-impl From<&Hob<'_>> for DeserializableHob {
+impl From<&Hob<'_>> for HobSerDe {
     fn from(hob: &Hob) -> Self {
         match hob {
             Hob::Handoff(handoff) => Self::Handoff {
@@ -109,15 +88,14 @@ impl From<&Hob<'_>> for DeserializableHob {
                 end_of_hob_list: handoff.end_of_hob_list,
             },
             Hob::MemoryAllocation(mem_alloc) => Self::MemoryAllocation {
-                alloc_descriptor: DeserializableMemAllocDescriptor {
-                    name: format_guid(mem_alloc.alloc_descriptor.name), // Convert GUID to string
+                alloc_descriptor: MemAllocDescriptorSerDe {
+                    name: format_guid(mem_alloc.alloc_descriptor.name),
                     memory_base_address: mem_alloc.alloc_descriptor.memory_base_address,
                     memory_length: mem_alloc.alloc_descriptor.memory_length,
                     memory_type: mem_alloc.alloc_descriptor.memory_type,
-                    reserved: mem_alloc.alloc_descriptor.reserved,
                 },
             },
-            Hob::ResourceDescriptor(resource_desc) => Self::ResourceDescriptor(DeserializableResourceDescriptor {
+            Hob::ResourceDescriptor(resource_desc) => Self::ResourceDescriptor(ResourceDescriptorSerDe {
                 owner: format_guid(resource_desc.owner),
                 resource_type: resource_desc.resource_type,
                 resource_attribute: resource_desc.resource_attribute,
@@ -125,7 +103,7 @@ impl From<&Hob<'_>> for DeserializableHob {
                 resource_length: resource_desc.resource_length,
             }),
             Hob::ResourceDescriptorV2(resource_desc2) => Self::ResourceDescriptorV2 {
-                v1: DeserializableResourceDescriptor {
+                v1: ResourceDescriptorSerDe {
                     owner: format_guid(resource_desc2.v1.owner),
                     resource_type: resource_desc2.v1.resource_type,
                     resource_attribute: resource_desc2.v1.resource_attribute,
@@ -134,15 +112,13 @@ impl From<&Hob<'_>> for DeserializableHob {
                 },
                 attributes: resource_desc2.attributes,
             },
-            Hob::GuidHob(guid_ext, data) => {
-                Self::GuidExtension { name: format_guid(guid_ext.name), data: data.to_vec() }
+            Hob::GuidHob(guid_ext, _) => {
+                Self::GuidExtension { name: format_guid(guid_ext.name) /* data: data.to_vec() */ }
             }
             Hob::FirmwareVolume(fv) => Self::FirmwareVolume { base_address: fv.base_address, length: fv.length },
-            Hob::Cpu(cpu) => Self::Cpu {
-                size_of_memory_space: cpu.size_of_memory_space,
-                size_of_io_space: cpu.size_of_io_space,
-                reserved: cpu.reserved,
-            },
+            Hob::Cpu(cpu) => {
+                Self::Cpu { size_of_memory_space: cpu.size_of_memory_space, size_of_io_space: cpu.size_of_io_space }
+            }
             _ => Self::UnknownHob {},
         }
     }
@@ -174,8 +150,7 @@ mod tests {
                     "name": "123e4567-e89b-12d3-a456-426614174000",
                     "memory_base_address": 4096,
                     "memory_length": 12345678,
-                    "memory_type": 0,
-                    "reserved": [0, 0, 0, 0]
+                    "memory_type": 0
                     }
                 },
                 {
@@ -199,8 +174,7 @@ mod tests {
                 },
                 {
                     "type": "guid_extension",
-                    "name": "123e4567-e89b-12d3-a456-426614174000",
-                    "data": [1, 2, 3, 4, 5, 6, 7, 8]
+                    "name": "123e4567-e89b-12d3-a456-426614174000"
                 },
                 {
                     "type": "firmware_volume",
@@ -210,8 +184,7 @@ mod tests {
                 {
                     "type": "cpu",
                     "size_of_memory_space": 48,
-                    "size_of_io_space": 16,
-                    "reserved": [0, 0, 0, 0, 0, 0]
+                    "size_of_io_space": 16
                 },
                 {
                     "type": "unknown_hob"
@@ -220,10 +193,10 @@ mod tests {
         }
         "#;
 
-        let deserialized_hob_list: DeserializableHobList = from_str(json_data).expect("Failed to deserialize");
+        let deserialized_hob_list: HobListSerDe = from_str(json_data).expect("Failed to deserialize");
 
         assert_eq!(deserialized_hob_list.hobs.len(), 8);
-        if let DeserializableHob::Handoff {
+        if let HobSerDe::Handoff {
             version,
             memory_top,
             memory_bottom,
@@ -242,17 +215,16 @@ mod tests {
             panic!("First element is not a Handoff HOB");
         }
 
-        if let DeserializableHob::MemoryAllocation { alloc_descriptor } = &deserialized_hob_list.hobs[1] {
+        if let HobSerDe::MemoryAllocation { alloc_descriptor } = &deserialized_hob_list.hobs[1] {
             assert_eq!(alloc_descriptor.name, "123e4567-e89b-12d3-a456-426614174000");
             assert_eq!(alloc_descriptor.memory_base_address, 4096);
             assert_eq!(alloc_descriptor.memory_length, 12345678);
             assert_eq!(alloc_descriptor.memory_type, 0);
-            assert_eq!(alloc_descriptor.reserved, [0, 0, 0, 0]);
         } else {
             panic!("Second element is not a MemoryAllocation HOB");
         }
 
-        if let DeserializableHob::ResourceDescriptor(resource_desc) = &deserialized_hob_list.hobs[2] {
+        if let HobSerDe::ResourceDescriptor(resource_desc) = &deserialized_hob_list.hobs[2] {
             assert_eq!(resource_desc.owner, "123e4567-e89b-12d3-a456-426614174000");
             assert_eq!(resource_desc.resource_type, 1);
             assert_eq!(resource_desc.resource_attribute, 2);
@@ -262,7 +234,7 @@ mod tests {
             panic!("Third element is not a ResourceDescriptor HOB");
         }
 
-        if let DeserializableHob::ResourceDescriptorV2 { v1, attributes } = &deserialized_hob_list.hobs[3] {
+        if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = &deserialized_hob_list.hobs[3] {
             assert_eq!(v1.owner, "123e4567-e89b-12d3-a456-426614174000");
             assert_eq!(v1.resource_type, 1);
             assert_eq!(v1.resource_attribute, 2);
@@ -273,26 +245,22 @@ mod tests {
             panic!("Fourth element is not a ResourceDescriptorV2 HOB");
         }
 
-        if let DeserializableHob::GuidExtension { name, data } = &deserialized_hob_list.hobs[4] {
+        if let HobSerDe::GuidExtension { name } = &deserialized_hob_list.hobs[4] {
             assert_eq!(name, "123e4567-e89b-12d3-a456-426614174000");
-            assert_eq!(data, &[1, 2, 3, 4, 5, 6, 7, 8]);
         } else {
             panic!("Fifth element is not a GuidExtension HOB");
         }
 
-        if let DeserializableHob::FirmwareVolume { base_address, length } = &deserialized_hob_list.hobs[5] {
+        if let HobSerDe::FirmwareVolume { base_address, length } = &deserialized_hob_list.hobs[5] {
             assert_eq!(*base_address, 65536);
             assert_eq!(*length, 987654321);
         } else {
             panic!("Sixth element is not a FirmwareVolume HOB");
         }
 
-        if let DeserializableHob::Cpu { size_of_memory_space, size_of_io_space, reserved } =
-            &deserialized_hob_list.hobs[6]
-        {
+        if let HobSerDe::Cpu { size_of_memory_space, size_of_io_space } = &deserialized_hob_list.hobs[6] {
             assert_eq!(*size_of_memory_space, 48);
             assert_eq!(*size_of_io_space, 16);
-            assert_eq!(*reserved, [0, 0, 0, 0, 0, 0]);
         } else {
             panic!("Seventh element is not a CPU HOB");
         }
@@ -354,7 +322,7 @@ mod tests {
         };
         v1.header.r#type = hob::RESOURCE_DESCRIPTOR2;
         v1.header.length = size_of::<hob::ResourceDescriptorV2>() as u16;
-        let resource_desc2_hob = hob::ResourceDescriptorV2 { v1: v1, attributes: 8 };
+        let resource_desc2_hob = hob::ResourceDescriptorV2 { v1, attributes: 8 };
 
         let data = [1_u8, 2, 3, 4, 5, 6, 7, 8];
         let guid_hob = (
@@ -385,8 +353,8 @@ mod tests {
         hob_list.push(Hob::FirmwareVolume(&fv_hob));
         hob_list.push(Hob::Cpu(&cpu_hob));
 
-        let serializable_list = DeserializableHobList::from(&hob_list);
-        let mut json = to_string_pretty(&serializable_list).expect("Serialization failed");
+        let serializable_list = HobListSerDe::from(&hob_list);
+        let json = to_string_pretty(&serializable_list).expect("Serialization failed");
 
         assert!(json.contains(r#""type": "handoff""#), "Handoff HOB missing");
         assert!(json.contains(r#""memory_top": 3735928559"#), "Memory top value incorrect");

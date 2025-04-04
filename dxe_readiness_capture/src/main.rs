@@ -8,36 +8,27 @@
 //!
 
 // no_std and no_main are applicable only when building as an EFI application.
-// Tests are built as normal Rust binaries, which will contain main and link to
-// std.
-#![cfg_attr(not(test), no_std)]
-#![cfg_attr(not(test), no_main)]
-
-use core::str;
-
-use common::serializable_hob::DeserializableHobList;
-use hob_utils::dump_hobs;
-use mu_pi::hob::HobList;
-use serde_json_core::to_slice;
+// Tests/other std targets are built as normal Rust binaries, which require main
+// and link to std.
+#![cfg_attr(target_os = "uefi", no_std)]
+#![cfg_attr(target_os = "uefi", no_main)]
 
 // Include all unit testable modules in the crate here.
-mod bump_allocator;
 mod hob_utils;
 
 cfg_if::cfg_if! {
     // Below code is meant to be compiled as an EFI application. So it should be
     // discarded when the crate is compiling for tests.
-    if #[cfg(not(test))] {
+    if #[cfg(target_os = "uefi")] {
         extern crate alloc;
-        use core::{ffi::c_void, panic::PanicInfo};
-        use stacktrace::StackTrace;
-        use alloc::vec::Vec;
-
         mod logger;
-
-        use bump_allocator::ALLOCATOR;
-        use logger::init_logger;
+        mod allocator;
+        use core::{ffi::c_void, panic::PanicInfo};
+        use hob_utils::dump;
         use hob_utils::read_phit_hob;
+        use logger::init_logger;
+        use mu_pi::hob::HobList;
+        use stacktrace::StackTrace;
 
         #[panic_handler]
         fn panic(info: &PanicInfo) -> ! {
@@ -50,23 +41,23 @@ cfg_if::cfg_if! {
             loop {}
         }
 
-        #[cfg_attr(target_os = "uefi", export_name = "efi_main")]
+        #[export_name = "efi_main"]
         pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
             init_logger();
 
             log::info!("Hello from Dxe Readiness Capture Tool!");
 
             let (free_memory_bottom, free_memory_top) = read_phit_hob(physical_hob_list).expect("PHIT HOB was not found.");
-            ALLOCATOR.init(free_memory_bottom, free_memory_top);
+            allocator::init(free_memory_bottom, free_memory_top);
             log::info!("Free Memory Bottom: 0x{:X}", free_memory_bottom);
             log::info!("Free Memory Top: 0x{:X}", free_memory_top);
 
             let mut hob_list = HobList::default();
             hob_list.discover_hobs(physical_hob_list);
-            let hob_str = dump_hobs(&hob_list);
+            let json_str = dump(&hob_list);
 
-            if let Some(hob_str) = hob_str {
-                log::info!("{}", hob_str);
+            if let Some(json_str) = json_str {
+                log::info!("{}", json_str);
             } else {
                 log::info!("Failed to dump HOB JSON");
             }
@@ -74,5 +65,7 @@ cfg_if::cfg_if! {
             log::info!("Dead Loop");
             loop {}
         }
+    } else {
+        fn main() {}
     }
 }
