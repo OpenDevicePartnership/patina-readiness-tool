@@ -6,7 +6,7 @@ use r_efi::efi::Guid;
 extern crate alloc;
 use alloc::string::String;
 use alloc::vec::Vec;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Serialize};
 use serializable_fv::FirmwareVolumeSerDe;
 use serializable_hob::HobListSerDe;
 
