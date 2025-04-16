@@ -1,11 +1,7 @@
 [workspace]
 resolver = "2"
 
-members = [
-  "dxe_readiness_capture",
-  "common",
-  "dxe_readiness_validator",
-]
+members = ["dxe_readiness_capture", "common", "dxe_readiness_validator"]
 
 [workspace.package]
 version = "0.1.0"
@@ -19,10 +15,18 @@ section_extractor = { version = "9" }
 stacktrace = { version = "9" }
 uefi_sdk = { version = "3" }
 log = { version = "^0.4", default-features = false, features = [
-    "release_max_level_warn",
+  "release_max_level_warn",
 ] }
 spin = "^0.9"
-mu_pi = { version = ">=5.2.1" }
+mu_pi = { version = "5" }
+serde = { version = "1", default-features = false, features = [
+  "alloc",
+  "derive",
+] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
+r-efi = { version = "5.0.0", default-features = false }
+uuid = { version = "1.10.0", default-features = false }
+clap = { version = "4", features = ["derive"] }
 
 [profile.dev]
 opt-level = 3
