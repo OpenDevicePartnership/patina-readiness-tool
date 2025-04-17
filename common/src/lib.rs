@@ -8,7 +8,7 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use serde::{Deserialize, Serialize};
 use serializable_fv::FirmwareVolumeSerDe;
-use serializable_hob::HobListSerDe;
+use serializable_hob::HobSerDe;
 
 pub mod serializable_fv;
 pub mod serializable_hob;
@@ -37,6 +37,6 @@ pub fn format_guid(guid: Guid) -> String {
 /// to JSON.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DxeReadinessCaptureSerDe {
-    pub hob_list: HobListSerDe,
+    pub hob_list: Vec<HobSerDe>,
     pub fv_list: Vec<FirmwareVolumeSerDe>,
 }

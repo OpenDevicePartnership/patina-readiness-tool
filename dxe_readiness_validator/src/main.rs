@@ -10,12 +10,21 @@
 use clap::Parser;
 use commandline::CommandLine;
 use logger::init_logger;
+use validate::validate;
 
 mod commandline;
 mod logger;
-fn main() {
+mod validate;
+mod validate_fv;
+mod validate_hob;
+
+fn main() -> Result<(), String> {
     init_logger();
     log::info!("Hello from Dxe Readiness Validation Tool!\n");
     let args = CommandLine::parse();
-    log::info!("Command line arguments: {:#?}", args);
+
+    let file_path = &args.filename;
+    log::info!("File path: {}", file_path);
+
+    validate(file_path)
 }

@@ -1,881 +1,879 @@
 {
-  "hob_list": {
-    "hobs": [
-      {
-        "type": "handoff",
-        "version": 9,
-        "memory_top": 2130706432,
-        "memory_bottom": 2063327232,
-        "free_memory_top": 2122313728,
-        "free_memory_bottom": 2063479904,
-        "end_of_hob_list": 2063479896
-      },
-      {
-        "type": "guid_extension",
-        "name": "3b387bfd-7abc-4cf2-a0ca-b6a16c1b1b25"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "36587034-fcde-45b4-9a2b-d5c4c139965a"
-      },
-      {
-        "type": "guid_extension",
-        "name": "4d60cfb5-f481-4a98-9c81-bff86460c43e"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2130694144,
-          "memory_length": 12288,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "4b733449-8eff-488c-921a-154ada251807"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "ea296d92-0b69-423c-8c28-33b4e0a91268"
-      },
-      {
-        "type": "guid_extension",
-        "name": "9b3ada4f-ae56-4c24-8dea-f03b7558ae50"
-      },
-      {
-        "type": "guid_extension",
-        "name": "e701458c-4900-4ca5-b772-3d37949f7927"
-      },
-      {
-        "type": "guid_extension",
-        "name": "060cc026-4c0d-4dda-8f41-595fef00a502"
-      },
-      {
-        "type": "guid_extension",
-        "name": "9abfd639-d1d0-4eff-bdb6-7ec4190d17d5"
-      },
-      {
-        "type": "guid_extension",
-        "name": "0cf445dd-a67c-4f8c-819b-b7b686ed7c75"
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 5,
-        "resource_attribute": 15367,
-        "physical_start": 0,
-        "resource_length": 196608
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 5,
-        "resource_attribute": 15367,
-        "physical_start": 196608,
-        "resource_length": 131072
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 0,
-        "resource_attribute": 15367,
-        "physical_start": 327680,
-        "resource_length": 327680
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 0,
-        "resource_attribute": 15367,
-        "physical_start": 1048576,
-        "resource_length": 2129657856
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 5,
-        "resource_attribute": 15367,
-        "physical_start": 2130706432,
-        "resource_length": 16777216
-      },
-      {
-        "type": "guid_extension",
-        "name": "00000000-0000-0000-0000-000000000000"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2130706432,
-          "memory_length": 16777216,
-          "memory_type": 0
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 196608,
-          "memory_length": 131072,
-          "memory_type": 0
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 8519680,
-          "memory_length": 917504,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "firmware_volume",
-        "base_address": 9437184,
-        "length": 10485760
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 9437184,
-          "memory_length": 10485760,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "firmware_volume",
-        "base_address": 19922944,
-        "length": 2097152
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 19922944,
-          "memory_length": 2097152,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 655360,
-        "resource_length": 393216
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 3221225472,
-        "resource_length": 1006632960
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 4273995776,
-        "resource_length": 4096
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 4275044352,
-        "resource_length": 4096
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 4275159040,
-        "resource_length": 16384
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 2952790016,
-        "resource_length": 268435456
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 4276092928,
-        "resource_length": 1048576
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 1,
-        "resource_attribute": 1031,
-        "physical_start": 4290772992,
-        "resource_length": 4194304
-      },
-      {
-        "type": "resource_descriptor",
-        "owner": "00000000-0000-0000-0000-000000000000",
-        "resource_type": 2,
-        "resource_attribute": 3,
-        "physical_start": 24576,
-        "resource_length": 40960
-      },
-      {
-        "type": "cpu",
-        "size_of_memory_space": 36,
-        "size_of_io_space": 16
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "4ed4bf27-4092-42e9-807d-527b1d00c9bd",
-          "memory_base_address": 2125324288,
-          "memory_length": 131072,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2130632704,
-          "memory_length": 61440,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126438400,
-          "memory_length": 4194304,
-          "memory_type": 6
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "3def51c5-228f-481d-821b-32ec4df7d9c7"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126422016,
-          "memory_length": 16384,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126405632,
-          "memory_length": 16384,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126397440,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126385152,
-          "memory_length": 12288,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "8cfdb8c8-d6b2-40f3-8e97-02307cc98b7c"
-      },
-      {
-        "type": "guid_extension",
-        "name": "4c19049f-4137-4dd3-9c10-8b97a83ffdfa"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126376960,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126372864,
-          "memory_length": 4096,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "a160bf99-2aa4-4d7d-9993-899cb12df376"
-      },
-      {
-        "type": "guid_extension",
-        "name": "f34014c5-bcec-4f36-ada7-49fff5dd179f"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126364672,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "d4ffc718-fb82-4274-9afc-aa8b1eef5293"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126299136,
-          "memory_length": 65536,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "d4ffc718-fb82-4274-9afc-aa8b1eef5293"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126233600,
-          "memory_length": 65536,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126168064,
-          "memory_length": 65536,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2126147584,
-          "memory_length": 20480,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125979648,
-          "memory_length": 167936,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125975552,
-          "memory_length": 4096,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "d178f11d-8716-418e-a131-967d2ac42843"
-      },
-      {
-        "type": "guid_extension",
-        "name": "11e2bd88-ed38-4abd-a399-21f25fd07a60"
-      },
-      {
-        "type": "guid_extension",
-        "name": "dabbd793-7b46-4144-8ad4-101c7c08ebfa"
-      },
-      {
-        "type": "guid_extension",
-        "name": "58eb6a19-3699-4c68-a836-dacd8edcad4a"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125971456,
-          "memory_length": 4096,
-          "memory_type": 7
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125950976,
-          "memory_length": 20480,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "9e9f374b-8f16-4230-9824-5846ee766a97"
-      },
-      {
-        "type": "guid_extension",
-        "name": "ba33f15d-4000-45c1-8e88-f91692d457e3"
-      },
-      {
-        "type": "guid_extension",
-        "name": "6dadf1d1-d4cc-4910-bb6e-82b1fd80ff3d"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125946880,
-          "memory_length": 4096,
-          "memory_type": 7
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "c2217ba7-03bb-4f63-a647-7c25c5fc9d73"
-      },
-      {
-        "type": "guid_extension",
-        "name": "417a7f64-f4e9-4b32-846a-5cc4d8621879"
-      },
-      {
-        "type": "guid_extension",
-        "name": "417a7f64-f4e9-4b32-846a-5cc4d8621879"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125942784,
-          "memory_length": 4096,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125938688,
-          "memory_length": 4096,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125922304,
-          "memory_length": 16384,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125910016,
-          "memory_length": 12288,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125889536,
-          "memory_length": 20480,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "10d70125-baa3-4296-a62f-602bebbb9010"
-      },
-      {
-        "type": "guid_extension",
-        "name": "ee4e5898-3914-4259-9d6e-dc7bd79403cf"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125881344,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "3b387bfd-7abc-4cf2-a0ca-b6a16c1b1b25"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125877248,
-          "memory_length": 4096,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125869056,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "653065a3-adc5-49fe-974c-14485802373b"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125844480,
-          "memory_length": 24576,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125824000,
-          "memory_length": 20480,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "b07c8481-b02f-44ca-a909-64f8cd470b6f"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125815808,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125807616,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125799424,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125787136,
-          "memory_length": 12288,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "455f8b79-6713-4119-8a9c-887d1a33e243"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "455f8b79-6713-4119-8a9c-887d1a33e243"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125778944,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "96ad286c-ac0f-4ba1-9734-6c9f3cad904c"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125754368,
-          "memory_length": 24576,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125746176,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125697024,
-          "memory_length": 49152,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125692928,
-          "memory_length": 4096,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125635584,
-          "memory_length": 57344,
-          "memory_type": 7
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125602816,
-          "memory_length": 32768,
-          "memory_type": 7
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125582336,
-          "memory_length": 20480,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125574144,
-          "memory_length": 8192,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "guid_extension",
-        "name": "455f8b79-6713-4119-8a9c-887d1a33e243"
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125455360,
-          "memory_length": 118784,
-          "memory_type": 3
-        }
-      },
-      {
-        "type": "unknown_hob"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2125324288,
-          "memory_length": 131072,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2122317824,
-          "memory_length": 2097152,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2124414976,
-          "memory_length": 909312,
-          "memory_type": 7
-        }
-      },
-      {
-        "type": "guid_extension",
-        "name": "ea296d92-0b69-423c-8c28-33b4e0a91268"
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2063327232,
-          "memory_length": 131072,
-          "memory_type": 4
-        }
-      },
-      {
-        "type": "memory_allocation",
-        "alloc_descriptor": {
-          "name": "00000000-0000-0000-0000-000000000000",
-          "memory_base_address": 2122313728,
-          "memory_length": 4096,
-          "memory_type": 4
-        }
+  "hob_list": [
+    {
+      "type": "handoff",
+      "version": 9,
+      "memory_top": 2130706432,
+      "memory_bottom": 2063327232,
+      "free_memory_top": 2122313728,
+      "free_memory_bottom": 2063479904,
+      "end_of_hob_list": 2063479896
+    },
+    {
+      "type": "guid_extension",
+      "name": "3b387bfd-7abc-4cf2-a0ca-b6a16c1b1b25"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "36587034-fcde-45b4-9a2b-d5c4c139965a"
+    },
+    {
+      "type": "guid_extension",
+      "name": "4d60cfb5-f481-4a98-9c81-bff86460c43e"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2130694144,
+        "memory_length": 12288,
+        "memory_type": 4
       }
-    ]
-  },
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "4b733449-8eff-488c-921a-154ada251807"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "ea296d92-0b69-423c-8c28-33b4e0a91268"
+    },
+    {
+      "type": "guid_extension",
+      "name": "9b3ada4f-ae56-4c24-8dea-f03b7558ae50"
+    },
+    {
+      "type": "guid_extension",
+      "name": "e701458c-4900-4ca5-b772-3d37949f7927"
+    },
+    {
+      "type": "guid_extension",
+      "name": "060cc026-4c0d-4dda-8f41-595fef00a502"
+    },
+    {
+      "type": "guid_extension",
+      "name": "9abfd639-d1d0-4eff-bdb6-7ec4190d17d5"
+    },
+    {
+      "type": "guid_extension",
+      "name": "0cf445dd-a67c-4f8c-819b-b7b686ed7c75"
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 5,
+      "resource_attribute": 15367,
+      "physical_start": 0,
+      "resource_length": 196608
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 5,
+      "resource_attribute": 15367,
+      "physical_start": 196608,
+      "resource_length": 131072
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 0,
+      "resource_attribute": 15367,
+      "physical_start": 327680,
+      "resource_length": 327680
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 0,
+      "resource_attribute": 15367,
+      "physical_start": 1048576,
+      "resource_length": 2129657856
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 5,
+      "resource_attribute": 15367,
+      "physical_start": 2130706432,
+      "resource_length": 16777216
+    },
+    {
+      "type": "guid_extension",
+      "name": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2130706432,
+        "memory_length": 16777216,
+        "memory_type": 0
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 196608,
+        "memory_length": 131072,
+        "memory_type": 0
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 8519680,
+        "memory_length": 917504,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "firmware_volume",
+      "base_address": 9437184,
+      "length": 10485760
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 9437184,
+        "memory_length": 10485760,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "firmware_volume",
+      "base_address": 19922944,
+      "length": 2097152
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 19922944,
+        "memory_length": 2097152,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 655360,
+      "resource_length": 393216
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 3221225472,
+      "resource_length": 1006632960
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 4273995776,
+      "resource_length": 4096
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 4275044352,
+      "resource_length": 4096
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 4275159040,
+      "resource_length": 16384
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 2952790016,
+      "resource_length": 268435456
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 4276092928,
+      "resource_length": 1048576
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 1,
+      "resource_attribute": 1031,
+      "physical_start": 4290772992,
+      "resource_length": 4194304
+    },
+    {
+      "type": "resource_descriptor",
+      "owner": "00000000-0000-0000-0000-000000000000",
+      "resource_type": 2,
+      "resource_attribute": 3,
+      "physical_start": 24576,
+      "resource_length": 40960
+    },
+    {
+      "type": "cpu",
+      "size_of_memory_space": 36,
+      "size_of_io_space": 16
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "4ed4bf27-4092-42e9-807d-527b1d00c9bd",
+        "memory_base_address": 2125324288,
+        "memory_length": 131072,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2130632704,
+        "memory_length": 61440,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126438400,
+        "memory_length": 4194304,
+        "memory_type": 6
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "3def51c5-228f-481d-821b-32ec4df7d9c7"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126422016,
+        "memory_length": 16384,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126405632,
+        "memory_length": 16384,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126397440,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126385152,
+        "memory_length": 12288,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "8cfdb8c8-d6b2-40f3-8e97-02307cc98b7c"
+    },
+    {
+      "type": "guid_extension",
+      "name": "4c19049f-4137-4dd3-9c10-8b97a83ffdfa"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126376960,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126372864,
+        "memory_length": 4096,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "a160bf99-2aa4-4d7d-9993-899cb12df376"
+    },
+    {
+      "type": "guid_extension",
+      "name": "f34014c5-bcec-4f36-ada7-49fff5dd179f"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126364672,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "d4ffc718-fb82-4274-9afc-aa8b1eef5293"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126299136,
+        "memory_length": 65536,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "d4ffc718-fb82-4274-9afc-aa8b1eef5293"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126233600,
+        "memory_length": 65536,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126168064,
+        "memory_length": 65536,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2126147584,
+        "memory_length": 20480,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125979648,
+        "memory_length": 167936,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125975552,
+        "memory_length": 4096,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "d178f11d-8716-418e-a131-967d2ac42843"
+    },
+    {
+      "type": "guid_extension",
+      "name": "11e2bd88-ed38-4abd-a399-21f25fd07a60"
+    },
+    {
+      "type": "guid_extension",
+      "name": "dabbd793-7b46-4144-8ad4-101c7c08ebfa"
+    },
+    {
+      "type": "guid_extension",
+      "name": "58eb6a19-3699-4c68-a836-dacd8edcad4a"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125971456,
+        "memory_length": 4096,
+        "memory_type": 7
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125950976,
+        "memory_length": 20480,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "9e9f374b-8f16-4230-9824-5846ee766a97"
+    },
+    {
+      "type": "guid_extension",
+      "name": "ba33f15d-4000-45c1-8e88-f91692d457e3"
+    },
+    {
+      "type": "guid_extension",
+      "name": "6dadf1d1-d4cc-4910-bb6e-82b1fd80ff3d"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125946880,
+        "memory_length": 4096,
+        "memory_type": 7
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "c2217ba7-03bb-4f63-a647-7c25c5fc9d73"
+    },
+    {
+      "type": "guid_extension",
+      "name": "417a7f64-f4e9-4b32-846a-5cc4d8621879"
+    },
+    {
+      "type": "guid_extension",
+      "name": "417a7f64-f4e9-4b32-846a-5cc4d8621879"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125942784,
+        "memory_length": 4096,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125938688,
+        "memory_length": 4096,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125922304,
+        "memory_length": 16384,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125910016,
+        "memory_length": 12288,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125889536,
+        "memory_length": 20480,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "10d70125-baa3-4296-a62f-602bebbb9010"
+    },
+    {
+      "type": "guid_extension",
+      "name": "ee4e5898-3914-4259-9d6e-dc7bd79403cf"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125881344,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "3b387bfd-7abc-4cf2-a0ca-b6a16c1b1b25"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125877248,
+        "memory_length": 4096,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125869056,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "653065a3-adc5-49fe-974c-14485802373b"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125844480,
+        "memory_length": 24576,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125824000,
+        "memory_length": 20480,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "b07c8481-b02f-44ca-a909-64f8cd470b6f"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125815808,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125807616,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125799424,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125787136,
+        "memory_length": 12288,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "455f8b79-6713-4119-8a9c-887d1a33e243"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "455f8b79-6713-4119-8a9c-887d1a33e243"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125778944,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "96ad286c-ac0f-4ba1-9734-6c9f3cad904c"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125754368,
+        "memory_length": 24576,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125746176,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125697024,
+        "memory_length": 49152,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125692928,
+        "memory_length": 4096,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125635584,
+        "memory_length": 57344,
+        "memory_type": 7
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125602816,
+        "memory_length": 32768,
+        "memory_type": 7
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125582336,
+        "memory_length": 20480,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125574144,
+        "memory_length": 8192,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "guid_extension",
+      "name": "455f8b79-6713-4119-8a9c-887d1a33e243"
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125455360,
+        "memory_length": 118784,
+        "memory_type": 3
+      }
+    },
+    {
+      "type": "unknown_hob"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2125324288,
+        "memory_length": 131072,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2122317824,
+        "memory_length": 2097152,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2124414976,
+        "memory_length": 909312,
+        "memory_type": 7
+      }
+    },
+    {
+      "type": "guid_extension",
+      "name": "ea296d92-0b69-423c-8c28-33b4e0a91268"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2063327232,
+        "memory_length": 131072,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": 2122313728,
+        "memory_length": 4096,
+        "memory_type": 4
+      }
+    }
+  ],
   "fv_list": [
     {
       "fv_name": "7cb8bdc9-f8eb-4f34-aaea-3ee4af6516a1",
@@ -5133,12 +5131,12 @@
         {
           "name": "23c9322f-2af2-476a-bc4c-26bc88266c71",
           "file_type": "DxeCore",
-          "length": 106032,
+          "length": 107056,
           "attributes": 0,
           "sections": [
             {
               "section_type": "Pe32",
-              "length": 105988,
+              "length": 107012,
               "compression_type": "uncompressed"
             },
             {

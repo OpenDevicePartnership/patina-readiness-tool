@@ -1,24 +1,9 @@
-// basically you can't deserialize references (complex explanation but if this assumption is wrong then we can rework the code)
-// but the key point is that we don't actually need to deserialize into mu_pi::hob structs, we can deserialize kinda whatever we want
-// so here i cut out some information from mu_pi (ie headers)
-// and also get rid of the references so we can easily derive deserialization
-// if the assumptions are wrong (assumption #0: deserialization of references not possible) then we can rework this
-// but the point is that these structs are local to this tool and there's no need to reference the more complex PI spec structs
-// for internal validation purposes
-
-use mu_pi::hob::{EfiPhysicalAddress, Hob, HobList};
+use mu_pi::hob::{EfiPhysicalAddress, Hob};
 use serde::{Deserialize, Serialize};
 
 use alloc::string::String;
-use alloc::vec::Vec;
 
 use crate::format_guid;
-
-// This is the serialized version of the HOB list.
-#[derive(Serialize, Deserialize, Debug)]
-pub struct HobListSerDe {
-    pub hobs: Vec<HobSerDe>,
-}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
@@ -68,12 +53,6 @@ pub struct ResourceDescriptorSerDe {
     resource_attribute: u32,
     physical_start: u64,
     resource_length: u64,
-}
-
-impl From<&HobList<'_>> for HobListSerDe {
-    fn from(hob_list: &HobList) -> Self {
-        HobListSerDe { hobs: hob_list.iter().map(HobSerDe::from).collect() }
-    }
 }
 
 impl From<&Hob<'_>> for HobSerDe {
@@ -127,14 +106,14 @@ impl From<&Hob<'_>> for HobSerDe {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mu_pi::{hob, BootMode};
+    use mu_pi::hob;
+    use mu_pi::BootMode;
     use serde_json::{from_str, to_string_pretty};
 
     #[test]
     fn test_hoblist_deserialization() {
         let json_data = r#"
-        {
-            "hobs": [
+            [
                 {
                     "type": "handoff",
                     "version": 1,
@@ -190,12 +169,11 @@ mod tests {
                     "type": "unknown_hob"
                 }
             ]
-        }
         "#;
 
-        let deserialized_hob_list: HobListSerDe = from_str(json_data).expect("Failed to deserialize");
+        let hob_list: Vec<HobSerDe> = from_str(json_data).expect("Failed to deserialize");
 
-        assert_eq!(deserialized_hob_list.hobs.len(), 8);
+        assert_eq!(hob_list.len(), 8);
         if let HobSerDe::Handoff {
             version,
             memory_top,
@@ -203,7 +181,7 @@ mod tests {
             free_memory_top,
             free_memory_bottom,
             end_of_hob_list,
-        } = &deserialized_hob_list.hobs[0]
+        } = &hob_list[0]
         {
             assert_eq!(*version, 1);
             assert_eq!(*memory_top, 3735928559);
@@ -215,7 +193,7 @@ mod tests {
             panic!("First element is not a Handoff HOB");
         }
 
-        if let HobSerDe::MemoryAllocation { alloc_descriptor } = &deserialized_hob_list.hobs[1] {
+        if let HobSerDe::MemoryAllocation { alloc_descriptor } = &hob_list[1] {
             assert_eq!(alloc_descriptor.name, "123e4567-e89b-12d3-a456-426614174000");
             assert_eq!(alloc_descriptor.memory_base_address, 4096);
             assert_eq!(alloc_descriptor.memory_length, 12345678);
@@ -224,7 +202,7 @@ mod tests {
             panic!("Second element is not a MemoryAllocation HOB");
         }
 
-        if let HobSerDe::ResourceDescriptor(resource_desc) = &deserialized_hob_list.hobs[2] {
+        if let HobSerDe::ResourceDescriptor(resource_desc) = &hob_list[2] {
             assert_eq!(resource_desc.owner, "123e4567-e89b-12d3-a456-426614174000");
             assert_eq!(resource_desc.resource_type, 1);
             assert_eq!(resource_desc.resource_attribute, 2);
@@ -234,7 +212,7 @@ mod tests {
             panic!("Third element is not a ResourceDescriptor HOB");
         }
 
-        if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = &deserialized_hob_list.hobs[3] {
+        if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = &hob_list[3] {
             assert_eq!(v1.owner, "123e4567-e89b-12d3-a456-426614174000");
             assert_eq!(v1.resource_type, 1);
             assert_eq!(v1.resource_attribute, 2);
@@ -245,20 +223,20 @@ mod tests {
             panic!("Fourth element is not a ResourceDescriptorV2 HOB");
         }
 
-        if let HobSerDe::GuidExtension { name } = &deserialized_hob_list.hobs[4] {
+        if let HobSerDe::GuidExtension { name } = &hob_list[4] {
             assert_eq!(name, "123e4567-e89b-12d3-a456-426614174000");
         } else {
             panic!("Fifth element is not a GuidExtension HOB");
         }
 
-        if let HobSerDe::FirmwareVolume { base_address, length } = &deserialized_hob_list.hobs[5] {
+        if let HobSerDe::FirmwareVolume { base_address, length } = &hob_list[5] {
             assert_eq!(*base_address, 65536);
             assert_eq!(*length, 987654321);
         } else {
             panic!("Sixth element is not a FirmwareVolume HOB");
         }
 
-        if let HobSerDe::Cpu { size_of_memory_space, size_of_io_space } = &deserialized_hob_list.hobs[6] {
+        if let HobSerDe::Cpu { size_of_memory_space, size_of_io_space } = &hob_list[6] {
             assert_eq!(*size_of_memory_space, 48);
             assert_eq!(*size_of_io_space, 16);
         } else {
@@ -343,17 +321,18 @@ mod tests {
         let header = hob::header::Hob { r#type: hob::CPU, length: size_of::<hob::Cpu>() as u16, reserved: 0 };
         let cpu_hob = hob::Cpu { header, size_of_memory_space: 0, size_of_io_space: 0, reserved: [0; 6] };
 
-        let mut hob_list = HobList::default();
-        hob_list.push(Hob::Handoff(&handoff_hob));
-        hob_list.push(Hob::ResourceDescriptor(&resource_desc_hob));
-        hob_list.push(Hob::MemoryAllocation(&memory_alloc_hob));
-        hob_list.push(Hob::ResourceDescriptor(&resource_desc_hob));
-        hob_list.push(Hob::ResourceDescriptorV2(&resource_desc2_hob));
-        hob_list.push(Hob::GuidHob(&guid_hob.0, &data));
-        hob_list.push(Hob::FirmwareVolume(&fv_hob));
-        hob_list.push(Hob::Cpu(&cpu_hob));
+        let hob_list = vec![
+            Hob::Handoff(&handoff_hob),
+            Hob::ResourceDescriptor(&resource_desc_hob),
+            Hob::MemoryAllocation(&memory_alloc_hob),
+            Hob::ResourceDescriptor(&resource_desc_hob),
+            Hob::ResourceDescriptorV2(&resource_desc2_hob),
+            Hob::GuidHob(&guid_hob.0, &data),
+            Hob::FirmwareVolume(&fv_hob),
+            Hob::Cpu(&cpu_hob),
+        ];
 
-        let serializable_list = HobListSerDe::from(&hob_list);
+        let serializable_list = hob_list.iter().map(HobSerDe::from).collect::<Vec<HobSerDe>>();
         let json = to_string_pretty(&serializable_list).expect("Serialization failed");
 
         assert!(json.contains(r#""type": "handoff""#), "Handoff HOB missing");

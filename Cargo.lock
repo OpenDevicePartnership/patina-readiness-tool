@@ -242,6 +242,7 @@ name = "dxe_readiness_validator"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "common",
  "log",
  "mu_pi",
  "r-efi",

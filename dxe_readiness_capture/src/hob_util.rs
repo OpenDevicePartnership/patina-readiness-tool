@@ -6,16 +6,10 @@
 
 use core::{ffi::c_void, mem, str};
 
-use common::serializable_fv::FirmwareVolumeSerDe;
-use common::serializable_hob::HobListSerDe;
-use common::DxeReadinessCaptureSerDe;
-use mu_pi::fw_fs::FirmwareVolume;
-use mu_pi::hob::{header, Hob, HobList, PhaseHandoffInformationTable, HANDOFF};
+use mu_pi::hob::{header, Hob, PhaseHandoffInformationTable, HANDOFF};
 
 extern crate alloc;
 use alloc::string::{String, ToString};
-use alloc::vec;
-use alloc::vec::Vec;
 
 pub(crate) fn read_phit_hob(physical_hob_list: *const c_void) -> Option<(usize, usize)> {
     if physical_hob_list.is_null() {
@@ -41,24 +35,4 @@ pub(crate) fn assert_hob_size<T>(hob: &header::Hob) {
     let hob_len = hob.length as usize;
     let hob_size = mem::size_of::<T>();
     assert_eq!(hob_len, hob_size, "Trying to cast hob of length {hob_len} into a pointer of size {hob_size}");
-}
-
-pub(crate) fn dump(hob_list: &HobList) -> Option<String> {
-    let serializable_hob_list = HobListSerDe::from(hob_list);
-    let serializable_fv_list = hob_list
-        .iter()
-        .filter_map(|hob| {
-            if let Hob::FirmwareVolume(&fv) = hob {
-                let mut fv_serde =
-                    FirmwareVolumeSerDe::from(unsafe { FirmwareVolume::new_from_address(fv.base_address) }.unwrap());
-                fv_serde.fv_base_address = fv.base_address;
-                Some(fv_serde)
-            } else {
-                None
-            }
-        })
-        .collect::<Vec<_>>();
-
-    let serializable_list = DxeReadinessCaptureSerDe { hob_list: serializable_hob_list, fv_list: serializable_fv_list };
-    serde_json::to_string_pretty(&serializable_list).ok()
 }

@@ -14,18 +14,23 @@
 #![cfg_attr(target_os = "uefi", no_main)]
 
 // Include all unit testable modules in the crate here.
-mod hob_utils;
+#[macro_use]
+extern crate alloc;
+mod capture;
+mod capture_fv;
+mod capture_hob;
+mod hob_util;
 
 cfg_if::cfg_if! {
     // Below code is meant to be compiled as an EFI application. So it should be
     // discarded when the crate is compiling for tests.
     if #[cfg(target_os = "uefi")] {
-        extern crate alloc;
+
         mod logger;
         mod allocator;
         use core::{ffi::c_void, panic::PanicInfo};
-        use hob_utils::dump;
-        use hob_utils::read_phit_hob;
+        use capture::capture;
+        use hob_util::read_phit_hob;
         use logger::init_logger;
         use mu_pi::hob::HobList;
         use stacktrace::StackTrace;
@@ -54,12 +59,11 @@ cfg_if::cfg_if! {
 
             let mut hob_list = HobList::default();
             hob_list.discover_hobs(physical_hob_list);
-            let json_str = dump(&hob_list);
 
-            if let Some(json_str) = json_str {
+            if let Ok(json_str) = capture(&hob_list) {
                 log::info!("{}", json_str);
             } else {
-                log::info!("Failed to dump HOB JSON");
+                log::info!("Failed to dump HOB list to JSON");
             }
 
             log::info!("Dead Loop");

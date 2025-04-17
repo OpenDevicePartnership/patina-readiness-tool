@@ -38,3 +38,12 @@ Then, run the following command:
 ```sh
 python .\build_and_run_rust_binary.py --fw-patch-repo C:\r\fw_rust_patcher --custom-efi C:\r\platform_handoff_validation_tool\target\x86_64-unknown-uefi\debug\dxe_readiness_capture.efi
 ```
+
+## **Running Validator**
+
+To run the validator application with the appropriate JSON file captured during
+the capture phase, use the command below:
+
+```sh
+cargo make run -- -f dxe_readiness_validator\src\tests\data\q35_capture.json
+```
