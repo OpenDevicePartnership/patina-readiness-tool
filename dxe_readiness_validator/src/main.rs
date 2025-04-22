@@ -14,6 +14,7 @@ use validate::validate;
 
 mod commandline;
 mod logger;
+mod platform_error;
 mod validate;
 mod validate_fv;
 mod validate_hob;

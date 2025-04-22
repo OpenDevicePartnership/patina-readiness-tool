@@ -33,6 +33,46 @@ pub fn format_guid(guid: Guid) -> String {
     )
 }
 
+pub trait Interval: Clone + Ord {
+    fn start(&self) -> u64;
+    fn end(&self) -> u64;
+    fn length(&self) -> u64 {
+        self.end() - self.start()
+    }
+    fn contains(&self, other: &Self) -> bool {
+        self.start() <= other.start() && self.end() >= other.end()
+    }
+    fn overlaps(&self, other: &Self) -> bool;
+    fn merge(&self, other: &Self) -> Self;
+    fn try_merge(&self, other: &Self) -> Option<Self> {
+        if self.overlaps(other) {
+            Some(self.merge(other))
+        } else {
+            None
+        }
+    }
+    fn merge_intervals(intervals: &[&Self]) -> Vec<Self> {
+        if intervals.is_empty() {
+            return Vec::new();
+        }
+
+        let mut sorted = intervals.to_vec();
+        sorted.sort_by(|a, b| a.cmp(b));
+
+        let mut result = vec![sorted[0].clone()];
+        for current in sorted.into_iter().skip(1) {
+            let last = result.last_mut().unwrap();
+            if let Some(merged) = last.try_merge(current) {
+                *last = merged;
+            } else {
+                result.push((*current).clone());
+            }
+        }
+
+        result
+    }
+}
+
 /// This structure respresents the actual capture data that will be serialized
 /// to JSON.
 #[derive(Serialize, Deserialize, Debug)]

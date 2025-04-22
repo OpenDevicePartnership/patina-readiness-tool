@@ -1,9 +1,298 @@
 use common::serializable_hob::HobSerDe;
+use common::{format_guid, serializable_hob::ResourceDescriptorSerDe};
+use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
+use r_efi::efi;
 
-pub fn validate_hob(hob_list: &[HobSerDe]) -> Result<(), String> {
+use crate::platform_error::{PlatformError, Result};
+use common::Interval;
+
+const DXE_MEMORY_PROTECTION_SETTINGS_GUID: efi::Guid =
+    efi::Guid::from_fields(0x9ABFD639, 0xD1D0, 0x4EFF, 0xBD, 0xB6, &[0x7E, 0xC4, 0x19, 0x0D, 0x17, 0xD5]);
+
+pub fn validate_hob(hob_list: &[HobSerDe]) -> std::result::Result<(), String> {
     if hob_list.is_empty() {
         return Err("HOB list is empty".to_string());
     }
 
+    verify_hobs(hob_list).map_err(|e| format!("HOB verification failed: {}", e))?;
     Ok(())
+}
+
+fn is_io(resource_type: u32) -> bool {
+    resource_type == EFI_RESOURCE_IO || resource_type == EFI_RESOURCE_IO_RESERVED
+}
+
+fn check_hob_overlap<T>(resource_list: &[&T]) -> Vec<(T, T)>
+where
+    T: Interval,
+{
+    let mut overlaps = Vec::new();
+    for i in 0..resource_list.len() {
+        for j in (i + 1)..resource_list.len() {
+            if resource_list[i].overlaps(&resource_list[j]) {
+                overlaps.push(((*resource_list[i]).clone(), (*resource_list[j]).clone()));
+            }
+        }
+    }
+
+    overlaps
+}
+
+pub fn check_memory_overlap(hob_list: &[HobSerDe]) -> Result<()> {
+    let mut overlaps = Vec::new();
+
+    let mut v1_memory_hobs: Vec<&ResourceDescriptorSerDe> = Vec::new();
+    let mut v2_memory_hobs: Vec<&ResourceDescriptorSerDe> = Vec::new();
+    let mut v1_io_hobs: Vec<&ResourceDescriptorSerDe> = Vec::new();
+    let mut v2_io_hobs: Vec<&ResourceDescriptorSerDe> = Vec::new();
+
+    for hob in hob_list {
+        match hob {
+            HobSerDe::ResourceDescriptor(resource) if !is_io(resource.resource_type) => v1_memory_hobs.push(resource),
+            HobSerDe::ResourceDescriptorV2 { v1: resource, .. } if !is_io(resource.resource_type) => {
+                v2_memory_hobs.push(resource)
+            }
+            HobSerDe::ResourceDescriptor(resource) if is_io(resource.resource_type) => v1_io_hobs.push(resource),
+            HobSerDe::ResourceDescriptorV2 { v1: resource, .. } if is_io(resource.resource_type) => {
+                v2_io_hobs.push(resource)
+            }
+            _ => (),
+        }
+    }
+
+    overlaps.extend(check_hob_overlap(&v1_memory_hobs));
+    overlaps.extend(check_hob_overlap(&v2_memory_hobs));
+    overlaps.extend(check_hob_overlap(&v1_io_hobs));
+    overlaps.extend(check_hob_overlap(&v2_io_hobs));
+
+    if overlaps.is_empty() {
+        Ok(())
+    } else {
+        Err(PlatformError::MemoryRangeOverlap { overlaps })
+    }
+}
+
+fn check_memory_protection_hob_exists(hob_list: &[HobSerDe]) -> Result<()> {
+    for hob in hob_list {
+        if let HobSerDe::GuidExtension { name } = hob {
+            if *name == format_guid(DXE_MEMORY_PROTECTION_SETTINGS_GUID) {
+                return Ok(()); // Found the target GUID, verification passes
+            }
+        }
+    }
+
+    Err(PlatformError::MissingMemoryProtections)
+}
+
+// for v1/v2: the requirement is that v2 hobs are a superset of v1
+// the strategy i use here is:
+// 1. check for consistency:
+// a. if any v1 hobs overlap with v2 hobs, make sure they have the same attributes
+// 2. check for superset property
+// a. sort and merge all hobs
+// b. for each v1 interval, make sure some combination (merged) of v2 hobs covers it fully
+// quick proof sketchs that merging is safe:
+// if a V1 overlaps with any V2s, those V2s must have the same attributes as it,
+// so it's safe to merge for the superset check
+
+// if v1 and v2 overlap, make sure info is consistent
+fn check_overlapping_v1v2(hob_list: &[HobSerDe]) -> Result<()> {
+    let mut inconsistent_v1_v2 = Vec::new();
+
+    for hob1 in hob_list {
+        for hob2 in hob_list {
+            let HobSerDe::ResourceDescriptor(v1) = hob1 else { continue };
+            let HobSerDe::ResourceDescriptorV2 { v1: v2, .. } = hob2 else { continue };
+            if v1.overlaps(&v2) {
+                if v1.resource_type != v2.resource_type
+                    || v1.resource_attribute != v2.resource_attribute
+                    || v1.owner != v2.owner
+                {
+                    inconsistent_v1_v2.push(((*v1).clone(), (*v2).clone()));
+                }
+            }
+        }
+    }
+
+    if inconsistent_v1_v2.is_empty() {
+        Ok(())
+    } else {
+        Err(PlatformError::InconsistentMemoryAttributes { conflicting_intervals: inconsistent_v1_v2 })
+    }
+}
+
+fn check_v1v2_superset(hob_list: &[HobSerDe]) -> Result<()> {
+    let mut v1_resources: Vec<&ResourceDescriptorSerDe> = Vec::new();
+    let mut v2_resources: Vec<&ResourceDescriptorSerDe> = Vec::new();
+
+    let mut v1_not_covered = Vec::new();
+
+    for hob in hob_list {
+        if let HobSerDe::ResourceDescriptor(v1) = hob {
+            v1_resources.push(v1);
+        } else if let HobSerDe::ResourceDescriptorV2 { v1: v2, .. } = hob {
+            v2_resources.push(v2);
+        }
+    }
+
+    // if no v1, that's okay
+    // if no v2, is that okay? it means they haven't migrated over to the new resource descriptor format
+
+    let merged_v2 = Interval::merge_intervals(&v2_resources);
+
+    for v1 in v1_resources {
+        let mut is_covered = false;
+        for v2 in &merged_v2 {
+            if v2.contains(v1) {
+                is_covered = true;
+                break;
+            }
+        }
+
+        if !is_covered {
+            v1_not_covered.push((*v1).clone());
+        }
+    }
+
+    if v1_not_covered.is_empty() {
+        Ok(())
+    } else {
+        Err(PlatformError::InconsistentRanges { unmatched_v1: v1_not_covered })
+    }
+}
+
+fn check_v1v2_consistency(hob_list: &[HobSerDe]) -> Result<()> {
+    check_overlapping_v1v2(hob_list)?;
+    check_v1v2_superset(hob_list)?;
+    Ok(())
+}
+
+pub fn verify_hobs(hob_list: &[HobSerDe]) -> Result<()> {
+    check_memory_overlap(hob_list)?;
+    check_memory_protection_hob_exists(hob_list)?;
+    check_v1v2_consistency(hob_list)?;
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use common::serializable_hob::ResourceDescriptorSerDe;
+    use mu_pi::hob::EfiPhysicalAddress;
+
+    fn create_v1_hob(
+        start: EfiPhysicalAddress,
+        length: u64,
+        resource_type: u32,
+        resource_attribute: u32,
+        owner: &str,
+    ) -> HobSerDe {
+        HobSerDe::ResourceDescriptor(ResourceDescriptorSerDe {
+            physical_start: start,
+            resource_length: length,
+            resource_type,
+            resource_attribute,
+            owner: owner.to_string(),
+        })
+    }
+
+    fn create_v2_hob(
+        start: EfiPhysicalAddress,
+        length: u64,
+        resource_type: u32,
+        resource_attribute: u32,
+        owner: &str,
+        attributes: u64,
+    ) -> HobSerDe {
+        HobSerDe::ResourceDescriptorV2 {
+            v1: ResourceDescriptorSerDe {
+                physical_start: start,
+                resource_length: length,
+                resource_type,
+                resource_attribute,
+                owner: owner.to_string(),
+            },
+            attributes,
+        }
+    }
+
+    fn create_guid_extension_hob(name: &str) -> HobSerDe {
+        HobSerDe::GuidExtension { name: name.to_string() }
+    }
+
+    #[test]
+    fn test_check_memory_overlap() {
+        // it is OKAY if v1 v2 hobs overlap -- it should not be flagged
+        let hob1 = create_v1_hob(100, 50, 3, 0, "owner1");
+        let hob2 = create_v2_hob(100, 50, 3, 0, "owner1", 123);
+        let hob_list = vec![hob1, hob2];
+        assert_eq!(check_memory_overlap(&hob_list), Ok(()));
+    }
+
+    #[test]
+    fn test_check_memory_protection_hob_exists() {
+        let hob_list_missing =
+            vec![create_v1_hob(100, 50, 3, 0, "owner1"), create_v2_hob(300, 50, 3, 0, "owner1", 123)];
+
+        assert_eq!(check_memory_protection_hob_exists(&hob_list_missing), Err(PlatformError::MissingMemoryProtections));
+
+        let protection_hob = create_guid_extension_hob(&format_guid(DXE_MEMORY_PROTECTION_SETTINGS_GUID));
+        let hob_list_found = vec![create_v1_hob(100, 50, 3, 0, "owner1"), protection_hob];
+        assert_eq!(check_memory_protection_hob_exists(&hob_list_found), Ok(()));
+    }
+
+    #[test]
+    fn test_check_v1v2_superset_ok() {
+        // V1 hob fully covered by single V2
+        let v1_hob = create_v1_hob(200, 30, 3, 0, "owner1");
+        let v2_hob = create_v2_hob(100, 200, 3, 0, "owner1", 123);
+        let hob_list = vec![v1_hob, v2_hob];
+
+        assert_eq!(check_v1v2_superset(&hob_list), Ok(()));
+    }
+
+    #[test]
+    fn test_check_v1v2_multiple_superset_ok() {
+        // V1 hob fully covered by multiple V2's
+        // [200, 250] is covered by [100, 220] and [220, 300]
+        let v1_hob = create_v1_hob(200, 50, 3, 0, "owner1");
+        let v2_hob1 = create_v2_hob(100, 120, 3, 0, "owner1", 123);
+        let v2_hob2 = create_v2_hob(220, 80, 3, 0, "owner1", 123);
+        let hob_list = vec![v1_hob, v2_hob1, v2_hob2];
+
+        assert_eq!(check_v1v2_superset(&hob_list), Ok(()));
+    }
+
+    #[test]
+    fn test_check_v1v2_superset_fail() {
+        // V1 not fully covered (gap)
+        let v1_hob = create_v1_hob(200, 100, 3, 0, "owner1");
+        let v2_hob1 = create_v2_hob(100, 50, 3, 0, "owner1", 123);
+        let v2_hob2 = create_v2_hob(180, 10, 3, 0, "owner1", 123);
+        let hob_list = vec![v1_hob, v2_hob1, v2_hob2];
+
+        let res = check_v1v2_superset(&hob_list);
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn test_check_overlapping_v1v2_consistency_ok() {
+        // Consistent v1 and v2
+        let v1_hob = create_v1_hob(100, 100, 3, 0, "owner1");
+        let v2_hob = create_v2_hob(150, 100, 3, 0, "owner1", 123);
+        let hob_list = vec![v1_hob, v2_hob];
+
+        assert_eq!(check_overlapping_v1v2(&hob_list), Ok(()));
+    }
+
+    #[test]
+    fn test_check_overlapping_v1v2_consistency_fail() {
+        // Overlapping and inconsistent v1/v2 (diff resource type)
+        let v1_hob = create_v1_hob(100, 100, 3, 0, "owner1");
+        let v2_hob = create_v2_hob(150, 100, 4, 0, "owner1", 123);
+        let hob_list = vec![v1_hob, v2_hob];
+
+        let res = check_overlapping_v1v2(&hob_list);
+        assert!(res.is_err());
+    }
 }

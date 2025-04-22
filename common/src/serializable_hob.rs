@@ -1,11 +1,13 @@
+use core::cmp::Ordering;
+
 use mu_pi::hob::{EfiPhysicalAddress, Hob};
 use serde::{Deserialize, Serialize};
 
 use alloc::string::String;
 
-use crate::format_guid;
+use crate::{format_guid, Interval};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum HobSerDe {
     Handoff {
@@ -38,7 +40,7 @@ pub enum HobSerDe {
     UnknownHob,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MemAllocDescriptorSerDe {
     name: String, // GUID as a string
     memory_base_address: u64,
@@ -46,13 +48,63 @@ pub struct MemAllocDescriptorSerDe {
     memory_type: u32,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub struct ResourceDescriptorSerDe {
-    owner: String, // GUID as a string
-    resource_type: u32,
-    resource_attribute: u32,
-    physical_start: u64,
-    resource_length: u64,
+    pub owner: String, // GUID as a string
+    pub resource_type: u32,
+    pub resource_attribute: u32,
+    pub physical_start: u64,
+    pub resource_length: u64,
+}
+
+impl Interval for ResourceDescriptorSerDe {
+    fn start(&self) -> u64 {
+        self.physical_start
+    }
+
+    fn end(&self) -> u64 {
+        self.physical_start + self.resource_length
+    }
+
+    /// Check if this resource descriptor overlaps with another one.
+    /// - [s] [o] - non overlapping
+    /// - [s][o] - overlapping(s and o are adjacent)
+    /// - [s[]o] - overlapping
+    /// - [s[o]] - overlapping
+    /// - [o[s]] - overlapping
+    /// - [o[]s] - overlapping
+    /// - [o][s] - overlapping(o and s are adjacent)
+    /// - [o] [s] - non overlapping
+    fn overlaps(&self, other: &ResourceDescriptorSerDe) -> bool {
+        !(self.end() < other.start() || other.end() < self.start())
+    }
+
+    /// Merge two resource descriptors into one(including non overlapping
+    /// intervals).
+    fn merge(&self, other: &Self) -> Self {
+        Self {
+            owner: self.owner.clone(),
+            resource_type: self.resource_type,
+            resource_attribute: self.resource_attribute,
+            physical_start: core::cmp::min(self.start(), other.start()),
+            resource_length: core::cmp::max(self.end(), other.end()) - core::cmp::min(self.start(), other.start()),
+        }
+    }
+}
+
+impl Ord for ResourceDescriptorSerDe {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.physical_start.cmp(&other.physical_start) {
+            Ordering::Equal => self.resource_length.cmp(&other.resource_length),
+            other => other,
+        }
+    }
+}
+
+impl PartialOrd for ResourceDescriptorSerDe {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 impl From<&Hob<'_>> for HobSerDe {
