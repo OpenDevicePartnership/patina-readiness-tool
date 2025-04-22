@@ -68,15 +68,20 @@ impl Interval for ResourceDescriptorSerDe {
 
     /// Check if this resource descriptor overlaps with another one.
     /// - [s] [o] - non overlapping
-    /// - [s][o] - overlapping(s and o are adjacent)
     /// - [s[]o] - overlapping
     /// - [s[o]] - overlapping
     /// - [o[s]] - overlapping
     /// - [o[]s] - overlapping
-    /// - [o][s] - overlapping(o and s are adjacent)
     /// - [o] [s] - non overlapping
     fn overlaps(&self, other: &ResourceDescriptorSerDe) -> bool {
-        !(self.end() < other.start() || other.end() < self.start())
+        self.start() < other.end() && other.start() < self.end()
+    }
+
+    /// Check if this resource descriptor is adjacent to another one.
+    /// Adjacency means:
+    /// - [s][o] or [o][s] (end of one is exactly the start of the other)
+    fn adjacent(&self, other: &ResourceDescriptorSerDe) -> bool {
+        self.end() == other.start() || other.end() == self.start()
     }
 
     /// Merge two resource descriptors into one(including non overlapping

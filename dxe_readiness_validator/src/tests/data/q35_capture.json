@@ -1007,7 +1007,7 @@
             {
               "section_type": "Version",
               "length": 14,
-              "compression_type": "uncompressed"
+              "compression_type": "LZMA uncompressed"
             }
           ]
         },
@@ -1020,7 +1020,7 @@
             {
               "section_type": "DxeDepex",
               "length": 40,
-              "compression_type": "uncompressed"
+              "compression_type": "LZMA uncompressed"
             },
             {
               "section_type": "Pe32",

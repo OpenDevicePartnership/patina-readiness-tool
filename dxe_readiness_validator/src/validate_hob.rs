@@ -3,18 +3,18 @@ use common::{format_guid, serializable_hob::ResourceDescriptorSerDe};
 use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
 use r_efi::efi;
 
-use crate::platform_error::{PlatformError, Result};
+use crate::validate::{ValidationKind, ValidationReport};
 use common::Interval;
 
 const DXE_MEMORY_PROTECTION_SETTINGS_GUID: efi::Guid =
     efi::Guid::from_fields(0x9ABFD639, 0xD1D0, 0x4EFF, 0xBD, 0xB6, &[0x7E, 0xC4, 0x19, 0x0D, 0x17, 0xD5]);
 
-pub fn validate_hob(hob_list: &[HobSerDe]) -> std::result::Result<(), String> {
+pub fn validate_hob(hob_list: &[HobSerDe], validation_report: &mut ValidationReport) -> Result<(), String> {
     if hob_list.is_empty() {
         return Err("HOB list is empty".to_string());
     }
 
-    verify_hobs(hob_list).map_err(|e| format!("HOB verification failed: {}", e))?;
+    verify_hobs(hob_list, validation_report).map_err(|e| format!("HOB verification failed: {}", e))?;
     Ok(())
 }
 
@@ -38,7 +38,7 @@ where
     overlaps
 }
 
-pub fn check_memory_overlap(hob_list: &[HobSerDe]) -> Result<()> {
+pub fn check_memory_overlap(hob_list: &[HobSerDe], validation_report: &mut ValidationReport) -> Result<(), String> {
     let mut overlaps = Vec::new();
 
     let mut v1_memory_hobs: Vec<&ResourceDescriptorSerDe> = Vec::new();
@@ -65,14 +65,22 @@ pub fn check_memory_overlap(hob_list: &[HobSerDe]) -> Result<()> {
     overlaps.extend(check_hob_overlap(&v1_io_hobs));
     overlaps.extend(check_hob_overlap(&v2_io_hobs));
 
-    if overlaps.is_empty() {
-        Ok(())
-    } else {
-        Err(PlatformError::MemoryRangeOverlap { overlaps })
+    let mut validation_result = String::new();
+    for (hob1, hob2) in &overlaps {
+        validation_result.push_str(&format!("{:?} <-> {:?}\n", hob1, hob2));
     }
+
+    if !validation_result.is_empty() {
+        validation_report.add_violation(ValidationKind::HobOverlappingMemoryRanges, &validation_result);
+    }
+
+    Ok(())
 }
 
-fn check_memory_protection_hob_exists(hob_list: &[HobSerDe]) -> Result<()> {
+fn check_memory_protection_hob_exists(
+    hob_list: &[HobSerDe],
+    validation_report: &mut ValidationReport,
+) -> Result<(), String> {
     for hob in hob_list {
         if let HobSerDe::GuidExtension { name } = hob {
             if *name == format_guid(DXE_MEMORY_PROTECTION_SETTINGS_GUID) {
@@ -81,7 +89,8 @@ fn check_memory_protection_hob_exists(hob_list: &[HobSerDe]) -> Result<()> {
         }
     }
 
-    Err(PlatformError::MissingMemoryProtections)
+    validation_report.add_violation(ValidationKind::MissingMemoryProtectionHob, "Missing memory protection HOB");
+    Ok(())
 }
 
 // for v1/v2: the requirement is that v2 hobs are a superset of v1
@@ -96,7 +105,10 @@ fn check_memory_protection_hob_exists(hob_list: &[HobSerDe]) -> Result<()> {
 // so it's safe to merge for the superset check
 
 // if v1 and v2 overlap, make sure info is consistent
-fn check_overlapping_v1v2(hob_list: &[HobSerDe]) -> Result<()> {
+fn check_overlapping_v1v2_attributes(
+    hob_list: &[HobSerDe],
+    validation_report: &mut ValidationReport,
+) -> Result<(), String> {
     let mut inconsistent_v1_v2 = Vec::new();
 
     for hob1 in hob_list {
@@ -114,18 +126,23 @@ fn check_overlapping_v1v2(hob_list: &[HobSerDe]) -> Result<()> {
         }
     }
 
-    if inconsistent_v1_v2.is_empty() {
-        Ok(())
-    } else {
-        Err(PlatformError::InconsistentMemoryAttributes { conflicting_intervals: inconsistent_v1_v2 })
+    let mut validation_result = String::new();
+    for (hob1, hob2) in &inconsistent_v1_v2 {
+        validation_result.push_str(&format!("Inconsistent Memory Attribute HOBs: {:?} and {:?}\n", hob1, hob2));
     }
+
+    if !validation_result.is_empty() {
+        validation_report.add_violation(ValidationKind::InconsistentMemoryAttributes, &validation_result);
+    }
+
+    Ok(())
 }
 
-fn check_v1v2_superset(hob_list: &[HobSerDe]) -> Result<()> {
+fn check_v1v2_superset(hob_list: &[HobSerDe], validation_report: &mut ValidationReport) -> Result<(), String> {
     let mut v1_resources: Vec<&ResourceDescriptorSerDe> = Vec::new();
     let mut v2_resources: Vec<&ResourceDescriptorSerDe> = Vec::new();
 
-    let mut v1_not_covered = Vec::new();
+    let mut v1_not_migrated = Vec::new();
 
     for hob in hob_list {
         if let HobSerDe::ResourceDescriptor(v1) = hob {
@@ -141,36 +158,41 @@ fn check_v1v2_superset(hob_list: &[HobSerDe]) -> Result<()> {
     let merged_v2 = Interval::merge_intervals(&v2_resources);
 
     for v1 in v1_resources {
-        let mut is_covered = false;
+        let mut is_v1_migrated = false;
         for v2 in &merged_v2 {
             if v2.contains(v1) {
-                is_covered = true;
+                is_v1_migrated = true;
                 break;
             }
         }
 
-        if !is_covered {
-            v1_not_covered.push((*v1).clone());
+        if !is_v1_migrated {
+            v1_not_migrated.push((*v1).clone());
         }
     }
 
-    if v1_not_covered.is_empty() {
-        Ok(())
-    } else {
-        Err(PlatformError::InconsistentRanges { unmatched_v1: v1_not_covered })
+    let mut validation_result = String::new();
+    for v1 in &v1_not_migrated {
+        validation_result.push_str(&format!("{:?}\n", v1));
     }
-}
 
-fn check_v1v2_consistency(hob_list: &[HobSerDe]) -> Result<()> {
-    check_overlapping_v1v2(hob_list)?;
-    check_v1v2_superset(hob_list)?;
+    if !validation_result.is_empty() {
+        validation_report.add_violation(ValidationKind::V1MemoryRangeNotCotainnedInV2, &validation_result);
+    }
+
     Ok(())
 }
 
-pub fn verify_hobs(hob_list: &[HobSerDe]) -> Result<()> {
-    check_memory_overlap(hob_list)?;
-    check_memory_protection_hob_exists(hob_list)?;
-    check_v1v2_consistency(hob_list)?;
+fn check_v1v2_consistency(hob_list: &[HobSerDe], validation_report: &mut ValidationReport) -> Result<(), String> {
+    check_overlapping_v1v2_attributes(hob_list, validation_report)?;
+    check_v1v2_superset(hob_list, validation_report)?;
+    Ok(())
+}
+
+pub fn verify_hobs(hob_list: &[HobSerDe], validation_report: &mut ValidationReport) -> Result<(), String> {
+    check_memory_overlap(hob_list, validation_report)?;
+    check_v1v2_consistency(hob_list, validation_report)?;
+    check_memory_protection_hob_exists(hob_list, validation_report)?;
     Ok(())
 }
 
@@ -226,7 +248,9 @@ mod tests {
         let hob1 = create_v1_hob(100, 50, 3, 0, "owner1");
         let hob2 = create_v2_hob(100, 50, 3, 0, "owner1", 123);
         let hob_list = vec![hob1, hob2];
-        assert_eq!(check_memory_overlap(&hob_list), Ok(()));
+        let mut validation_report = ValidationReport::new();
+        assert_eq!(check_memory_overlap(&hob_list, &mut validation_report), Ok(()));
+        assert!(validation_report.is_empty());
     }
 
     #[test]
@@ -234,11 +258,15 @@ mod tests {
         let hob_list_missing =
             vec![create_v1_hob(100, 50, 3, 0, "owner1"), create_v2_hob(300, 50, 3, 0, "owner1", 123)];
 
-        assert_eq!(check_memory_protection_hob_exists(&hob_list_missing), Err(PlatformError::MissingMemoryProtections));
+        let mut validation_report = ValidationReport::new();
+        assert_eq!(check_memory_protection_hob_exists(&hob_list_missing, &mut validation_report), Ok(()));
+        assert!(!validation_report.is_empty());
 
+        let mut validation_report = ValidationReport::new();
         let protection_hob = create_guid_extension_hob(&format_guid(DXE_MEMORY_PROTECTION_SETTINGS_GUID));
         let hob_list_found = vec![create_v1_hob(100, 50, 3, 0, "owner1"), protection_hob];
-        assert_eq!(check_memory_protection_hob_exists(&hob_list_found), Ok(()));
+        assert_eq!(check_memory_protection_hob_exists(&hob_list_found, &mut validation_report), Ok(()));
+        assert!(validation_report.is_empty());
     }
 
     #[test]
@@ -248,7 +276,9 @@ mod tests {
         let v2_hob = create_v2_hob(100, 200, 3, 0, "owner1", 123);
         let hob_list = vec![v1_hob, v2_hob];
 
-        assert_eq!(check_v1v2_superset(&hob_list), Ok(()));
+        let mut validation_report = ValidationReport::new();
+        assert_eq!(check_v1v2_superset(&hob_list, &mut validation_report), Ok(()));
+        assert!(validation_report.is_empty());
     }
 
     #[test]
@@ -260,7 +290,9 @@ mod tests {
         let v2_hob2 = create_v2_hob(220, 80, 3, 0, "owner1", 123);
         let hob_list = vec![v1_hob, v2_hob1, v2_hob2];
 
-        assert_eq!(check_v1v2_superset(&hob_list), Ok(()));
+        let mut validation_report = ValidationReport::new();
+        assert_eq!(check_v1v2_superset(&hob_list, &mut validation_report), Ok(()));
+        assert!(validation_report.is_empty());
     }
 
     #[test]
@@ -271,8 +303,10 @@ mod tests {
         let v2_hob2 = create_v2_hob(180, 10, 3, 0, "owner1", 123);
         let hob_list = vec![v1_hob, v2_hob1, v2_hob2];
 
-        let res = check_v1v2_superset(&hob_list);
-        assert!(res.is_err());
+        let mut validation_report = ValidationReport::new();
+        let res = check_v1v2_superset(&hob_list, &mut validation_report);
+        assert!(res.is_ok());
+        assert!(!validation_report.is_empty());
     }
 
     #[test]
@@ -282,7 +316,9 @@ mod tests {
         let v2_hob = create_v2_hob(150, 100, 3, 0, "owner1", 123);
         let hob_list = vec![v1_hob, v2_hob];
 
-        assert_eq!(check_overlapping_v1v2(&hob_list), Ok(()));
+        let mut validation_report = ValidationReport::new();
+        assert_eq!(check_overlapping_v1v2_attributes(&hob_list, &mut validation_report), Ok(()));
+        assert!(validation_report.is_empty());
     }
 
     #[test]
@@ -292,7 +328,9 @@ mod tests {
         let v2_hob = create_v2_hob(150, 100, 4, 0, "owner1", 123);
         let hob_list = vec![v1_hob, v2_hob];
 
-        let res = check_overlapping_v1v2(&hob_list);
-        assert!(res.is_err());
+        let mut validation_report = ValidationReport::new();
+        let res = check_overlapping_v1v2_attributes(&hob_list, &mut validation_report);
+        assert!(res.is_ok());
+        assert!(!validation_report.is_empty());
     }
 }

@@ -43,9 +43,10 @@ pub trait Interval: Clone + Ord {
         self.start() <= other.start() && self.end() >= other.end()
     }
     fn overlaps(&self, other: &Self) -> bool;
+    fn adjacent(&self, other: &Self) -> bool;
     fn merge(&self, other: &Self) -> Self;
     fn try_merge(&self, other: &Self) -> Option<Self> {
-        if self.overlaps(other) {
+        if self.overlaps(other) || self.adjacent(other) {
             Some(self.merge(other))
         } else {
             None
