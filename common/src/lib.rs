@@ -58,7 +58,7 @@ pub trait Interval: Clone + Ord {
         }
 
         let mut sorted = intervals.to_vec();
-        sorted.sort_by(|a, b| a.cmp(b));
+        sorted.sort();
 
         let mut result = vec![sorted[0].clone()];
         for current in sorted.into_iter().skip(1) {

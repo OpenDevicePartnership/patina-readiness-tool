@@ -6,3 +6,6 @@ targets = [
     "x86_64-pc-windows-msvc",
     "aarch64-pc-windows-msvc",
 ]
+
+[tools]
+nextest = "0.1.1"

@@ -64,17 +64,17 @@ dependencies = [
 [tasks.test-capture-binary]
 description = "Build and run tests for Dxe Readiness Capture UEFI binary."
 command = "cargo"
-args = ["test", "-p", "dxe_readiness_capture"]
+args = ["nextest", "run", "-p", "dxe_readiness_capture", "--no-tests", "pass", "${@}"]
 
 [tasks.test-validation-binary]
 description = "Build and run tests for Dxe Readiness Validation binary."
 command = "cargo"
-args = ["test", "-p", "dxe_readiness_validator"]
+args = ["nextest", "run", "-p", "dxe_readiness_validator", "--no-tests", "pass", "${@}"]
 
 [tasks.test-common]
 description = "Build and run tests for Common lib."
 command = "cargo"
-args = ["test", "-p", "common"]
+args = ["nextest", "run", "-p", "common", "--no-tests", "pass", "${@}"]
 
 [tasks.test]
 description = "Build and run tests for all binaries."
@@ -92,7 +92,6 @@ description = "Run validator binary."
 clear = true
 dependencies = ["run-validator"]
 
-# TODO: Some of the tasks need to be fixed to work.
 [tasks.coverage]
 description = "Build and run all tests and calculate coverage."
 clear = true
@@ -101,6 +100,8 @@ args = [
     "tarpaulin",
     "--output-dir",
     "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target",
+    "--out",
+    "Html",
 ]
 
 [tasks.clippy]
@@ -116,8 +117,6 @@ command = "cargo"
 args = [
     "doc",
     "@@split(INDIVIDUAL_PACKAGE_TARGETS, )",
-    "--features",
-    "doc",
     "--open",
 ]
 
@@ -128,7 +127,7 @@ command = "cargo"
 args = ["fmt", "--all"]
 
 [tasks.cspell]
-description = "Run cspell for spell checking."                                                                                                                   # npm install -g cspell@latest
+description = "Run cspell for spell checking."                                                                                                                                     # npm install -g cspell@latest
 script = "cspell --quiet  --no-progress --no-summary  --dot --gitignore -e \"{.git/**,.github/**,.vscode/**,.azurepipelines/**,dxe_readiness_validator/src/tests/data/*.json}\" ."
 
 [tasks.all]
@@ -138,7 +137,7 @@ dependencies = [
     "cspell",
     "build",
     "test",
-    # "coverage",
+    "coverage",
     "fmt",
-    # "doc",
+    "doc",
 ]
