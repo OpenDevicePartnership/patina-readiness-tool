@@ -17,7 +17,8 @@ pub enum ValidationKind {
     ProhibitedAprioriFile,
     ProhibitedCombinedDrivers,
     TraditionalSmm,
-    V1MemoryRangeNotCotainnedInV2,
+    V1MemoryRangeNotContainedInV2,
+    PageZeroMemoryAllocated,
 }
 
 impl fmt::Display for ValidationKind {
@@ -30,7 +31,8 @@ impl fmt::Display for ValidationKind {
             ValidationKind::ProhibitedAprioriFile => "Prohibited Apriori File",
             ValidationKind::ProhibitedCombinedDrivers => "Prohibited Combined Drivers",
             ValidationKind::TraditionalSmm => "Traditional SMM",
-            ValidationKind::V1MemoryRangeNotCotainnedInV2 => "V1 Memory Range Not Contained In V2",
+            ValidationKind::V1MemoryRangeNotContainedInV2 => "V1 Memory Range Not Contained In V2",
+            ValidationKind::PageZeroMemoryAllocated => "Memory Allocated in Page Zero",
         };
         write!(f, "{}", text)
     }

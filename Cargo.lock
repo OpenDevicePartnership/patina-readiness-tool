@@ -258,6 +258,7 @@ dependencies = [
  "r-efi",
  "serde",
  "serde_json",
+ "uefi_sdk 3.0.3",
  "uuid",
 ]
 

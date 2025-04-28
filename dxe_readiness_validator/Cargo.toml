@@ -13,6 +13,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 uuid = { workspace = true }
 colored = "3.0.0"
+uefi_sdk = { workspace = true }
 
 [features]
 default = []

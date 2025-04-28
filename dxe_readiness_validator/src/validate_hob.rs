@@ -1,7 +1,10 @@
+use core::alloc;
+
 use common::serializable_hob::HobSerDe;
 use common::{format_guid, serializable_hob::ResourceDescriptorSerDe};
 use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
 use r_efi::efi;
+use uefi_sdk::base::UEFI_PAGE_SIZE;
 
 use crate::validate::{ValidationApp, ValidationKind};
 use crate::ValidationResult;
@@ -170,7 +173,7 @@ impl ValidationApp {
         }
 
         for v1 in &v1_not_migrated {
-            self.validation_report.add_violation(ValidationKind::V1MemoryRangeNotCotainnedInV2, &format!("{:?}", v1));
+            self.validation_report.add_violation(ValidationKind::V1MemoryRangeNotContainedInV2, &format!("{:?}", v1));
         }
 
         Ok(())
@@ -179,6 +182,27 @@ impl ValidationApp {
     fn check_v1v2_consistency(&mut self) -> ValidationResult {
         self.check_overlapping_v1v2_attributes()?;
         self.check_v1v2_superset()?;
+        Ok(())
+    }
+
+    fn check_page0(&mut self) -> ValidationResult {
+        const PAGE_ZERO_START: u64 = 0;
+        const PAGE_ZERO_END: u64 = UEFI_PAGE_SIZE as u64 - 1;
+        let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
+            return Ok(());
+        };
+
+        for hob in hob_list {
+            if let HobSerDe::MemoryAllocation { alloc_descriptor } = hob {
+                if alloc_descriptor.memory_base_address >= PAGE_ZERO_START
+                    && alloc_descriptor.memory_base_address <= PAGE_ZERO_END
+                {
+                    self.validation_report
+                        .add_violation(ValidationKind::PageZeroMemoryAllocated, &format!("{:?}", alloc_descriptor));
+                }
+            }
+        }
+
         Ok(())
     }
 
@@ -194,6 +218,7 @@ impl ValidationApp {
         self.check_memory_overlap()?;
         self.check_v1v2_consistency()?;
         self.check_memory_protection_hob_exists()?;
+        self.check_page0()?;
         Ok(())
     }
 }
@@ -201,7 +226,7 @@ impl ValidationApp {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use common::serializable_hob::ResourceDescriptorSerDe;
+    use common::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
     use mu_pi::hob::EfiPhysicalAddress;
 
     fn create_v1_hob(
@@ -242,6 +267,12 @@ mod tests {
 
     fn create_guid_extension_hob(name: &str) -> HobSerDe {
         HobSerDe::GuidExtension { name: name.to_string() }
+    }
+
+    fn create_memory_hob(name: String, memory_base_address: u64, memory_length: u64, memory_type: u32) -> HobSerDe {
+        HobSerDe::MemoryAllocation {
+            alloc_descriptor: MemAllocDescriptorSerDe { name, memory_base_address, memory_length, memory_type },
+        }
     }
 
     #[test]
@@ -340,6 +371,24 @@ mod tests {
         let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
         let mut app = ValidationApp::new_with_data(data);
         let res = app.check_overlapping_v1v2_attributes();
+        assert!(res.is_ok());
+        assert!(!app.validation_report.is_empty());
+    }
+
+    #[test]
+    fn test_pagezero() {
+        let page_zero_mem_hob = create_memory_hob("test".to_string(), 0, 0x10, 1);
+        let mem_hob = create_memory_hob("test2".to_string(), UEFI_PAGE_SIZE as u64 + 1, 0x100, 1);
+        let mut hob_list = vec![mem_hob.clone()];
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_page0();
+        assert!(res.is_ok());
+        assert!(app.validation_report.is_empty());
+
+        let hob_list = vec![mem_hob.clone(), page_zero_mem_hob];
+        app = ValidationApp::new_with_data(DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] });
+        let res = app.check_page0();
         assert!(res.is_ok());
         assert!(!app.validation_report.is_empty());
     }

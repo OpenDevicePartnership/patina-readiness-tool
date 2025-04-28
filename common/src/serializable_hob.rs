@@ -42,10 +42,10 @@ pub enum HobSerDe {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MemAllocDescriptorSerDe {
-    name: String, // GUID as a string
-    memory_base_address: u64,
-    memory_length: u64,
-    memory_type: u32,
+    pub name: String, // GUID as a string
+    pub memory_base_address: u64,
+    pub memory_length: u64,
+    pub memory_type: u32,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
