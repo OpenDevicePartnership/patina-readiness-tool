@@ -8,8 +8,6 @@ mu_pi = { workspace = true }
 r-efi = { workspace = true }
 section_extractor = { workspace = true }
 serde = { workspace = true }
-
-[dev-dependencies]
 serde_json = { workspace = true }
 
 [features]

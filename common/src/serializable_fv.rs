@@ -1,3 +1,4 @@
+use crate::hex_format;
 use alloc::string::String;
 use alloc::string::ToString;
 use alloc::vec::Vec;
@@ -11,7 +12,6 @@ use mu_pi::fw_fs::FfsSectionHeader::NOT_COMPRESSED;
 use mu_pi::fw_fs::FfsSectionHeader::STANDARD_COMPRESSION;
 use mu_pi::fw_fs::FirmwareVolume;
 use mu_pi::fw_fs::SectionMetaData;
-use mu_pi::hob::EfiPhysicalAddress;
 use r_efi::efi;
 use serde::{Deserialize, Serialize};
 
@@ -22,7 +22,8 @@ use crate::format_guid;
 pub struct FirmwareVolumeSerDe {
     pub fv_name: String,
     pub fv_length: usize,
-    pub fv_base_address: EfiPhysicalAddress,
+    #[serde(with = "hex_format")]
+    pub fv_base_address: u64,
     pub fv_attributes: u32,
     pub files: Vec<FirmwareFileSerDe>,
 }
@@ -33,7 +34,7 @@ pub struct FirmwareFileSerDe {
     pub name: String, // GUID
     pub file_type: String,
     pub length: usize,
-    // pub base_address: EfiPhysicalAddress,
+    // pub base_address: u64,
     pub attributes: u32,
     pub sections: Vec<FirmwareSectionSerDe>,
 }

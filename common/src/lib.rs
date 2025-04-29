@@ -81,3 +81,26 @@ pub struct DxeReadinessCaptureSerDe {
     pub hob_list: Vec<HobSerDe>,
     pub fv_list: Vec<FirmwareVolumeSerDe>,
 }
+
+mod hex_format {
+    use alloc::string::String;
+    use serde::Deserialize;
+    use serde::{self, Deserializer, Serializer};
+
+    pub fn serialize<S>(num: &u64, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&format!("0x{:x}", num))
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<u64, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: &str = Deserialize::deserialize(deserializer)?;
+        let s = String::from(s);
+        let s = s.strip_prefix("0x").ok_or_else(|| serde::de::Error::custom("Missing '0x' prefix"))?;
+        u64::from_str_radix(s, 16).map_err(serde::de::Error::custom)
+    }
+}

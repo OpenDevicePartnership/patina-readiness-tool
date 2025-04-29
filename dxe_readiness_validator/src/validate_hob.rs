@@ -1,5 +1,3 @@
-use core::alloc;
-
 use common::serializable_hob::HobSerDe;
 use common::{format_guid, serializable_hob::ResourceDescriptorSerDe};
 use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
@@ -186,7 +184,6 @@ impl ValidationApp {
     }
 
     fn check_page0(&mut self) -> ValidationResult {
-        const PAGE_ZERO_START: u64 = 0;
         const PAGE_ZERO_END: u64 = UEFI_PAGE_SIZE as u64 - 1;
         let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
             return Ok(());
@@ -194,9 +191,7 @@ impl ValidationApp {
 
         for hob in hob_list {
             if let HobSerDe::MemoryAllocation { alloc_descriptor } = hob {
-                if alloc_descriptor.memory_base_address >= PAGE_ZERO_START
-                    && alloc_descriptor.memory_base_address <= PAGE_ZERO_END
-                {
+                if alloc_descriptor.memory_base_address <= PAGE_ZERO_END {
                     self.validation_report
                         .add_violation(ValidationKind::PageZeroMemoryAllocated, &format!("{:?}", alloc_descriptor));
                 }
@@ -379,7 +374,7 @@ mod tests {
     fn test_pagezero() {
         let page_zero_mem_hob = create_memory_hob("test".to_string(), 0, 0x10, 1);
         let mem_hob = create_memory_hob("test2".to_string(), UEFI_PAGE_SIZE as u64 + 1, 0x100, 1);
-        let mut hob_list = vec![mem_hob.clone()];
+        let hob_list = vec![mem_hob.clone()];
         let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
         let mut app = ValidationApp::new_with_data(data);
         let res = app.check_page0();

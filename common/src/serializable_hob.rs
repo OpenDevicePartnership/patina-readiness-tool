@@ -1,22 +1,25 @@
 use core::cmp::Ordering;
 
-use mu_pi::hob::{EfiPhysicalAddress, Hob};
-use serde::{Deserialize, Serialize};
-
-use alloc::string::String;
-
+use crate::hex_format;
 use crate::{format_guid, Interval};
+use alloc::string::String;
+use mu_pi::hob::Hob;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum HobSerDe {
     Handoff {
         version: u32,
-        memory_top: EfiPhysicalAddress,
-        memory_bottom: EfiPhysicalAddress,
-        free_memory_top: EfiPhysicalAddress,
-        free_memory_bottom: EfiPhysicalAddress,
-        end_of_hob_list: EfiPhysicalAddress,
+        #[serde(with = "hex_format")]
+        memory_top: u64,
+        #[serde(with = "hex_format")]
+        memory_bottom: u64,
+        #[serde(with = "hex_format")]
+        free_memory_top: u64,
+        #[serde(with = "hex_format")]
+        free_memory_bottom: u64,
+        end_of_hob_list: u64,
     },
     MemoryAllocation {
         alloc_descriptor: MemAllocDescriptorSerDe,
@@ -30,7 +33,8 @@ pub enum HobSerDe {
         name: String,
     },
     FirmwareVolume {
-        base_address: EfiPhysicalAddress,
+        #[serde(with = "hex_format")]
+        base_address: u64,
         length: u64,
     },
     Cpu {
@@ -43,6 +47,7 @@ pub enum HobSerDe {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MemAllocDescriptorSerDe {
     pub name: String, // GUID as a string
+    #[serde(with = "hex_format")]
     pub memory_base_address: u64,
     pub memory_length: u64,
     pub memory_type: u32,
@@ -53,6 +58,7 @@ pub struct ResourceDescriptorSerDe {
     pub owner: String, // GUID as a string
     pub resource_type: u32,
     pub resource_attribute: u32,
+    #[serde(with = "hex_format")]
     pub physical_start: u64,
     pub resource_length: u64,
 }
@@ -178,17 +184,17 @@ mod tests {
                 {
                     "type": "handoff",
                     "version": 1,
-                    "memory_top": 3735928559,
-                    "memory_bottom": 3735932206,
-                    "free_memory_top": 1048576,
-                    "free_memory_bottom": 65536,
+                    "memory_top": "0xDEADCFEE",
+                    "memory_bottom": "0xDEADBEEF",
+                    "free_memory_top": "0x100000",
+                    "free_memory_bottom": "0x10000",
                     "end_of_hob_list": 4277009102
                 },
                 {
                     "type": "memory_allocation",
                     "alloc_descriptor": {
                     "name": "123e4567-e89b-12d3-a456-426614174000",
-                    "memory_base_address": 4096,
+                    "memory_base_address": "0x1000",
                     "memory_length": 12345678,
                     "memory_type": 0
                     }
@@ -198,7 +204,7 @@ mod tests {
                     "owner": "123e4567-e89b-12d3-a456-426614174000",
                     "resource_type": 1,
                     "resource_attribute": 2,
-                    "physical_start": 8192,
+                    "physical_start": "0x2000",
                     "resource_length": 16384
                 },
                 {
@@ -207,7 +213,7 @@ mod tests {
                     "owner": "123e4567-e89b-12d3-a456-426614174000",
                     "resource_type": 1,
                     "resource_attribute": 2,
-                    "physical_start": 8192,
+                    "physical_start": "0x2000",
                     "resource_length": 16384
                     },
                     "attributes": 42
@@ -218,7 +224,7 @@ mod tests {
                 },
                 {
                     "type": "firmware_volume",
-                    "base_address": 65536,
+                    "base_address": "0x10000",
                     "length": 987654321
                 },
                 {
@@ -245,8 +251,8 @@ mod tests {
         } = &hob_list[0]
         {
             assert_eq!(*version, 1);
-            assert_eq!(*memory_top, 3735928559);
-            assert_eq!(*memory_bottom, 3735932206);
+            assert_eq!(*memory_top, 3735932910);
+            assert_eq!(*memory_bottom, 3735928559);
             assert_eq!(*free_memory_top, 1048576);
             assert_eq!(*free_memory_bottom, 65536);
             assert_eq!(*end_of_hob_list, 4277009102);
@@ -316,8 +322,8 @@ mod tests {
             header,
             version: 0x00010000,
             boot_mode: BootMode::BootWithFullConfiguration,
-            memory_top: 0xdeadbeef,
-            memory_bottom: 0xdeadc0de,
+            memory_top: 0xdeadc0de,
+            memory_bottom: 0xdeadbeef,
             free_memory_top: 104,
             free_memory_bottom: 255,
             end_of_hob_list: 0xdeaddeadc0dec0de,
@@ -397,14 +403,14 @@ mod tests {
         let json = to_string_pretty(&serializable_list).expect("Serialization failed");
 
         assert!(json.contains(r#""type": "handoff""#), "Handoff HOB missing");
-        assert!(json.contains(r#""memory_top": 3735928559"#), "Memory top value incorrect");
-        assert!(json.contains(r#""memory_bottom": 3735929054"#), "Memory bottom value incorrect");
+        assert!(json.contains(r#""memory_top": "0xdeadc0de""#), "Memory top value incorrect");
+        assert!(json.contains(r#""memory_bottom": "0xdeadbeef""#), "Memory bottom value incorrect");
 
         assert!(json.contains(r#""type": "memory_allocation""#), "Memory Allocation HOB missing");
         assert!(json.contains(r#""memory_length": 81985529216486895"#), "Memory length incorrect");
 
         assert!(json.contains(r#""type": "resource_descriptor""#), "Resource Descriptor HOB missing");
-        assert!(json.contains(r#""physical_start": 0"#), "Physical start missing");
+        assert!(json.contains(r#""physical_start": "0x0""#), "Physical start missing");
 
         assert!(json.contains(r#""type": "resource_descriptor_v2""#), "Resource Descriptor V2 missing");
         assert!(json.contains(r#""attributes": 8"#), "Resource Descriptor V2 attributes incorrect");
@@ -412,6 +418,7 @@ mod tests {
         assert!(json.contains(r#""type": "guid_extension""#), "GUID Extension HOB missing");
 
         assert!(json.contains(r#""type": "firmware_volume""#), "Firmware Volume HOB missing");
+        assert!(json.contains(r#""base_address": "0x0""#), "Firmware Volume base address incorrect");
         assert!(json.contains(r#""length": 81985529216486895"#), "Firmware Volume length incorrect");
 
         assert!(json.contains(r#""type": "cpu""#), "CPU HOB missing");
