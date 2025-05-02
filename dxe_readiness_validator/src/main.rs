@@ -13,8 +13,6 @@ use validate::ValidationApp;
 mod commandline;
 mod logger;
 mod validate;
-mod validate_fv;
-mod validate_hob;
 
 pub type ValidationResult = Result<(), String>;
 

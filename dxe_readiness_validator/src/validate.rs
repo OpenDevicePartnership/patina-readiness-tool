@@ -1,3 +1,5 @@
+mod fv;
+mod hob;
 use crate::commandline::CommandLine;
 use crate::ValidationResult;
 use clap::CommandFactory;
