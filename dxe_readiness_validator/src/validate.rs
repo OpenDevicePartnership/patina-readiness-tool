@@ -21,6 +21,7 @@ pub enum ValidationKind {
     TraditionalSmm,
     V1MemoryRangeNotContainedInV2,
     PageZeroMemoryAllocated,
+    V2ContainsUCEAttribute,
 }
 
 impl fmt::Display for ValidationKind {
@@ -35,6 +36,7 @@ impl fmt::Display for ValidationKind {
             ValidationKind::TraditionalSmm => "Traditional SMM",
             ValidationKind::V1MemoryRangeNotContainedInV2 => "V1 Memory Range Not Contained In V2",
             ValidationKind::PageZeroMemoryAllocated => "Memory Allocated in Page Zero",
+            ValidationKind::V2ContainsUCEAttribute => "V2 HOB Uses EFI_MEMORY_UCE as Cacheability Attribute"
         };
         write!(f, "{}", text)
     }

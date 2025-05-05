@@ -201,6 +201,22 @@ impl ValidationApp {
         Ok(())
     }
 
+    /// Confirm no resource descriptor HOB v2 contains EFI_MEMORY_UCE as the set attribute
+    fn check_mem_uce(&mut self) -> ValidationResult {
+        let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
+            return Ok(());
+        };
+
+        for hob in hob_list {
+            if let HobSerDe::ResourceDescriptorV2 { v1, attributes} = hob {
+                if attributes & efi::MEMORY_UCE != 0 {
+                    self.validation_report.add_violation(ValidationKind::V2ContainsUCEAttribute, &format!("{:?}", v1));
+                }
+            }
+        } 
+        Ok(())
+    }
+
     pub fn validate_hobs(&mut self) -> ValidationResult {
         let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
             return Err("HOB list is empty".to_string());
@@ -214,6 +230,7 @@ impl ValidationApp {
         self.check_v1v2_consistency()?;
         self.check_memory_protection_hob_exists()?;
         self.check_page0()?;
+        self.check_mem_uce()?;
         Ok(())
     }
 }
@@ -384,6 +401,18 @@ mod tests {
         let hob_list = vec![mem_hob.clone(), page_zero_mem_hob];
         app = ValidationApp::new_with_data(DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] });
         let res = app.check_page0();
+        assert!(res.is_ok());
+        assert!(!app.validation_report.is_empty());
+    }
+
+    #[test]
+    fn test_mem_uce() {
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_UCE);
+        let hob_list = vec![v2_hob];
+
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_mem_uce();
         assert!(res.is_ok());
         assert!(!app.validation_report.is_empty());
     }
