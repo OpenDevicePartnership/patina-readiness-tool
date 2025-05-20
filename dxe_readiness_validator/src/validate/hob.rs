@@ -208,12 +208,12 @@ impl ValidationApp {
         };
 
         for hob in hob_list {
-            if let HobSerDe::ResourceDescriptorV2 { v1, attributes} = hob {
+            if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
                 if attributes & efi::MEMORY_UCE != 0 {
                     self.validation_report.add_violation(ValidationKind::V2ContainsUCEAttribute, &format!("{:?}", v1));
                 }
             }
-        } 
+        }
         Ok(())
     }
 
