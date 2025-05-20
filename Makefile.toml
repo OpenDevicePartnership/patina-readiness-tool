@@ -17,6 +17,20 @@ args = [
     "x86_64-unknown-uefi",
 ]
 
+[tasks.build-intel-lnl]
+description = "Builds the Intel Lunar Lake Dxe Readiness Capture UEFI binary."
+command = "cargo"
+args = [
+    "build",
+    "-p",
+    "dxe_readiness_capture",
+    "--target",
+    "x86_64-unknown-uefi",
+    "--features",
+    "intel_lnl"
+]
+
+
 [tasks.build-aarch64-uefi]
 description = "Builds the aarch64 Dxe Readiness Capture UEFI binary."
 command = "cargo"
@@ -58,6 +72,7 @@ dependencies = [
     "build-aarch64-uefi",
     "build-x64-windows",
     "build-aarch64-windows",
+    "build-intel-lnl",
 ]
 
 # Tests will be built and run based on the host platform.

@@ -21,3 +21,4 @@ uefi_sdk = { workspace = true }
 default = []
 x64 = []
 aarch64 = []
+intel_lnl = []
