@@ -1,4 +1,4 @@
-//! Dxe Readiness Capture Tool - X64/AArch64
+//! Dxe Readiness Capture Library - X64/AArch64
 //!
 //! ## License
 //!
@@ -20,10 +20,8 @@ cfg_if::cfg_if! {
         #[macro_use]
         extern crate alloc;
         mod allocator;
-        mod logger;
         mod capture;
         use core::{ffi::c_void, panic::PanicInfo};
-        use logger::init_logger;
         use stacktrace::StackTrace;
         use capture::CaptureApp;
         use alloc::string::String;
@@ -40,10 +38,8 @@ cfg_if::cfg_if! {
             loop {}
         }
 
-        #[export_name = "efi_main"]
-        pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
-            init_logger();
-
+        // Called by platform-specific binaries after initializing the logger.
+        pub fn core_start(physical_hob_list: *const c_void) -> ! {
             log::info!("Dxe Readiness Capture Tool");
 
             let app = CaptureApp::new(physical_hob_list);
@@ -57,7 +53,5 @@ cfg_if::cfg_if! {
             log::info!("Dead Loop");
             loop {}
         }
-    } else {
-        fn main() {}
     }
 }
