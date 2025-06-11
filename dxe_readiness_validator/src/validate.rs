@@ -118,15 +118,17 @@ impl ValidationApp {
         Ok(())
     }
 
-    pub fn validate(&mut self) -> ValidationResult {
+    pub fn validate(&mut self) -> Result<usize, String> {
         self.deserialize_json()?;
         self.validate_hobs()?;
         self.validate_firmware_volumes()?;
 
         if !self.validation_report.is_empty() {
             log::info!("{}", self.validation_report);
+        } else {
+            log::info!("Validation passed with no errors.");
         }
 
-        Ok(())
+        Ok(self.validation_report.violations.len())
     }
 }
