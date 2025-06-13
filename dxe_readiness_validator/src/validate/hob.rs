@@ -1,5 +1,5 @@
 use common::serializable_hob::HobSerDe;
-use common::{format_guid, serializable_hob::ResourceDescriptorSerDe};
+use common::serializable_hob::ResourceDescriptorSerDe;
 use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
 use r_efi::efi;
 use uefi_sdk::base::UEFI_PAGE_SIZE;
@@ -8,8 +8,7 @@ use crate::validate::{ValidationApp, ValidationKind};
 use crate::ValidationResult;
 use common::{DxeReadinessCaptureSerDe, Interval};
 
-const DXE_MEMORY_PROTECTION_SETTINGS_GUID: efi::Guid =
-    efi::Guid::from_fields(0x9ABFD639, 0xD1D0, 0x4EFF, 0xBD, 0xB6, &[0x7E, 0xC4, 0x19, 0x0D, 0x17, 0xD5]);
+use super::HobValidationKind;
 
 fn is_io(resource_type: u32) -> bool {
     resource_type == EFI_RESOURCE_IO || resource_type == EFI_RESOURCE_IO_RESERVED
@@ -66,28 +65,12 @@ impl ValidationApp {
         overlaps.extend(check_hob_overlap(&v2_io_hobs));
 
         for (hob1, hob2) in &overlaps {
-            self.validation_report
-                .add_violation(ValidationKind::HobOverlappingMemoryRanges, &format!("{:?} <-> {:?}", hob1, hob2));
+            self.validation_report.add_violation(
+                ValidationKind::Hob(HobValidationKind::OverlappingMemoryRanges),
+                &format!("{:?} <-> {:?}", hob1, hob2),
+            );
         }
 
-        Ok(())
-    }
-
-    fn check_memory_protection_hob_exists(&mut self) -> ValidationResult {
-        let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
-            return Ok(());
-        };
-
-        for hob in hob_list {
-            if let HobSerDe::GuidExtension { name } = hob {
-                if *name == format_guid(DXE_MEMORY_PROTECTION_SETTINGS_GUID) {
-                    return Ok(()); // Found the target GUID, verification passes
-                }
-            }
-        }
-
-        self.validation_report
-            .add_violation(ValidationKind::MissingMemoryProtectionHob, "Missing memory protection HOB");
         Ok(())
     }
 
@@ -125,7 +108,7 @@ impl ValidationApp {
 
         for (hob1, hob2) in &inconsistent_v1_v2 {
             self.validation_report.add_violation(
-                ValidationKind::InconsistentMemoryAttributes,
+                ValidationKind::Hob(HobValidationKind::InconsistentMemoryAttributes),
                 &format!("Inconsistent Memory Attribute HOBs: {:?} and {:?}", hob1, hob2),
             );
         }
@@ -171,7 +154,10 @@ impl ValidationApp {
         }
 
         for v1 in &v1_not_migrated {
-            self.validation_report.add_violation(ValidationKind::V1MemoryRangeNotContainedInV2, &format!("{:?}", v1));
+            self.validation_report.add_violation(
+                ValidationKind::Hob(HobValidationKind::V1MemoryRangeNotContainedInV2),
+                &format!("{:?}", v1),
+            );
         }
 
         Ok(())
@@ -192,8 +178,10 @@ impl ValidationApp {
         for hob in hob_list {
             if let HobSerDe::MemoryAllocation { alloc_descriptor } = hob {
                 if alloc_descriptor.memory_base_address <= PAGE_ZERO_END {
-                    self.validation_report
-                        .add_violation(ValidationKind::PageZeroMemoryAllocated, &format!("{:?}", alloc_descriptor));
+                    self.validation_report.add_violation(
+                        ValidationKind::Hob(HobValidationKind::PageZeroMemoryDescribed),
+                        &format!("{:?}", alloc_descriptor),
+                    );
                 }
             }
         }
@@ -210,7 +198,10 @@ impl ValidationApp {
         for hob in hob_list {
             if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
                 if attributes & efi::MEMORY_UCE != 0 {
-                    self.validation_report.add_violation(ValidationKind::V2ContainsUCEAttribute, &format!("{:?}", v1));
+                    self.validation_report.add_violation(
+                        ValidationKind::Hob(HobValidationKind::V2ContainsUceAttribute),
+                        &format!("{:?}", v1),
+                    );
                 }
             }
         }
@@ -228,7 +219,6 @@ impl ValidationApp {
 
         self.check_memory_overlap()?;
         self.check_v1v2_consistency()?;
-        self.check_memory_protection_hob_exists()?;
         self.check_page0()?;
         self.check_mem_uce()?;
         Ok(())
@@ -277,10 +267,6 @@ mod tests {
         }
     }
 
-    fn create_guid_extension_hob(name: &str) -> HobSerDe {
-        HobSerDe::GuidExtension { name: name.to_string() }
-    }
-
     fn create_memory_hob(name: String, memory_base_address: u64, memory_length: u64, memory_type: u32) -> HobSerDe {
         HobSerDe::MemoryAllocation {
             alloc_descriptor: MemAllocDescriptorSerDe { name, memory_base_address, memory_length, memory_type },
@@ -297,23 +283,6 @@ mod tests {
         let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
         let mut app = ValidationApp::new_with_data(data);
         assert_eq!(app.check_memory_overlap(), Ok(()));
-        assert!(app.validation_report.is_empty());
-    }
-
-    #[test]
-    fn test_check_memory_protection_hob_exists() {
-        let hob_list = vec![create_v1_hob(100, 50, 3, 0, "owner1"), create_v2_hob(300, 50, 3, 0, "owner1", 123)];
-
-        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
-        let mut app = ValidationApp::new_with_data(data);
-        assert_eq!(app.check_memory_protection_hob_exists(), Ok(()));
-        assert!(!app.validation_report.is_empty());
-
-        let protection_hob = create_guid_extension_hob(&format_guid(DXE_MEMORY_PROTECTION_SETTINGS_GUID));
-        let hob_list = vec![create_v1_hob(100, 50, 3, 0, "owner1"), protection_hob];
-        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
-        let mut app = ValidationApp::new_with_data(data);
-        assert_eq!(app.check_memory_protection_hob_exists(), Ok(()));
         assert!(app.validation_report.is_empty());
     }
 

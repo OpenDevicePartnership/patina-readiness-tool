@@ -11,34 +11,66 @@ use std::fmt;
 use std::fs;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub enum HobValidationKind {
+    InconsistentMemoryAttributes,  // HOBs must define consistent memory attributes
+    OverlappingMemoryRanges,       // HOBs must not define overlapping memory ranges
+    PageZeroMemoryDescribed,       // Page zero must not be described in memory HOBs
+    V1MemoryRangeNotContainedInV2, // All V1 ranges must be covered by V2
+    V2ContainsUceAttribute,        // V2 ranges must not have the UCE attribute
+}
+
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub enum FvValidationKind {
+    CombinedDriversPresent, // FV must not contain combined drivers
+    LzmaCompressedSections, // FV must not contain LZMA-compressed sections
+    ProhibitedAprioriFile,  // FV must not contain an Apriori file
+    UsesTraditionalSmm,     // FV must not contain traditional SMM drivers
+}
+
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum ValidationKind {
-    HobOverlappingMemoryRanges,
-    InconsistentMemoryAttributes,
-    LzmaCompressedSections,
-    MissingMemoryProtectionHob,
-    ProhibitedAprioriFile,
-    ProhibitedCombinedDrivers,
-    TraditionalSmm,
-    V1MemoryRangeNotContainedInV2,
-    PageZeroMemoryAllocated,
-    V2ContainsUCEAttribute,
+    Hob(HobValidationKind),
+    Fv(FvValidationKind),
 }
 
 impl fmt::Display for ValidationKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let text = match self {
-            ValidationKind::HobOverlappingMemoryRanges => "HOB Overlapping Memory Ranges",
-            ValidationKind::InconsistentMemoryAttributes => "Inconsistent Memory Attributes",
-            ValidationKind::LzmaCompressedSections => "LZMA Compressed Sections",
-            ValidationKind::MissingMemoryProtectionHob => "Missing Memory Protection HOB",
-            ValidationKind::ProhibitedAprioriFile => "Prohibited Apriori File",
-            ValidationKind::ProhibitedCombinedDrivers => "Prohibited Combined Drivers",
-            ValidationKind::TraditionalSmm => "Traditional SMM",
-            ValidationKind::V1MemoryRangeNotContainedInV2 => "V1 Memory Range Not Contained In V2",
-            ValidationKind::PageZeroMemoryAllocated => "Memory Allocated in Page Zero",
-            ValidationKind::V2ContainsUCEAttribute => "V2 HOB Uses EFI_MEMORY_UCE as Cacheability Attribute",
+            ValidationKind::Hob(hob_validation_kind) => match hob_validation_kind {
+                HobValidationKind::InconsistentMemoryAttributes => "HOBs with inconsistent memory attributes",
+                HobValidationKind::OverlappingMemoryRanges => "HOBs with overlapping memory ranges",
+                HobValidationKind::PageZeroMemoryDescribed => "HOB describing page zero memory allocation",
+                HobValidationKind::V1MemoryRangeNotContainedInV2 => "V1 memory range not contained within V2",
+                HobValidationKind::V2ContainsUceAttribute => "V2 HOB contains prohibited EFI_MEMORY_UCE attribute",
+            },
+            ValidationKind::Fv(fv_validation_kind) => match fv_validation_kind {
+                FvValidationKind::CombinedDriversPresent => "Firmware volume contains prohibited combined drivers",
+                FvValidationKind::LzmaCompressedSections => "Firmware volume contains LZMA-compressed sections",
+                FvValidationKind::ProhibitedAprioriFile => "Firmware volume contains a prohibited APRIORI file",
+                FvValidationKind::UsesTraditionalSmm => "Firmware volume contains traditional SMM drivers",
+            },
         };
         write!(f, "{}", text)
+    }
+}
+
+impl ValidationKind {
+    pub fn guidance(&self) -> &str {
+        match self {
+            ValidationKind::Hob(hob_validation_kind) => match hob_validation_kind {
+                HobValidationKind::InconsistentMemoryAttributes => "V1 and V2 HOBs describing the same range(s) with inconsistent memory attributes are not supported.",
+                HobValidationKind::OverlappingMemoryRanges => "HOBs with overlapping memory ranges are not supported.",
+                HobValidationKind::PageZeroMemoryDescribed => "HOB describing page zero memory allocation not supported. As page zero will be used to detect null pointer dereferences",
+                HobValidationKind::V1MemoryRangeNotContainedInV2 => "All V1 HOB ranges should be described/covered by corresponding V2 HOBs.",
+                HobValidationKind::V2ContainsUceAttribute => "V2 HOB contains prohibited EFI_MEMORY_UCE attribute.",
+            },
+            ValidationKind::Fv(fv_validation_kind) => match fv_validation_kind {
+                FvValidationKind::CombinedDriversPresent => "Firmware volume contains prohibited combined drivers. \nBelow file types are prohibited\n- COMBINED_MM_DXE(0x0C)\n- COMBINED_PEIM_DRIVER(0x08).",
+                FvValidationKind::LzmaCompressedSections => "Firmware volume contains LZMA-compressed sections. Rust Dxe Core do not have support for LZMA compression.",
+                FvValidationKind::ProhibitedAprioriFile => "Firmware volume contains a prohibited A priori file. Rust Dxe Core do not support A priori based driver dispatch.",
+                FvValidationKind::UsesTraditionalSmm => "Firmware volume contains traditional SMM drivers. Below file types are prohibited\n- COMBINED_MM_DXE(0x0C)\n- COMBINED_PEIM_DRIVER(0x08)\n- MM(0x0A)\n- MM_CORE(0x0D).",
+            },
+        }
     }
 }
 
@@ -66,15 +98,17 @@ impl fmt::Display for ValidationReport {
         if self.violations.is_empty() {
             writeln!(f, "No validation violations found.")?;
         } else {
-            writeln!(f, "{}", "Validation violations:".red().bold())?;
-            for (i, (kind, messages)) in self.violations.iter().enumerate() {
+            writeln!(f, "{}", "Validation Results:".red().bold())?;
+            for (kind, messages) in &self.violations {
                 if messages.is_empty() {
                     continue;
                 }
-                writeln!(f, "{}", format!("{}. {}:", i + 1, kind).green().bold())?;
+                writeln!(f, "──────────────────────────────────────────────────────────────────")?;
+                writeln!(f, "{} ❌\n", format!("- {}", kind).green().bold())?;
                 for (j, msg) in messages.iter().enumerate() {
                     writeln!(f, "{}. {}", j + 1, msg)?;
                 }
+                writeln!(f, "\n💡 {}", format!("Guidance:\n{}", kind.guidance()).blue().bold())?;
             }
         }
         Ok(())

@@ -4,19 +4,19 @@ This serves as a living document to track and evolve the set of validations impl
 
 ## HOB Validations
 
-| Validation Area                  | Description                                                                                    |
-| -------------------------------- | ---------------------------------------------------------------------------------------------- |
-| **HOB Internal Consistency**     | Validate that V2 Resource Descriptor HOBs describe all ranges covered by V1 HOBs.              |
-| **No Overlapping Memory Ranges** | Ensure HOB memory ranges described in Resource Descriptor HOBs do not overlap.                 |
-| **Memory Protection HOB**        | The GUID extension HOB marked by `gDxeMemoryProtectionSettingsGuid` must exist.                |
-| **Page 0 Allocation**            | Page 0 should not be covered by any memory allocation HOB.                                     |
-| **EFI_MEMORY_UCE in RD HOB v2**  | `EFI_MEMORY_UCE` should not be set as a cacheability attribute in V2 Resource Descriptor HOBs. |
+| Validation Kind                         | Description                                                                                              |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Inconsistent Memory Attributes**      | Identifies V1 and V2 HOBs describing the same range(s) with inconsistent memory attributes (prohibited). |
+| **Overlapping Memory Ranges**           | Identifies HOBs with overlapping memory ranges (prohibited).                                             |
+| **Page Zero Memory Allocated**          | Identifies HOBs that describe page zero memory allocation (prohibited).                                  |
+| **V1 Memory Range Not Contained In V2** | Identifies V1 HOBs with memory ranges not covered by V2 (prohibited).                                    |
+| **V2 Contains UCE Attribute**           | Identifies V2 HOBs that use the prohibited `EFI_MEMORY_UCE` cacheability attribute.                      |
 
 ## Firmware Volume (FV) Validations
 
-| Validation Area                | Description                                               |
-| ------------------------------ | --------------------------------------------------------- |
-| **Unsupported FFS File Types** | Combined drivers are not supported and should be flagged. |
-| **LZMA Compression**           | Do not use LZMA-compressed sections (temporary).          |
-| **SMM Mode**                   | Use Standalone MM, not Traditional SMM.                   |
-| **A Priori FV Sections**       | A priori-based dispatch should not be used.               |
+| Validation Kind              | Description                                                              |
+| ---------------------------- | ------------------------------------------------------------------------ |
+| **Combined Drivers Present** | Firmware volumes must not contain combined drivers (prohibited).         |
+| **Lzma Compressed Sections** | Firmware volumes must not contain LZMA-compressed sections (prohibited). |
+| **Prohibited Apriori File**  | Firmware volumes must not contain an A Priori file (prohibited).         |
+| **Uses Traditional Smm**     | Firmware volumes must not contain traditional SMM (prohibited).          |

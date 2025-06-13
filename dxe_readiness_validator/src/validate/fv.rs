@@ -5,6 +5,8 @@ use crate::{
 use common::{format_guid, DxeReadinessCaptureSerDe};
 use r_efi::efi::Guid;
 
+use super::FvValidationKind;
+
 impl ValidationApp {
     fn validate_fv_standalone_mm(&mut self) -> ValidationResult {
         let Some(DxeReadinessCaptureSerDe { ref fv_list, .. }) = self.data.as_ref() else {
@@ -20,7 +22,7 @@ impl ValidationApp {
                 {
                     if let Ok(json_str) = serde_json::to_string_pretty(file) {
                         self.validation_report.add_violation(
-                            ValidationKind::TraditionalSmm,
+                            ValidationKind::Fv(FvValidationKind::UsesTraditionalSmm),
                             &format!("FV: {} File: {}", fv.fv_name, json_str),
                         );
                     }
@@ -41,7 +43,7 @@ impl ValidationApp {
                 if file.file_type == "CombinedPeimDriver" || file.file_type == "CombinedMmDxe" {
                     if let Ok(json_str) = serde_json::to_string_pretty(file) {
                         self.validation_report.add_violation(
-                            ValidationKind::ProhibitedCombinedDrivers,
+                            ValidationKind::Fv(FvValidationKind::CombinedDriversPresent),
                             &format!("FV: {} File: {}", fv.fv_name, json_str),
                         );
                     }
@@ -79,7 +81,7 @@ impl ValidationApp {
                 if file.name == pei_apriori_file_name_guid || file.name == apriori_file_name_guid {
                     if let Ok(json_str) = serde_json::to_string_pretty(file) {
                         self.validation_report.add_violation(
-                            ValidationKind::ProhibitedAprioriFile,
+                            ValidationKind::Fv(FvValidationKind::ProhibitedAprioriFile),
                             &format!("FV: {} File: {}", fv.fv_name, json_str),
                         );
                     }
@@ -101,7 +103,7 @@ impl ValidationApp {
                     if section.compression_type.starts_with("LZMA ") {
                         if let Ok(json_str) = serde_json::to_string_pretty(section) {
                             self.validation_report.add_violation(
-                                ValidationKind::LzmaCompressedSections,
+                                ValidationKind::Fv(FvValidationKind::LzmaCompressedSections),
                                 &format!("FV: {} File: {} Section: {}", fv.fv_name, file.name, json_str),
                             );
                         }
