@@ -208,6 +208,27 @@ impl ValidationApp {
         Ok(())
     }
 
+    /// Confirm resource descriptor HOB v2 contains atleast one valid cacheability attribute set
+    fn check_mem_valid_cacheability(&mut self) -> ValidationResult {
+        let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
+            return Ok(());
+        };
+
+        for hob in hob_list {
+            if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
+                const CACHE_ATTRIBUTE_IGNORED_MASK: u64 = !efi::MEMORY_UCE;
+                let mask = efi::CACHE_ATTRIBUTE_MASK & CACHE_ATTRIBUTE_IGNORED_MASK;
+                if attributes & mask == 0 {
+                    self.validation_report.add_violation(
+                        ValidationKind::Hob(HobValidationKind::V2MissingValidCacheabilityAttribute),
+                        &format!("{:?}", v1),
+                    );
+                }
+            }
+        }
+        Ok(())
+    }
+
     pub fn validate_hobs(&mut self) -> ValidationResult {
         let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
             return Err("HOB list is empty".to_string());
@@ -221,6 +242,7 @@ impl ValidationApp {
         self.check_v1v2_consistency()?;
         self.check_page0()?;
         self.check_mem_uce()?;
+        self.check_mem_valid_cacheability()?;
         Ok(())
     }
 }
@@ -382,6 +404,36 @@ mod tests {
         let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
         let mut app = ValidationApp::new_with_data(data);
         let res = app.check_mem_uce();
+        assert!(res.is_ok());
+        assert!(!app.validation_report.is_empty());
+    }
+
+    #[test]
+    fn test_mem_v2_cacheability() {
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_UC);
+        let hob_list = vec![v2_hob];
+
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_mem_valid_cacheability();
+        assert!(res.is_ok());
+        assert!(app.validation_report.is_empty());
+
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_UCE);
+        let hob_list = vec![v2_hob];
+
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_mem_valid_cacheability();
+        assert!(res.is_ok());
+        assert!(!app.validation_report.is_empty());
+
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_RO);
+        let hob_list = vec![v2_hob];
+
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_mem_valid_cacheability();
         assert!(res.is_ok());
         assert!(!app.validation_report.is_empty());
     }
