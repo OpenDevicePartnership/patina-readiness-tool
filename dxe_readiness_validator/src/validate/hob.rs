@@ -208,7 +208,7 @@ impl ValidationApp {
         Ok(())
     }
 
-    /// Confirm resource descriptor HOB v2 contains atleast one valid cacheability attribute set
+    /// Confirm resource descriptor HOB v2 contains at most one valid cacheability attribute set
     fn check_mem_valid_cacheability(&mut self) -> ValidationResult {
         let Some(DxeReadinessCaptureSerDe { ref hob_list, .. }) = self.data.as_ref() else {
             return Ok(());
@@ -218,7 +218,10 @@ impl ValidationApp {
             if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
                 const CACHE_ATTRIBUTE_IGNORED_MASK: u64 = !efi::MEMORY_UCE;
                 let mask = efi::CACHE_ATTRIBUTE_MASK & CACHE_ATTRIBUTE_IGNORED_MASK;
-                if attributes & mask == 0 {
+                // Ensure exactly one cache attribute is set:
+                // 1. Check if none of the cache bits are set
+                // 2. Check if more than one bit is set by checking if it is not a power of 2
+                if attributes & mask == 0 || attributes & (attributes - 1) != 0 {
                     self.validation_report.add_violation(
                         ValidationKind::Hob(HobValidationKind::V2MissingValidCacheabilityAttribute),
                         &format!("{:?}", v1),
@@ -410,27 +413,54 @@ mod tests {
 
     #[test]
     fn test_mem_v2_cacheability() {
+        // +ve test - valid cacheability attribute specified
         let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_UC);
         let hob_list = vec![v2_hob];
-
         let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
         let mut app = ValidationApp::new_with_data(data);
         let res = app.check_mem_valid_cacheability();
         assert!(res.is_ok());
         assert!(app.validation_report.is_empty());
 
+        // -ve test - supported cacheability attribute specified
         let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_UCE);
         let hob_list = vec![v2_hob];
-
         let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
         let mut app = ValidationApp::new_with_data(data);
         let res = app.check_mem_valid_cacheability();
         assert!(res.is_ok());
         assert!(!app.validation_report.is_empty());
 
+        // -ve test - invalid cacheability attribute specified
         let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_RO);
         let hob_list = vec![v2_hob];
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_mem_valid_cacheability();
+        assert!(res.is_ok());
+        assert!(!app.validation_report.is_empty());
 
+        // -ve test - multiple cacheability attributes specified
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_WT | efi::MEMORY_WC);
+        let hob_list = vec![v2_hob];
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_mem_valid_cacheability();
+        assert!(res.is_ok());
+        assert!(!app.validation_report.is_empty());
+
+        // +ve test - valid cacheability attributes specified
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_WC);
+        let hob_list = vec![v2_hob];
+        let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
+        let mut app = ValidationApp::new_with_data(data);
+        let res = app.check_mem_valid_cacheability();
+        assert!(res.is_ok());
+        assert!(app.validation_report.is_empty());
+
+        // -ve test - invalid cacheability attributes value(0) specified
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", 0);
+        let hob_list = vec![v2_hob];
         let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
         let mut app = ValidationApp::new_with_data(data);
         let res = app.check_mem_valid_cacheability();

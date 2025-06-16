@@ -12,7 +12,7 @@ This serves as a living document to track and evolve the set of validations impl
 | **Page Zero Memory Allocated**               | Identifies HOBs that describe page zero memory allocation (prohibited).                                  |
 | **V1 Memory Range Not Contained In V2**      | Identifies V1 HOBs with memory ranges not covered by V2 (prohibited).                                    |
 | **V2 Contains UCE Attribute**                | Identifies V2 HOBs that use the prohibited `EFI_MEMORY_UCE` cacheability attribute.                      |
-| **V2 Missing Valid Cacheability Attributes** | Identifies V2 HOBs have valid cacheability attribute set.                                                |
+| **V2 Missing Valid Cacheability Attributes** | Identifies V2 HOBs have valid cacheability attribute set(at most one).                                   |
 
 ## Firmware Volume (FV) Validations
 

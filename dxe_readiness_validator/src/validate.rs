@@ -17,7 +17,7 @@ pub enum HobValidationKind {
     PageZeroMemoryDescribed,             // Page zero must not be described in memory HOBs
     V1MemoryRangeNotContainedInV2,       // All V1 ranges must be covered by V2
     V2ContainsUceAttribute,              // V2 ranges must not have the UCE attribute
-    V2MissingValidCacheabilityAttribute, // V2 resource descriptor must have at least one valid Cacheability attribute set
+    V2MissingValidCacheabilityAttribute, // V2 resource descriptor must have at most one valid Cacheability attribute set
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -67,7 +67,7 @@ impl ValidationKind {
                 HobValidationKind::PageZeroMemoryDescribed => "HOB describing page zero memory allocation not supported. As page zero will be used to detect null pointer dereferences",
                 HobValidationKind::V1MemoryRangeNotContainedInV2 => "All V1 HOB ranges should be described/covered by corresponding V2 HOBs.",
                 HobValidationKind::V2ContainsUceAttribute => "V2 HOB contains prohibited EFI_MEMORY_UCE attribute.",
-                HobValidationKind::V2MissingValidCacheabilityAttribute => "V2 resource descriptor must have atleast one valid Cacheability attribute set\n- MEMORY_UC\n- MEMORY_UCE\n- MEMORY_WB\n- MEMORY_WC\n- MEMORY_WP\n- MEMORY_WT\n",
+                HobValidationKind::V2MissingValidCacheabilityAttribute => "V2 resource descriptor must have at most one valid Cacheability attribute set\n- MEMORY_UC\n- MEMORY_UCE\n- MEMORY_WB\n- MEMORY_WC\n- MEMORY_WP\n- MEMORY_WT\n",
             },
             ValidationKind::Fv(fv_validation_kind) => match fv_validation_kind {
                 FvValidationKind::CombinedDriversPresent => "Firmware volume contains prohibited combined drivers. \nBelow file types are prohibited\n- COMBINED_MM_DXE(0x0C)\n- COMBINED_PEIM_DRIVER(0x08).",
