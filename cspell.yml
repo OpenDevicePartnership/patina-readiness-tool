@@ -25,6 +25,7 @@ minWordLength: 5
 caseSensitive: false
 allowCompoundWords: true
 words:
+  - brotli
   - edkii
   - keccak
   - withf
