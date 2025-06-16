@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD013 : Disable line limit.-->
 # **DXE Readiness Capture/Validation Tool**
 
 The workspace consists of two packages:
