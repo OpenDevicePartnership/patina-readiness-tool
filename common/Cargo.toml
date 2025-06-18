@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 mu_pi = { workspace = true }
 r-efi = { workspace = true }
-section_extractor = { workspace = true }
+patina_section_extractor = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 

@@ -22,7 +22,7 @@ cfg_if::cfg_if! {
         mod allocator;
         mod capture;
         use core::{ffi::c_void, panic::PanicInfo};
-        use stacktrace::StackTrace;
+        use patina_stacktrace::StackTrace;
         use capture::CaptureApp;
         use alloc::string::String;
         pub type CaptureResult<T> = Result<T, String>;

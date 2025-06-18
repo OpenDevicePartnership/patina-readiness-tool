@@ -8,7 +8,7 @@ To build and run the project locally, you'll need:
 - [`cargo make`](https://crates.io/crates/cargo-make/0.3.54)
 - Python 3 (for patching and running in QEMU)
 
-To build and run with QEMU locally, you will also need to clone [UefiRust](https://dev.azure.com/microsoft/MsUEFI/_git/UefiRust).
+To build and run with QEMU locally, you will also need to clone [patina-qemu](https://github.com/OpenDevicePartnership/patina-qemu/).
 
 To build for your specific architecture, see the `Makefile.toml` for specific build options.
 

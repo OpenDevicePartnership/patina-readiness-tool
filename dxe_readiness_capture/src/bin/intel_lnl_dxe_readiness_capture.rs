@@ -17,7 +17,7 @@ cfg_if::cfg_if! {
     if #[cfg(all(target_os = "uefi", target_arch = "x86_64"))] {
         use log::LevelFilter;
         use core::sync::atomic::{AtomicPtr, Ordering};
-        use uefi_sdk::{log::{Format, SerialLogger}, serial::uart::Uart16550};
+        use patina_sdk::{log::{Format, SerialLogger}, serial::uart::Uart16550};
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;
 

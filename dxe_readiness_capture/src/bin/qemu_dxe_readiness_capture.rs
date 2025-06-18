@@ -15,8 +15,8 @@
 
 cfg_if::cfg_if! {
     if #[cfg(all(target_os = "uefi", target_arch = "aarch64"))] {
-        use uefi_sdk::log::SerialLogger;
-        use uefi_sdk::{log::Format, serial::uart::UartPl011};
+        use patina_sdk::log::SerialLogger;
+        use patina_sdk::{log::Format, serial::uart::UartPl011};
         use log::LevelFilter;
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;
@@ -38,8 +38,8 @@ cfg_if::cfg_if! {
             core_start(physical_hob_list);
         }
     } else if #[cfg(all(target_os = "uefi", target_arch = "x86_64"))] {
-        use uefi_sdk::log::SerialLogger;
-        use uefi_sdk::{log::Format, serial::uart::Uart16550};
+        use patina_sdk::log::SerialLogger;
+        use patina_sdk::{log::Format, serial::uart::Uart16550};
         use log::LevelFilter;
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;

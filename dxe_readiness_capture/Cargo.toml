@@ -9,13 +9,13 @@ common = { path = "../common" }
 linked_list_allocator = "0.10.5"
 log = { workspace = true }
 mu_pi = { workspace = true }
+patina_sdk = { workspace = true }
+patina_section_extractor = { workspace = true }
+patina_stacktrace = { workspace = true }
 r-efi = { workspace = true }
-section_extractor = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 spin = { workspace = true }
-stacktrace = { workspace = true }
-uefi_sdk = { workspace = true }
 
 [features]
 default = []

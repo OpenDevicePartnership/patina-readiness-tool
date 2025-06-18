@@ -62,7 +62,7 @@ jobs:
           $base64 = "Basic " + [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("PAT:" + $pat))
           Write-Host "##vso[task.setvariable variable=base64Pat;isOutput=true;]$base64"
 
-    - script: cargo login "$(ConvertRegistryToken.base64Pat)" --registry UefiRust
+    - script: cargo login "$(ConvertRegistryToken.base64Pat)" --registry patina-fw
       displayName: Login to Registry
 
     - template: Steps/RustCargoSteps.yml@mu_devops
@@ -72,24 +72,24 @@ jobs:
         test_command: "cargo make test"
 
     - task: CopyFiles@2
-      displayName: "Stage x86_64 DXE Readiness Capture (EFI) Debug Binary"
+      displayName: "Stage QEMU x86_64 DXE Readiness Capture (EFI) Debug Binary"
       inputs:
         targetFolder: '$(Build.ArtifactStagingDirectory)/Bin/dxe_readiness_capture/debug/x86_64'
         SourceFolder: 'target/x86_64-unknown-uefi/debug'
         contents: |
-            **/dxe_readiness_capture.efi
-            **/dxe_readiness_capture.pdb
+            **/qemu_dxe_readiness_capture.efi
+            **/qemu_dxe_readiness_capture.pdb
         flattenFolders: true
       condition: Succeeded()
 
     - task: CopyFiles@2
-      displayName: "Stage aarch64 DXE Readiness Capture (EFI) Debug Binary"
+      displayName: "Stage QEMU aarch64 DXE Readiness Capture (EFI) Debug Binary"
       inputs:
         targetFolder: '$(Build.ArtifactStagingDirectory)/Bin/dxe_readiness_capture/debug/aarch64'
         SourceFolder: 'target/aarch64-unknown-uefi/debug'
         contents: |
-            **/dxe_readiness_capture.efi
-            **/dxe_readiness_capture.pdb
+            **/qemu_dxe_readiness_capture.efi
+            **/qemu_dxe_readiness_capture.pdb
         flattenFolders: true
       condition: Succeeded()
 

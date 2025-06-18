@@ -17,6 +17,9 @@ args = [
     "x86_64-unknown-uefi",
     "--bin",
     "qemu_dxe_readiness_capture",
+    "-Zbuild-std=core,compiler_builtins,alloc",
+    "-Zbuild-std-features=compiler-builtins-mem",
+    "-Zunstable-options",
     "${@}",
 ]
 
@@ -31,6 +34,9 @@ args = [
     "aarch64-unknown-uefi",
     "--bin",
     "qemu_dxe_readiness_capture",
+    "-Zbuild-std=core,compiler_builtins,alloc",
+    "-Zbuild-std-features=compiler-builtins-mem",
+    "-Zunstable-options",
     "${@}",
 ]
 
@@ -45,6 +51,9 @@ args = [
     "x86_64-unknown-uefi",
     "--bin",
     "intel_lnl_dxe_readiness_capture",
+    "-Zbuild-std=core,compiler_builtins,alloc",
+    "-Zbuild-std-features=compiler-builtins-mem",
+    "-Zunstable-options",
     "${@}",
 ]
 
@@ -87,17 +96,17 @@ dependencies = [
 [tasks.test-capture-binary]
 description = "Build and run tests for Dxe Readiness Capture UEFI binary."
 command = "cargo"
-args = ["nextest", "run", "-p", "dxe_readiness_capture", "--no-tests", "pass", "${@}"]
+args = ["test", "-p", "dxe_readiness_capture", "${@}"]
 
 [tasks.test-validation-binary]
 description = "Build and run tests for Dxe Readiness Validation binary."
 command = "cargo"
-args = ["nextest", "run", "-p", "dxe_readiness_validator", "--no-tests", "pass", "${@}"]
+args = ["test", "-p", "dxe_readiness_validator", "${@}"]
 
 [tasks.test-common]
 description = "Build and run tests for Common lib."
 command = "cargo"
-args = ["nextest", "run", "-p", "common", "--no-tests", "pass", "${@}"]
+args = ["test", "-p", "common", "${@}"]
 
 [tasks.test]
 description = "Build and run tests for all binaries."
@@ -137,11 +146,7 @@ args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
 env = { RUSTDOCFLAGS = "-D warnings" }
 description = "Builds all rust documentation in the workspace. Example `cargo make doc`"
 command = "cargo"
-args = [
-    "doc",
-    "@@split(INDIVIDUAL_PACKAGE_TARGETS, )",
-    "--open",
-]
+args = ["doc", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "--open"]
 
 [tasks.fmt]
 description = "Run cargo format."
@@ -155,12 +160,4 @@ script = "cspell --quiet  --no-progress --no-summary  --dot --gitignore -e \"{.g
 
 [tasks.all]
 description = "Run all tasks for PR readiness."
-dependencies = [
-    "clippy",
-    "cspell",
-    "build",
-    "test",
-    "coverage",
-    "fmt",
-    "doc",
-]
+dependencies = ["clippy", "cspell", "build", "test", "coverage", "fmt", "doc"]

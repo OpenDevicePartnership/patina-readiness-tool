@@ -5,15 +5,15 @@ edition = "2021"
 
 [dependencies]
 clap = { workspace = true }
+colored = "3.0.0"
 common = { path = "../common" }
 log = { workspace = true }
 mu_pi = { workspace = true }
+patina_sdk = { workspace = true }
 r-efi = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 uuid = { workspace = true }
-colored = "3.0.0"
-uefi_sdk = { workspace = true }
 
 [features]
 default = []
