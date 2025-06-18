@@ -5,7 +5,25 @@ default_to_workspace = false
 # This is needed due to uefi-sdk's use of unstable features.
 RUSTC_BOOTSTRAP = 1
 
-# Builds binaries for all supported targets.
+# Builds EFI binaries for hardware platforms.
+[tasks.build-intel-lnl]
+description = "Builds the Intel Lunar Lake Dxe Readiness Capture UEFI binary."
+command = "cargo"
+args = [
+    "build",
+    "-p",
+    "dxe_readiness_capture",
+    "--target",
+    "x86_64-unknown-uefi",
+    "--bin",
+    "intel_lnl_dxe_readiness_capture",
+    "-Zbuild-std=core,compiler_builtins,alloc",
+    "-Zbuild-std-features=compiler-builtins-mem",
+    "-Zunstable-options",
+    "${@}",
+]
+
+# Builds EFI binaries for virtual platform(QEMU).
 [tasks.build-x64-uefi]
 description = "Builds the x64 Dxe Readiness Capture UEFI binary."
 command = "cargo"
@@ -22,6 +40,7 @@ args = [
     "-Zunstable-options",
     "${@}",
 ]
+
 
 [tasks.build-aarch64-uefi]
 description = "Builds the aarch64 Dxe Readiness Capture UEFI binary."
@@ -40,44 +59,14 @@ args = [
     "${@}",
 ]
 
-[tasks.build-intel-lnl]
-description = "Builds the Intel Lunar Lake Dxe Readiness Capture UEFI binary."
-command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_capture",
-    "--target",
-    "x86_64-unknown-uefi",
-    "--bin",
-    "intel_lnl_dxe_readiness_capture",
-    "-Zbuild-std=core,compiler_builtins,alloc",
-    "-Zbuild-std-features=compiler-builtins-mem",
-    "-Zunstable-options",
-    "${@}",
-]
-
-[tasks.build-x64-windows]
-description = "Builds the x64 Dxe Readiness Validation binary."
+# Builds Validation binary for host platform.
+[tasks.build-validation-binary]
+description = "Builds the Dxe Readiness Validation binary."
 command = "cargo"
 args = [
     "build",
     "-p",
     "dxe_readiness_validator",
-    "--target",
-    "x86_64-pc-windows-msvc",
-    "${@}",
-]
-
-[tasks.build-aarch64-windows]
-description = "Builds the aarch64 Dxe Readiness Validation binary."
-command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_validator",
-    "--target",
-    "aarch64-pc-windows-msvc",
     "${@}",
 ]
 
@@ -85,11 +74,10 @@ args = [
 description = "Run all binaries."
 clear = true
 dependencies = [
+    "build-intel-lnl",
     "build-x64-uefi",
     "build-aarch64-uefi",
-    "build-x64-windows",
-    "build-aarch64-windows",
-    "build-intel-lnl",
+    "build-validation-binary",
 ]
 
 # Tests will be built and run based on the host platform.

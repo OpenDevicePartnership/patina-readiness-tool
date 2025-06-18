@@ -11,10 +11,11 @@ The workspace consists of two packages:
 Running `cargo make build` compiles both packages for all supported
 architectures and targets.
 
-| Target   | x86_64                                                          | AArch64                                                          |
-| -------- | --------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **UEFI** | target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi | target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi |
-| **Std**  | target\x86_64-pc-windows-msvc\debug\dxe_readiness_validater.exe | target\aarch64-pc-windows-msvc\debug\dxe_readiness_validater.exe |
+| Target      | x86_64                                                          | AArch64                                                          |
+| ----------- | --------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **UEFI**    | target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi | target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi |
+| **Windows** | target\debug\dxe_readiness_validater.exe                        | target\debug\dxe_readiness_validater.exe                         |
+| **Linux**   | target\debug\dxe_readiness_validater                            | target\debug\dxe_readiness_validater                             |
 
 ### **Supported Hardware Platforms**
 
@@ -30,11 +31,6 @@ platform-specific binaries:
 
 Executing `cargo make test` builds and runs the test binaries for both packages,
 matching the host architecture(x86_64-pc-windows-msvc|aarch64-pc-windows-msvc).
-
-| Target  | x86_64                                                            | AArch64                                                                   |
-| ------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| **Std** | target\debug\deps\qemu_dxe_readiness_capture-d1a2f334330e0b78.exe | qemu_dxe_readiness_capture-d1a2f334330e0b78.exe (aarch64-pc-windows-msvc) |
-| **Std** | target\debug\deps\dxe_readiness_validater-0217a28b86858ac9.exe    | dxe_readiness_validator-d1a2f334330e0b78.exe (aarch64-pc-windows-msvc)    |
 
 ## **Launching QEMU**
 
