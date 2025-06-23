@@ -44,13 +44,34 @@ pub enum HobSerDe {
     UnknownHob,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct MemAllocDescriptorSerDe {
     pub name: String, // GUID as a string
     #[serde(with = "hex_format")]
     pub memory_base_address: u64,
     pub memory_length: u64,
     pub memory_type: u32,
+}
+
+impl Interval for MemAllocDescriptorSerDe {
+    fn start(&self) -> u64 {
+        self.memory_base_address
+    }
+
+    fn end(&self) -> u64 {
+        self.memory_base_address + self.memory_length
+    }
+
+    /// Merge two memory descriptors into one(including non overlapping
+    /// intervals).
+    fn merge(&self, other: &Self) -> Self {
+        Self {
+            name: self.name.clone(),
+            memory_type: self.memory_type,
+            memory_base_address: core::cmp::min(self.start(), other.start()),
+            memory_length: core::cmp::max(self.end(), other.end()) - core::cmp::min(self.start(), other.start()),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
@@ -70,28 +91,6 @@ impl Interval for ResourceDescriptorSerDe {
 
     fn end(&self) -> u64 {
         self.physical_start + self.resource_length
-    }
-
-    /// Check if this resource descriptor overlaps with another one.
-    /// ```ignore
-    /// - [s] [o] - non overlapping
-    /// - [s[]o] - overlapping
-    /// - [s[o]] - overlapping
-    /// - [o[s]] - overlapping
-    /// - [o[]s] - overlapping
-    /// - [o] [s] - non overlapping
-    /// ```
-    fn overlaps(&self, other: &ResourceDescriptorSerDe) -> bool {
-        self.start() < other.end() && other.start() < self.end()
-    }
-
-    /// Check if this resource descriptor is adjacent to another one.
-    /// Adjacency means:
-    /// ```ignore
-    /// - [s][o] or [o][s] (end of one is exactly the start of the other)
-    /// ```
-    fn adjacent(&self, other: &ResourceDescriptorSerDe) -> bool {
-        self.end() == other.start() || other.end() == self.start()
     }
 
     /// Merge two resource descriptors into one(including non overlapping

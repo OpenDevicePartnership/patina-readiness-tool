@@ -53,4 +53,10 @@ the capture phase, use the command below:
 
 ```sh
 cargo make run -- -f dxe_readiness_validator\src\tests\data\q35_capture.json
+or
+target\debug\dxe_readiness_validator.exe -f dxe_readiness_validator\src\tests\data\q35_capture.json
 ```
+
+### Sample Validation Report
+
+![Validation Report](docs/images/validation_report.png)

@@ -53,7 +53,7 @@ validations. Unlike the capture crate, this crate runs in standard Rust and
 produces a `.exe`.
 
 Validations are based on on agreed-upon
-[requirements](https://github.com/OpenDevicePartnership/uefi-dxe-core/issues/222).
+[requirements](https://github.com/OpenDevicePartnership/patina/issues/222).
 Before contributing any new validations, make sure to document and get approval
 for your new requirement.
 
@@ -90,15 +90,17 @@ fn test_pagezero() {
     let hob_list = vec![mem_hob.clone()];
     let data = DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] };
     let mut app = ValidationApp::new_with_data(data);
-    let res = app.check_page0();
+    let mut validation_report = ValidationReport::new();
+    let res = app.validate_page0_memory_allocation(&mut validation_report);
     assert!(res.is_ok());
-    assert!(app.validation_report.is_empty());
+    assert_eq!(validation_report.violation_count(), 0);
 
     let hob_list = vec![mem_hob.clone(), page_zero_mem_hob];
     app = ValidationApp::new_with_data(DxeReadinessCaptureSerDe { hob_list, fv_list: vec![] });
-    let res = app.check_page0();
+    let mut validation_report = ValidationReport::new();
+    let res = app.validate_page0_memory_allocation(&mut validation_report);
     assert!(res.is_ok());
-    assert!(!app.validation_report.is_empty());
+    assert_ne!(validation_report.violation_count(), 0);
 }
 ```
 
@@ -114,7 +116,7 @@ fn test_pagezero() {
 If your contribution involves new validation requirements, follow these steps:
 
 1. Review the current list of [validation
-   requirements](https://github.com/OpenDevicePartnership/uefi-dxe-core/issues/222)
+   requirements](https://github.com/OpenDevicePartnership/patina/issues/222)
    on Github.
 2. If your requirement is not listed, add it to the discussion in the Github
    issue. Include justification on why the new requirement is necessary.

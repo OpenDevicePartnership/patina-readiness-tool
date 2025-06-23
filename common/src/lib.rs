@@ -35,16 +35,41 @@ pub fn format_guid(guid: Guid) -> String {
 
 pub trait Interval: Clone + Ord {
     fn start(&self) -> u64;
+
     fn end(&self) -> u64;
+
+    fn merge(&self, other: &Self) -> Self;
+
     fn length(&self) -> u64 {
         self.end() - self.start()
     }
+
     fn contains(&self, other: &Self) -> bool {
         self.start() <= other.start() && self.end() >= other.end()
     }
-    fn overlaps(&self, other: &Self) -> bool;
-    fn adjacent(&self, other: &Self) -> bool;
-    fn merge(&self, other: &Self) -> Self;
+
+    /// Check if this interval overlaps with another one.
+    /// ```ignore
+    /// - [s] [o] - non overlapping
+    /// - [s[]o] - overlapping
+    /// - [s[o]] - overlapping
+    /// - [o[s]] - overlapping
+    /// - [o[]s] - overlapping
+    /// - [o] [s] - non overlapping
+    /// ```
+    fn overlaps(&self, other: &Self) -> bool {
+        self.start() < other.end() && other.start() < self.end()
+    }
+
+    /// Check if this interval is adjacent to another one.
+    /// Adjacency means:
+    /// ```ignore
+    /// - [s][o] or [o][s] (end of one is exactly the start of the other)
+    /// ```
+    fn adjacent(&self, other: &Self) -> bool {
+        self.end() == other.start() || other.end() == self.start()
+    }
+
     fn try_merge(&self, other: &Self) -> Option<Self> {
         if self.overlaps(other) || self.adjacent(other) {
             Some(self.merge(other))
@@ -52,6 +77,7 @@ pub trait Interval: Clone + Ord {
             None
         }
     }
+
     fn merge_intervals(intervals: &[&Self]) -> Vec<Self> {
         if intervals.is_empty() {
             return Vec::new();

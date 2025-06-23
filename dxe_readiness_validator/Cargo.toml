@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 clap = { workspace = true }
 colored = "3.0.0"
+comfy-table = "7.1.4"
 common = { path = "../common" }
 log = { workspace = true }
 mu_pi = { workspace = true }

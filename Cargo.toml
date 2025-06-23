@@ -12,17 +12,9 @@ description = "Dxe Readiness Capture/Validation Tool"
 
 [workspace.dependencies]
 cfg-if = "1.0.0"
-patina_sdk = { version = "3", registry = "patina-fw", features = [
-  # Disable linker shenanigans used in patina_sdk for tests. The feature name
-  # "off" is very confusing and should be renamed to "disable_patina_tests", or
-  # better yet, the logic should be inverted and the feature renamed to
-  # "enable_patina_tests" for clarity. Additionally, the feature should be
-  # disabled by default and made opt-in, as it impacts all consumers of
-  # patina_sdk.
-  "off",
-] }
-patina_section_extractor = { version = "3", registry = "patina-fw" }
-patina_stacktrace = { version = "3", registry = "patina-fw" }
+patina_sdk = { version = "4", registry = "patina-fw" }
+patina_section_extractor = { version = "4", registry = "patina-fw" }
+patina_stacktrace = { version = "4", registry = "patina-fw" }
 log = { version = "^0.4", default-features = false, features = [
   "release_max_level_warn",
 ] }

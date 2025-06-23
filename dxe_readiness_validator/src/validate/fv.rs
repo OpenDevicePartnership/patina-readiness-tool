@@ -1,63 +1,61 @@
 use crate::{
-    validate::{ValidationApp, ValidationKind},
-    ValidationResult,
+    validation_kind::{FvValidationKind, ValidationKind},
+    validation_report::ValidationReport,
+    validator::Validator,
+    ValidationAppError,
 };
-use common::{format_guid, DxeReadinessCaptureSerDe};
+use common::{format_guid, serializable_fv::FirmwareVolumeSerDe};
 use r_efi::efi::Guid;
 
-use super::FvValidationKind;
+use super::ValidationResult;
 
-impl ValidationApp {
-    fn validate_fv_standalone_mm(&mut self) -> ValidationResult {
-        let Some(DxeReadinessCaptureSerDe { ref fv_list, .. }) = self.data.as_ref() else {
-            return Ok(());
-        };
+/// Performs validation on a list of firmware volumes to check for violations of
+/// Patina requirements.
+pub struct FvValidator<'a> {
+    fv_list: &'a Vec<FirmwareVolumeSerDe>,
+}
 
-        fv_list.iter().for_each(|fv| {
-            fv.files.iter().for_each(|file| {
-                if file.file_type == "CombinedPeimDriver"
-                    || file.file_type == "Mm"
-                    || file.file_type == "CombinedMmDxe"
-                    || file.file_type == "MmCore"
-                {
-                    if let Ok(json_str) = serde_json::to_string_pretty(file) {
-                        self.validation_report.add_violation(
-                            ValidationKind::Fv(FvValidationKind::UsesTraditionalSmm),
-                            &format!("FV: {} File: {}", fv.fv_name, json_str),
-                        );
-                    }
-                }
+impl<'a> FvValidator<'a> {
+    pub fn new(fv_list: &'a Vec<FirmwareVolumeSerDe>) -> Self {
+        FvValidator { fv_list }
+    }
+
+    /// Checks firmware volumes for files that use traditional SMM types and
+    /// reports violations if found.
+    pub(super) fn validate_fv_for_traditional_smm(&self) -> ValidationResult {
+        let mut validation_report = ValidationReport::new();
+
+        self.fv_list.iter().for_each(|fv| {
+            fv.files.iter().for_each(|file| match file.file_type.as_str() {
+                "CombinedPeimDriver" | "Mm" | "CombinedMmDxe" | "MmCore" => validation_report
+                    .add_violation(ValidationKind::Fv(FvValidationKind::UsesTraditionalSmm { file, fv })),
+                _ => (),
             });
         });
 
-        Ok(())
+        Ok(validation_report)
     }
 
-    fn validate_fv_combined_drivers(&mut self) -> ValidationResult {
-        let Some(DxeReadinessCaptureSerDe { ref fv_list, .. }) = self.data.as_ref() else {
-            return Ok(());
-        };
+    /// Checks firmware volumes for presence of combined driver files and
+    /// reports violations if any are found.
+    pub(super) fn validate_fv_for_combined_drivers(&self) -> ValidationResult {
+        let mut validation_report = ValidationReport::new();
 
-        fv_list.iter().for_each(|fv| {
-            fv.files.iter().for_each(|file| {
-                if file.file_type == "CombinedPeimDriver" || file.file_type == "CombinedMmDxe" {
-                    if let Ok(json_str) = serde_json::to_string_pretty(file) {
-                        self.validation_report.add_violation(
-                            ValidationKind::Fv(FvValidationKind::CombinedDriversPresent),
-                            &format!("FV: {} File: {}", fv.fv_name, json_str),
-                        );
-                    }
-                }
+        self.fv_list.iter().for_each(|fv| {
+            fv.files.iter().for_each(|file| match file.file_type.as_str() {
+                "CombinedPeimDriver" | "CombinedMmDxe" => validation_report
+                    .add_violation(ValidationKind::Fv(FvValidationKind::CombinedDriversPresent { file, fv })),
+                _ => (),
             });
         });
 
-        Ok(())
+        Ok(validation_report)
     }
 
-    fn validate_fv_apriori_file(&mut self) -> ValidationResult {
-        let Some(DxeReadinessCaptureSerDe { ref fv_list, .. }) = self.data.as_ref() else {
-            return Ok(());
-        };
+    /// Checks firmware volumes for presence of prohibited Apriori files by
+    /// their GUIDs and reports violations if found.
+    pub(super) fn validate_fv_for_apriori_file(&self) -> ValidationResult {
+        let mut validation_report = ValidationReport::new();
 
         let pei_apriori_file_name_guid = format_guid(Guid::from_fields(
             0x1B45CC0A,
@@ -76,59 +74,53 @@ impl ValidationApp {
             &[0x00, 0x80, 0xC7, 0x3C, 0x88, 0x81],
         ));
 
-        fv_list.iter().for_each(|fv| {
+        self.fv_list.iter().for_each(|fv| {
             fv.files.iter().for_each(|file| {
                 if file.name == pei_apriori_file_name_guid || file.name == apriori_file_name_guid {
-                    if let Ok(json_str) = serde_json::to_string_pretty(file) {
-                        self.validation_report.add_violation(
-                            ValidationKind::Fv(FvValidationKind::ProhibitedAprioriFile),
-                            &format!("FV: {} File: {}", fv.fv_name, json_str),
-                        );
-                    }
+                    validation_report
+                        .add_violation(ValidationKind::Fv(FvValidationKind::ProhibitedAprioriFile { file, fv }));
                 }
             });
         });
 
-        Ok(())
+        Ok(validation_report)
     }
 
-    fn validate_fv_file_sections(&mut self) -> ValidationResult {
-        let Some(DxeReadinessCaptureSerDe { ref fv_list, .. }) = self.data.as_ref() else {
-            return Ok(());
-        };
+    /// Validates firmware volumes for sections compressed with LZMA and reports
+    /// violations if any are found.
+    pub(super) fn validate_fv_for_lzma_sections(&self) -> ValidationResult {
+        let mut validation_report = ValidationReport::new();
 
-        for fv in fv_list {
+        for fv in self.fv_list {
             for file in &fv.files {
                 for section in &file.sections {
                     if section.compression_type.starts_with("LZMA ") {
-                        if let Ok(json_str) = serde_json::to_string_pretty(section) {
-                            self.validation_report.add_violation(
-                                ValidationKind::Fv(FvValidationKind::LzmaCompressedSections),
-                                &format!("FV: {} File: {} Section: {}", fv.fv_name, file.name, json_str),
-                            );
-                        }
+                        validation_report.add_violation(ValidationKind::Fv(FvValidationKind::LzmaCompressedSections {
+                            fv,
+                            file,
+                            section,
+                        }));
                     }
                 }
             }
         }
 
-        Ok(())
+        Ok(validation_report)
     }
+}
 
-    pub fn validate_firmware_volumes(&mut self) -> ValidationResult {
-        let Some(DxeReadinessCaptureSerDe { ref fv_list, .. }) = self.data.as_ref() else {
-            return Err("FV list is empty".to_string());
-        };
-
-        if fv_list.is_empty() {
-            return Err("FV list is empty".to_string());
+impl Validator for FvValidator<'_> {
+    fn validate(&self) -> ValidationResult {
+        let mut validation_report = ValidationReport::new();
+        if self.fv_list.is_empty() {
+            return Err(ValidationAppError::EmptyFvList);
         }
 
-        self.validate_fv_standalone_mm()?;
-        self.validate_fv_combined_drivers()?;
-        self.validate_fv_file_sections()?;
-        self.validate_fv_apriori_file()?;
-        Ok(())
+        validation_report.append_report(self.validate_fv_for_traditional_smm()?);
+        validation_report.append_report(self.validate_fv_for_combined_drivers()?);
+        validation_report.append_report(self.validate_fv_for_lzma_sections()?);
+        validation_report.append_report(self.validate_fv_for_apriori_file()?);
+        Ok(validation_report)
     }
 }
 
@@ -140,7 +132,7 @@ mod tests {
     use common::serializable_fv::FirmwareVolumeSerDe;
 
     #[test]
-    fn test_validate_fv_standalone_mm() {
+    fn test_validate_fv_for_traditional_smm() {
         let fv_list = vec![FirmwareVolumeSerDe {
             fv_name: "FV1".to_string(),
             fv_length: 1024,
@@ -178,11 +170,11 @@ mod tests {
             ],
         }];
 
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_firmware_volumes();
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate();
         assert!(result.is_ok());
-        assert!(!app.validation_report.is_empty());
+        let validation_report = result.unwrap();
+        assert_ne!(validation_report.violation_count(), 0);
     }
 
     #[test]
@@ -210,11 +202,11 @@ mod tests {
             ],
         }];
 
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_fv_combined_drivers();
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_for_combined_drivers();
         assert!(result.is_ok());
-        assert!(!app.validation_report.is_empty());
+        let validation_report = result.unwrap();
+        assert_ne!(validation_report.violation_count(), 0);
 
         let fv_list = vec![FirmwareVolumeSerDe {
             fv_name: "FV2".to_string(),
@@ -239,15 +231,15 @@ mod tests {
             ],
         }];
 
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_fv_combined_drivers();
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_for_combined_drivers();
         assert!(result.is_ok());
-        assert!(app.validation_report.is_empty());
+        let validation_report = result.unwrap();
+        assert_eq!(validation_report.violation_count(), 0);
     }
 
     #[test]
-    fn test_validate_fv_apriori_file() {
+    fn test_validate_fv_for_apriori_file() {
         let pei_apriori_file_name_guid = format_guid(Guid::from_fields(
             0x1B45CC0A,
             0x156A,
@@ -279,11 +271,11 @@ mod tests {
             }],
         }];
 
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_fv_apriori_file();
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_for_apriori_file();
         assert!(result.is_ok());
-        assert!(!app.validation_report.is_empty());
+        let validation_report = result.unwrap();
+        assert_ne!(validation_report.violation_count(), 0);
 
         let fv_list = vec![FirmwareVolumeSerDe {
             fv_name: "FV1".to_string(),
@@ -299,15 +291,15 @@ mod tests {
             }],
         }];
 
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_fv_apriori_file();
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_for_apriori_file();
         assert!(result.is_ok());
-        assert!(!app.validation_report.is_empty());
+        let validation_report = result.unwrap();
+        assert_ne!(validation_report.violation_count(), 0);
     }
 
     #[test]
-    fn test_validate_fv_file_sections() {
+    fn test_validate_fv_for_lzma_sections() {
         let fv_list = vec![FirmwareVolumeSerDe {
             fv_name: "FV1".to_string(),
             fv_length: 1024,
@@ -326,11 +318,11 @@ mod tests {
             }],
         }];
 
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_fv_file_sections();
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_for_lzma_sections();
         assert!(result.is_ok());
-        assert!(!app.validation_report.is_empty());
+        let validation_report = result.unwrap();
+        assert_ne!(validation_report.violation_count(), 0);
 
         let fv_list = vec![FirmwareVolumeSerDe {
             fv_name: "FV2".to_string(),
@@ -350,19 +342,19 @@ mod tests {
             }],
         }];
 
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_fv_file_sections();
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_for_lzma_sections();
         assert!(result.is_ok());
-        assert!(app.validation_report.is_empty());
+        let validation_report = result.unwrap();
+        assert_eq!(validation_report.violation_count(), 0);
     }
 
     #[test]
-    fn test_validate_fv_empty_list() {
-        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list: vec![] };
-        let mut app = ValidationApp::new_with_data(data);
-        let result = app.validate_firmware_volumes();
+    fn test_validate_empty_list() {
+        let fv_list = vec![];
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate();
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "FV list is empty".to_string());
+        assert_eq!(result.unwrap_err(), ValidationAppError::EmptyFvList);
     }
 }

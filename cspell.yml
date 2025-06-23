@@ -26,6 +26,7 @@ caseSensitive: false
 allowCompoundWords: true
 words:
   - brotli
+  - depex
   - edkii
   - keccak
   - libdxe

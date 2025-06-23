@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use crate::format_guid;
 
 // This is the serialized version of the FV list.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct FirmwareVolumeSerDe {
     pub fv_name: String,
     pub fv_length: usize,
@@ -29,7 +29,7 @@ pub struct FirmwareVolumeSerDe {
 }
 
 // This is the serialized version of the file list.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct FirmwareFileSerDe {
     pub name: String, // GUID
     pub file_type: String,
@@ -40,7 +40,7 @@ pub struct FirmwareFileSerDe {
 }
 
 // This is the serialized version of the section list.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct FirmwareSectionSerDe {
     pub section_type: String,
     pub length: usize,
