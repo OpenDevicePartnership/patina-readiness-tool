@@ -31,9 +31,13 @@ impl ValidationApp {
             return Err(ValidationAppError::InvalidCommandLine("'filename'".to_string()));
         };
 
-        let Ok(file_content) = fs::read_to_string(filename) else {
-            return Err(ValidationAppError::JSONFileNotFound(filename.clone()));
-        };
+        let file_content = fs::read_to_string(filename).map_err(|err| {
+            if err.kind() == std::io::ErrorKind::NotFound {
+                ValidationAppError::JSONFileNotFound(filename.clone())
+            } else {
+                ValidationAppError::JSONFileContentError(filename.clone(), err.to_string())
+            }
+        })?;
 
         let Ok(data) = serde_json::from_str::<DxeReadinessCaptureSerDe>(&file_content) else {
             return Err(ValidationAppError::JSONSerializationFailed(filename.clone()));

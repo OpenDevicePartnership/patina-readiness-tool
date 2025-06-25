@@ -27,7 +27,10 @@ impl CaptureApp<'_> {
     pub fn new(physical_hob_list: *const c_void) -> Self {
         let (free_memory_bottom, free_memory_top) =
             Self::read_phit_hob(physical_hob_list).expect("PHIT HOB was not found.");
-        allocator::init(free_memory_bottom, free_memory_top);
+
+        if cfg!(not(feature = "uefishell")) {
+            allocator::init(free_memory_bottom, free_memory_top);
+        }
 
         log::info!("Free Memory Bottom: 0x{:X}", free_memory_bottom);
         log::info!("Free Memory Top: 0x{:X}", free_memory_top);

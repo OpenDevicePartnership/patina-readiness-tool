@@ -110,7 +110,8 @@ impl ValidationKind<'_> {
                                                                       that other drivers can use that protocol as a depex statement, if required.\n   \
                                                                       Platforms may also list drivers in FFSes in the order they should be dispatched,\n   \
                                                                       though it is recommended to rely on depex statements.\n   \
-                                                                      Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                      Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md\n   \
+                                                                      Ref: https://github.com/OpenDevicePartnership/patina-qemu/pull/40",
                 FvValidationKind::UsesTraditionalSmm { .. } => "   Platforms must transition to Standalone MM (or not use MM at all, as applicable)\n   \
                                                                    using the provided guidance. All combined modules must be dropped in favor of\n   \
                                                                    single phase modules.\n   \

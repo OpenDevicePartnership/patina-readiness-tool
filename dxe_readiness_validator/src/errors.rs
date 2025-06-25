@@ -12,6 +12,10 @@ pub enum ValidationAppError {
     /// `String` contains the filename that failed to be read.
     JSONFileNotFound(String),
 
+    /// Indicates that the specified JSON file contain invalid 'utf-8' byte
+    /// sequence. The `String` contains the filename that failed to be read.
+    JSONFileContentError(String, String),
+
     /// Indicates a failure in deserializing the JSON file. The `String`
     /// contains the filename that failed to deserialize.
     JSONSerializationFailed(String),
@@ -35,6 +39,9 @@ impl fmt::Display for ValidationAppError {
             }
             ValidationAppError::JSONFileNotFound(path) => {
                 write!(f, "JSON file not found: {}", path)
+            }
+            ValidationAppError::JSONFileContentError(path, err) => {
+                write!(f, "Error reading the JSON file {} contents. Error: {}", path, err)
             }
             ValidationAppError::JSONSerializationFailed(reason) => {
                 write!(f, "Failed to serialize/deserialize JSON: {}", reason)

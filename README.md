@@ -11,11 +11,12 @@ The workspace consists of two packages:
 Running `cargo make build` compiles both packages for all supported
 architectures and targets.
 
-| Target      | x86_64                                                          | AArch64                                                          |
-| ----------- | --------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **UEFI**    | target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi | target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi |
-| **Windows** | target\debug\dxe_readiness_validater.exe                        | target\debug\dxe_readiness_validater.exe                         |
-| **Linux**   | target\debug\dxe_readiness_validater                            | target\debug\dxe_readiness_validater                             |
+| Target               | x86_64                                                               | AArch64                                                               |
+| -------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **UEFI Dxe Phase**   | target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi      | target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi      |
+| **UEFI Shell Phase** | target\x86_64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi | target\aarch64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi |
+| **Windows**          | target\debug\dxe_readiness_validater.exe                             | target\debug\dxe_readiness_validater.exe                              |
+| **Linux**            | target\debug\dxe_readiness_validater                                 | target\debug\dxe_readiness_validater                                  |
 
 ### **Supported Hardware Platforms**
 

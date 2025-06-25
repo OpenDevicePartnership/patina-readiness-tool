@@ -39,7 +39,7 @@ cfg_if::cfg_if! {
         }
 
         // Called by platform-specific binaries after initializing the logger.
-        pub fn core_start(physical_hob_list: *const c_void) -> ! {
+        pub fn core_start(physical_hob_list: *const c_void) {
             log::info!("Dxe Readiness Capture Tool");
 
             let app = CaptureApp::new(physical_hob_list);
@@ -49,9 +49,6 @@ cfg_if::cfg_if! {
             } else {
                 log::info!("Failed to dump HOB list to JSON");
             }
-
-            log::info!("Dead Loop");
-            loop {}
         }
     }
 }

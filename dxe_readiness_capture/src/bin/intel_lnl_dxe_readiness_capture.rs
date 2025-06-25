@@ -68,6 +68,8 @@ cfg_if::cfg_if! {
         pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
             init_logger();
             core_start(physical_hob_list);
+            log::info!("Dead Loop");
+            loop {}
         }
     } else {
         fn main() {}

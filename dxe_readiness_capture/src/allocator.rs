@@ -1,6 +1,6 @@
 use linked_list_allocator::LockedHeap;
 
-#[global_allocator]
+#[cfg_attr(not(feature = "uefishell"), global_allocator)]
 static ALLOCATOR: LockedHeap = LockedHeap::empty();
 
 pub fn init(free_memory_bottom: usize, free_memory_top: usize) {

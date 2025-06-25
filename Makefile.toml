@@ -5,6 +5,39 @@ default_to_workspace = false
 # This is needed due to uefi-sdk's use of unstable features.
 RUSTC_BOOTSTRAP = 1
 
+# Dxe Readiness Capture UEFI binaries to run from Uefi Shell.
+[tasks.build-x64-uefishell]
+description = "Builds the Dxe Readiness Capture UEFI binary to run in Uefi Shell."
+command = "cargo"
+args = [
+    "build",
+    "-p",
+    "dxe_readiness_capture",
+    "--target",
+    "x86_64-unknown-uefi",
+    "--bin",
+    "uefishell_dxe_readiness_capture",
+    "--features",
+    "uefishell",
+    "${@}",
+]
+
+[tasks.build-aarch64-uefishell]
+description = "Builds the Dxe Readiness Capture UEFI binary to run in Uefi Shell."
+command = "cargo"
+args = [
+    "build",
+    "-p",
+    "dxe_readiness_capture",
+    "--target",
+    "aarch64-unknown-uefi",
+    "--bin",
+    "uefishell_dxe_readiness_capture",
+    "--features",
+    "uefishell",
+    "${@}",
+]
+
 # Builds EFI binaries for hardware platforms.
 [tasks.build-intel-lnl]
 description = "Builds the Intel Lunar Lake Dxe Readiness Capture UEFI binary."
@@ -41,7 +74,6 @@ args = [
     "${@}",
 ]
 
-
 [tasks.build-aarch64-uefi]
 description = "Builds the aarch64 Dxe Readiness Capture UEFI binary."
 command = "cargo"
@@ -71,9 +103,11 @@ args = [
 ]
 
 [tasks.build]
-description = "Run all binaries."
+description = "Build all binaries."
 clear = true
 dependencies = [
+    "build-x64-uefishell",
+    "build-aarch64-uefishell",
     "build-intel-lnl",
     "build-x64-uefi",
     "build-aarch64-uefi",

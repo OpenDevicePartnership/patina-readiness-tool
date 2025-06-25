@@ -34,12 +34,12 @@ fn run_main() -> i32 {
     let mut app = ValidationApp::new();
 
     if let Err(err) = app.parse_json() {
-        eprintln!("{}", err);
+        println!("{}", err);
         return map_error(&err);
     }
 
     if let Err(err) = app.validate() {
-        eprintln!("{}", err);
+        println!("{}", err);
         return map_error(&err);
     }
 
