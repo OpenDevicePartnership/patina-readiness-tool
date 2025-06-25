@@ -21,9 +21,11 @@ use crate::format_guid;
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct FirmwareVolumeSerDe {
     pub fv_name: String,
+    #[serde(with = "hex_format")]
     pub fv_length: usize,
     #[serde(with = "hex_format")]
     pub fv_base_address: u64,
+    #[serde(with = "hex_format")]
     pub fv_attributes: u32,
     pub files: Vec<FirmwareFileSerDe>,
 }
@@ -33,8 +35,10 @@ pub struct FirmwareVolumeSerDe {
 pub struct FirmwareFileSerDe {
     pub name: String, // GUID
     pub file_type: String,
+    #[serde(with = "hex_format")]
     pub length: usize,
     // pub base_address: u64,
+    #[serde(with = "hex_format")]
     pub attributes: u32,
     pub sections: Vec<FirmwareSectionSerDe>,
 }
@@ -43,6 +47,7 @@ pub struct FirmwareFileSerDe {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct FirmwareSectionSerDe {
     pub section_type: String,
+    #[serde(with = "hex_format")]
     pub length: usize,
     pub compression_type: String,
     // pub attributes: u32,

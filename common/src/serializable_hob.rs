@@ -19,6 +19,7 @@ pub enum HobSerDe {
         free_memory_top: u64,
         #[serde(with = "hex_format")]
         free_memory_bottom: u64,
+        #[serde(with = "hex_format")]
         end_of_hob_list: u64,
     },
     MemoryAllocation {
@@ -78,9 +79,11 @@ impl Interval for MemAllocDescriptorSerDe {
 pub struct ResourceDescriptorSerDe {
     pub owner: String, // GUID as a string
     pub resource_type: u32,
+    #[serde(with = "hex_format")]
     pub resource_attribute: u32,
     #[serde(with = "hex_format")]
     pub physical_start: u64,
+    #[serde(with = "hex_format")]
     pub resource_length: u64,
 }
 
@@ -187,7 +190,7 @@ mod tests {
                     "memory_bottom": "0xDEADBEEF",
                     "free_memory_top": "0x100000",
                     "free_memory_bottom": "0x10000",
-                    "end_of_hob_list": 4277009102
+                    "end_of_hob_list": "0xFEEDFACE"
                 },
                 {
                     "type": "memory_allocation",
@@ -202,18 +205,18 @@ mod tests {
                     "type": "resource_descriptor",
                     "owner": "123e4567-e89b-12d3-a456-426614174000",
                     "resource_type": 1,
-                    "resource_attribute": 2,
+                    "resource_attribute": "0x2",
                     "physical_start": "0x2000",
-                    "resource_length": 16384
+                    "resource_length": "0x4000"
                 },
                 {
                     "type": "resource_descriptor_v2",
                     "v1": {
                     "owner": "123e4567-e89b-12d3-a456-426614174000",
                     "resource_type": 1,
-                    "resource_attribute": 2,
+                    "resource_attribute": "0x2",
                     "physical_start": "0x2000",
-                    "resource_length": 16384
+                    "resource_length": "0x4000"
                     },
                     "attributes": 42
                 },
