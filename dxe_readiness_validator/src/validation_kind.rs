@@ -242,7 +242,7 @@ impl PrettyPrintTable for ValidationKind<'_> {
                             serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
                         let attributes = format!("{:X}", attributes);
                         let resolution =
-                        "V2 Hob should contain at most\none valid cacheability attributes\n - MEMORY_UC(0x1)\n - MEMORY_WC(0x2)\n - MEMORY_WT(0x4)\n - MEMORY_WB(0x8)\n - MEMORY_UCE(0x10)\n - MEMORY_WP(0x1000)".to_string();
+                        "V2 Hob should contain exactly\none valid cacheability attributes\n - MEMORY_UC(0x1)\n - MEMORY_WC(0x2)\n - MEMORY_WT(0x4)\n - MEMORY_WB(0x8)\n - MEMORY_UCE(0x10)\n - MEMORY_WP(0x1000)".to_string();
                         vec![row_num, hob1_column, attributes, resolution]
                     }
                 }
