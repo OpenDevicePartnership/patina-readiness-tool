@@ -218,7 +218,10 @@ impl<'a> HobValidator<'a> {
                 // Ensure exactly one cache attribute is set:
                 // 1. Check if none of the cache bits are set
                 // 2. Check if more than one bit is set by checking if it is not a power of 2
-                if attributes & mask == 0 || attributes & (attributes - 1) != 0 {
+
+                if (v1.resource_type != EFI_RESOURCE_IO && v1.resource_type != EFI_RESOURCE_IO_RESERVED)
+                    && (attributes & mask == 0 || attributes & (attributes - 1) != 0)
+                {
                     validation_report.add_violation(ValidationKind::Hob(
                         HobValidationKind::V2MissingValidCacheabilityAttribute { hob1: v1, attributes: *attributes },
                     ));
