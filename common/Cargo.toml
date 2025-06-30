@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+goblin = { workspace = true, features = ["pe32", "pe64", "te", "alloc"]}
 mu_pi = { workspace = true }
 r-efi = { workspace = true }
 patina_section_extractor = { workspace = true }

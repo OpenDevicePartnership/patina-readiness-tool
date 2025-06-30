@@ -5,6 +5,8 @@ use crate::{
     ValidationAppError,
 };
 use common::{format_guid, serializable_fv::FirmwareVolumeSerDe};
+use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
+use patina_sdk::base::UEFI_PAGE_SIZE;
 use r_efi::efi::Guid;
 
 use super::ValidationResult;
@@ -86,9 +88,13 @@ impl<'a> FvValidator<'a> {
         Ok(validation_report)
     }
 
-    /// Validates firmware volumes for sections compressed with LZMA and reports
-    /// violations if any are found.
-    pub(super) fn validate_fv_for_lzma_sections(&self) -> ValidationResult {
+    /// Validates sections within firmware volumes for LZMA compression.
+    /// For PE images, validates that the section alignment is correct.
+    /// Reports violations if any are found.
+    pub(super) fn validate_fv_file_sections(&self) -> ValidationResult {
+        // ARM64 drivers require 64k alignment for Linux compat.
+        const ARM64_DRIVER_ALIGNMENT: usize = 0x10000;
+
         let mut validation_report = ValidationReport::new();
 
         for fv in self.fv_list {
@@ -100,6 +106,28 @@ impl<'a> FvValidator<'a> {
                             file,
                             section,
                         }));
+                    }
+
+                    if section.section_type == "Pe32" {
+                        if let Some(pe_header_info) = &section.pe_info {
+                            // ARM64 DXE_RUNTIME_DRIVER needs 64k alignment.
+                            if pe_header_info.machine == COFF_MACHINE_ARM64
+                                && pe_header_info.subsystem == IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
+                                && (pe_header_info.section_alignment as usize) % ARM64_DRIVER_ALIGNMENT != 0
+                            {
+                                validation_report.add_violation(ValidationKind::Fv(
+                                    FvValidationKind::InvalidSectionAlignment { fv, file, section },
+                                ));
+                            }
+                            // Other sections can be just page-aligned.
+                            if pe_header_info.section_alignment == 0
+                                || (pe_header_info.section_alignment as usize) % UEFI_PAGE_SIZE != 0
+                            {
+                                validation_report.add_violation(ValidationKind::Fv(
+                                    FvValidationKind::InvalidSectionAlignment { fv, file, section },
+                                ));
+                            }
+                        }
                     }
                 }
             }
@@ -118,7 +146,7 @@ impl Validator for FvValidator<'_> {
 
         validation_report.append_report(self.validate_fv_for_traditional_smm()?);
         validation_report.append_report(self.validate_fv_for_combined_drivers()?);
-        validation_report.append_report(self.validate_fv_for_lzma_sections()?);
+        validation_report.append_report(self.validate_fv_file_sections()?);
         validation_report.append_report(self.validate_fv_for_apriori_file()?);
         Ok(validation_report)
     }
@@ -130,6 +158,10 @@ mod tests {
     use common::serializable_fv::FirmwareFileSerDe;
     use common::serializable_fv::FirmwareSectionSerDe;
     use common::serializable_fv::FirmwareVolumeSerDe;
+    use goblin::pe::header::COFF_MACHINE_X86_64;
+    use goblin::pe::subsystem::IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER;
+    use goblin::pe::subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER;
+    use common::serializable_fv::PeHeaderInfo;
 
     #[test]
     fn test_validate_fv_for_traditional_smm() {
@@ -314,12 +346,13 @@ mod tests {
                     section_type: "LZMA".to_string(),
                     length: 256,
                     compression_type: "LZMA ".to_string(),
+                    pe_info: None,
                 }],
             }],
         }];
 
         let validator = FvValidator::new(&fv_list);
-        let result = validator.validate_fv_for_lzma_sections();
+        let result = validator.validate_fv_file_sections();
         assert!(result.is_ok());
         let validation_report = result.unwrap();
         assert_ne!(validation_report.violation_count(), 0);
@@ -338,15 +371,138 @@ mod tests {
                     section_type: "LZMA".to_string(),
                     length: 128,
                     compression_type: "uncompressed".to_string(),
+                    pe_info: None,
                 }],
             }],
         }];
 
         let validator = FvValidator::new(&fv_list);
-        let result = validator.validate_fv_for_lzma_sections();
+        let result = validator.validate_fv_file_sections();
         assert!(result.is_ok());
         let validation_report = result.unwrap();
         assert_eq!(validation_report.violation_count(), 0);
+    }
+
+    #[test]
+    fn test_validate_fv_image_alignment() {
+        let fv_list = vec![FirmwareVolumeSerDe {
+            fv_name: "FV1".to_string(),
+            fv_length: 1024,
+            fv_base_address: 0x1000,
+            fv_attributes: 0,
+            files: vec![FirmwareFileSerDe {
+                name: "File1".to_string(),
+                file_type: "CombinedPeimDriver".to_string(),
+                length: 512,
+                attributes: 0,
+                sections: vec![FirmwareSectionSerDe {
+                    section_type: "Pe32".to_string(),
+                    length: 256,
+                    compression_type: "uncompressed ".to_string(),
+                    pe_info: Some(PeHeaderInfo {
+                        section_alignment: 12345, // Not a valid multiple of page size
+                        machine: COFF_MACHINE_X86_64,
+                        subsystem: IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER,
+                    }),
+                }],
+            }],
+        }];
+
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_file_sections();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        // Invalid section alignment error should be captured
+        assert_eq!(validation_report.violation_count(), 1);
+
+        let fv_list = vec![FirmwareVolumeSerDe {
+            fv_name: "FV1".to_string(),
+            fv_length: 1024,
+            fv_base_address: 0x1000,
+            fv_attributes: 0,
+            files: vec![FirmwareFileSerDe {
+                name: "File1".to_string(),
+                file_type: "CombinedPeimDriver".to_string(),
+                length: 512,
+                attributes: 0,
+                sections: vec![FirmwareSectionSerDe {
+                    section_type: "Pe32".to_string(),
+                    length: 256,
+                    compression_type: "uncompressed ".to_string(),
+                    pe_info: Some(PeHeaderInfo {
+                        section_alignment: 0, // Must be a positive multiple of page size. Zero alignment not allowed for PE
+                        machine: COFF_MACHINE_X86_64,
+                        subsystem: IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER,
+                    }),
+                }],
+            }],
+        }];
+
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_file_sections();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        // Invalid section alignment error should be captured
+        assert_eq!(validation_report.violation_count(), 1);
+
+        let fv_list = vec![FirmwareVolumeSerDe {
+            fv_name: "FV2".to_string(),
+            fv_length: 2048,
+            fv_base_address: 0x2000,
+            fv_attributes: 0,
+            files: vec![FirmwareFileSerDe {
+                name: "File3".to_string(),
+                file_type: "MmCore".to_string(),
+                length: 128,
+                attributes: 0,
+                sections: vec![FirmwareSectionSerDe {
+                    section_type: "Pe32".to_string(),
+                    length: 128,
+                    compression_type: "uncompressed".to_string(),
+                    pe_info: Some(PeHeaderInfo {
+                        section_alignment: (UEFI_PAGE_SIZE * 2) as u32, // Valid multiple of page size
+                        machine: COFF_MACHINE_X86_64,
+                        subsystem: IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER,
+                    }),
+                }],
+            }],
+        }];
+
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_file_sections();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        assert_eq!(validation_report.violation_count(), 0);
+
+        let fv_list = vec![FirmwareVolumeSerDe {
+            fv_name: "FV2".to_string(),
+            fv_length: 2048,
+            fv_base_address: 0x2000,
+            fv_attributes: 0,
+            files: vec![FirmwareFileSerDe {
+                name: "File3".to_string(),
+                file_type: "MmCore".to_string(),
+                length: 128,
+                attributes: 0,
+                sections: vec![FirmwareSectionSerDe {
+                    section_type: "Pe32".to_string(),
+                    length: 128,
+                    compression_type: "uncompressed".to_string(),
+                    pe_info: Some(PeHeaderInfo {
+                        section_alignment: (UEFI_PAGE_SIZE * 2) as u32, // Valid multiple of page size but NOT valid for ARM64 DXE_RUNTIME_DRIVER
+                        machine: COFF_MACHINE_ARM64,
+                        subsystem: IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER,
+                    }),
+                }],
+            }],
+        }];
+
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_file_sections();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        // Invalid section alignment error should be captured
+        assert_eq!(validation_report.violation_count(), 1);
     }
 
     #[test]
