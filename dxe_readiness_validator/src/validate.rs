@@ -39,9 +39,8 @@ impl ValidationApp {
             }
         })?;
 
-        let Ok(data) = serde_json::from_str::<DxeReadinessCaptureSerDe>(&file_content) else {
-            return Err(ValidationAppError::JSONSerializationFailed(filename.clone()));
-        };
+        let data = serde_json::from_str::<DxeReadinessCaptureSerDe>(&file_content)
+            .map_err(|err| ValidationAppError::JSONSerializationFailed(filename.clone(), err.to_string()))?;
 
         self.data = Some(data);
         Ok(())

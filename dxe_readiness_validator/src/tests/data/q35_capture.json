@@ -6,12 +6,8 @@
       "memory_top": "0x7f000000",
       "memory_bottom": "0x7afbe000",
       "free_memory_top": "0x7e7ff000",
-      "free_memory_bottom": "0x7afe3460",
-      "end_of_hob_list": 2063479896
-    },
-    {
-      "type": "guid_extension",
-      "name": "3b387bfd-7abc-4cf2-a0ca-b6a16c1b1b25"
+      "free_memory_bottom": "0x7afe1cf0",
+      "end_of_hob_list": "0x7afe1ce8"
     },
     {
       "type": "unknown_hob"
@@ -86,41 +82,41 @@
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 5,
-      "resource_attribute": 15367,
+      "resource_attribute": "0x3c07",
       "physical_start": "0x0",
-      "resource_length": 196608
+      "resource_length": "0x30000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 5,
-      "resource_attribute": 15367,
+      "resource_attribute": "0x3c07",
       "physical_start": "0x30000",
-      "resource_length": 131072
+      "resource_length": "0x20000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 0,
-      "resource_attribute": 15367,
+      "resource_attribute": "0x3c07",
       "physical_start": "0x50000",
-      "resource_length": 327680
+      "resource_length": "0x50000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 0,
-      "resource_attribute": 15367,
+      "resource_attribute": "0x3c07",
       "physical_start": "0x100000",
-      "resource_length": 2129657856
+      "resource_length": "0x7ef00000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 5,
-      "resource_attribute": 15367,
+      "resource_attribute": "0x3c07",
       "physical_start": "0x7f000000",
-      "resource_length": 16777216
+      "resource_length": "0x1000000"
     },
     {
       "type": "guid_extension",
@@ -197,73 +193,73 @@
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xa0000",
-      "resource_length": 393216
+      "resource_length": "0x60000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xc0000000",
-      "resource_length": 1006632960
+      "resource_length": "0x3c000000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xfec00000",
-      "resource_length": 4096
+      "resource_length": "0x1000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xfed00000",
-      "resource_length": 4096
+      "resource_length": "0x1000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xfed1c000",
-      "resource_length": 16384
+      "resource_length": "0x4000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xb0000000",
-      "resource_length": 268435456
+      "resource_length": "0x10000000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xfee00000",
-      "resource_length": 1048576
+      "resource_length": "0x100000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 1,
-      "resource_attribute": 1031,
+      "resource_attribute": "0x407",
       "physical_start": "0xffc00000",
-      "resource_length": 4194304
+      "resource_length": "0x400000"
     },
     {
       "type": "resource_descriptor",
       "owner": "00000000-0000-0000-0000-000000000000",
       "resource_type": 2,
-      "resource_attribute": 3,
+      "resource_attribute": "0x3",
       "physical_start": "0x6000",
-      "resource_length": 40960
+      "resource_length": "0xa000"
     },
     {
       "type": "cpu",
@@ -274,7 +270,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "4ed4bf27-4092-42e9-807d-527b1d00c9bd",
-        "memory_base_address": "0x7eadd000",
+        "memory_base_address": "0x7eadc000",
         "memory_length": 131072,
         "memory_type": 4
       }
@@ -314,8 +310,8 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebe6000",
-        "memory_length": 16384,
+        "memory_base_address": "0x7ebe7000",
+        "memory_length": 12288,
         "memory_type": 3
       }
     },
@@ -323,7 +319,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebe4000",
+        "memory_base_address": "0x7ebe5000",
         "memory_length": 8192,
         "memory_type": 3
       }
@@ -332,7 +328,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebe1000",
+        "memory_base_address": "0x7ebe2000",
         "memory_length": 12288,
         "memory_type": 3
       }
@@ -349,7 +345,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebdf000",
+        "memory_base_address": "0x7ebe0000",
         "memory_length": 8192,
         "memory_type": 3
       }
@@ -358,7 +354,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebde000",
+        "memory_base_address": "0x7ebdf000",
         "memory_length": 4096,
         "memory_type": 3
       }
@@ -375,7 +371,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebdc000",
+        "memory_base_address": "0x7ebdd000",
         "memory_length": 8192,
         "memory_type": 3
       }
@@ -388,7 +384,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebcc000",
+        "memory_base_address": "0x7ebcd000",
         "memory_length": 65536,
         "memory_type": 4
       }
@@ -401,7 +397,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebbc000",
+        "memory_base_address": "0x7ebbd000",
         "memory_length": 65536,
         "memory_type": 4
       }
@@ -410,7 +406,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7ebac000",
+        "memory_base_address": "0x7ebad000",
         "memory_length": 65536,
         "memory_type": 3
       }
@@ -419,7 +415,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eba7000",
+        "memory_base_address": "0x7eba8000",
         "memory_length": 20480,
         "memory_type": 4
       }
@@ -440,7 +436,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb7e000",
+        "memory_base_address": "0x7eb7f000",
         "memory_length": 167936,
         "memory_type": 4
       }
@@ -449,7 +445,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb7d000",
+        "memory_base_address": "0x7eb7e000",
         "memory_length": 4096,
         "memory_type": 3
       }
@@ -477,7 +473,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb7c000",
+        "memory_base_address": "0x7eb7d000",
         "memory_length": 4096,
         "memory_type": 7
       }
@@ -486,7 +482,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb77000",
+        "memory_base_address": "0x7eb78000",
         "memory_length": 20480,
         "memory_type": 4
       }
@@ -510,7 +506,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb76000",
+        "memory_base_address": "0x7eb77000",
         "memory_length": 4096,
         "memory_type": 7
       }
@@ -546,6 +542,15 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": "0x7eb76000",
+        "memory_length": 4096,
+        "memory_type": 4
+      }
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
         "memory_base_address": "0x7eb75000",
         "memory_length": 4096,
         "memory_type": 4
@@ -555,16 +560,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb74000",
-        "memory_length": 4096,
-        "memory_type": 4
-      }
-    },
-    {
-      "type": "memory_allocation",
-      "alloc_descriptor": {
-        "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb70000",
+        "memory_base_address": "0x7eb71000",
         "memory_length": 16384,
         "memory_type": 3
       }
@@ -573,7 +569,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb6d000",
+        "memory_base_address": "0x7eb6e000",
         "memory_length": 12288,
         "memory_type": 3
       }
@@ -582,8 +578,8 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb68000",
-        "memory_length": 20480,
+        "memory_base_address": "0x7eb6a000",
+        "memory_length": 16384,
         "memory_type": 3
       }
     },
@@ -602,20 +598,16 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb66000",
+        "memory_base_address": "0x7eb68000",
         "memory_length": 8192,
         "memory_type": 3
       }
     },
     {
-      "type": "guid_extension",
-      "name": "3b387bfd-7abc-4cf2-a0ca-b6a16c1b1b25"
-    },
-    {
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb65000",
+        "memory_base_address": "0x7eb67000",
         "memory_length": 4096,
         "memory_type": 3
       }
@@ -624,7 +616,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb63000",
+        "memory_base_address": "0x7eb65000",
         "memory_length": 8192,
         "memory_type": 3
       }
@@ -637,7 +629,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb5d000",
+        "memory_base_address": "0x7eb5f000",
         "memory_length": 24576,
         "memory_type": 3
       }
@@ -646,7 +638,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb58000",
+        "memory_base_address": "0x7eb5a000",
         "memory_length": 20480,
         "memory_type": 4
       }
@@ -654,6 +646,15 @@
     {
       "type": "guid_extension",
       "name": "b07c8481-b02f-44ca-a909-64f8cd470b6f"
+    },
+    {
+      "type": "memory_allocation",
+      "alloc_descriptor": {
+        "name": "00000000-0000-0000-0000-000000000000",
+        "memory_base_address": "0x7eb58000",
+        "memory_length": 8192,
+        "memory_type": 3
+      }
     },
     {
       "type": "memory_allocation",
@@ -677,16 +678,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb52000",
-        "memory_length": 8192,
-        "memory_type": 3
-      }
-    },
-    {
-      "type": "memory_allocation",
-      "alloc_descriptor": {
-        "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb4f000",
+        "memory_base_address": "0x7eb51000",
         "memory_length": 12288,
         "memory_type": 3
       }
@@ -712,7 +704,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb4d000",
+        "memory_base_address": "0x7eb4f000",
         "memory_length": 8192,
         "memory_type": 3
       }
@@ -725,7 +717,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb47000",
+        "memory_base_address": "0x7eb49000",
         "memory_length": 24576,
         "memory_type": 3
       }
@@ -740,7 +732,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb45000",
+        "memory_base_address": "0x7eb47000",
         "memory_length": 8192,
         "memory_type": 3
       }
@@ -749,8 +741,8 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb39000",
-        "memory_length": 49152,
+        "memory_base_address": "0x7eb3c000",
+        "memory_length": 45056,
         "memory_type": 3
       }
     },
@@ -758,7 +750,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb38000",
+        "memory_base_address": "0x7eb3b000",
         "memory_length": 4096,
         "memory_type": 4
       }
@@ -770,7 +762,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb2a000",
+        "memory_base_address": "0x7eb2d000",
         "memory_length": 57344,
         "memory_type": 7
       }
@@ -779,7 +771,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb22000",
+        "memory_base_address": "0x7eb25000",
         "memory_length": 32768,
         "memory_type": 7
       }
@@ -788,7 +780,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb1d000",
+        "memory_base_address": "0x7eb20000",
         "memory_length": 20480,
         "memory_type": 3
       }
@@ -797,7 +789,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eb1b000",
+        "memory_base_address": "0x7eb1e000",
         "memory_length": 8192,
         "memory_type": 3
       }
@@ -816,8 +808,8 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eafd000",
-        "memory_length": 122880,
+        "memory_base_address": "0x7eafc000",
+        "memory_length": 139264,
         "memory_type": 3
       }
     },
@@ -828,7 +820,7 @@
       "type": "memory_allocation",
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
-        "memory_base_address": "0x7eadd000",
+        "memory_base_address": "0x7eadc000",
         "memory_length": 131072,
         "memory_type": 4
       }
@@ -847,7 +839,7 @@
       "alloc_descriptor": {
         "name": "00000000-0000-0000-0000-000000000000",
         "memory_base_address": "0x7ea00000",
-        "memory_length": 905216,
+        "memory_length": 901120,
         "memory_type": 7
       }
     },
@@ -877,19 +869,39 @@
   "fv_list": [
     {
       "fv_name": "7cb8bdc9-f8eb-4f34-aaea-3ee4af6516a1",
-      "fv_length": 10485760,
+      "fv_length": "0xa00000",
       "fv_base_address": "0x900000",
-      "fv_attributes": 524031,
+      "fv_attributes": "0x7feff",
       "files": [
         {
-          "name": "fc510ee7-ffdc-11d4-bd41-0080c73c8881",
-          "file_type": "FreeForm",
-          "length": 60,
-          "attributes": 0,
+          "name": "80cf7257-87ab-47f9-a3fe-d50b76d89541",
+          "file_type": "Driver",
+          "length": "0x7d1a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 36,
+              "length": "0xd4",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "DxeDepex",
+              "length": "0x6",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x7c04",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x12",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -897,27 +909,27 @@
         {
           "name": "d93ce3d8-a7eb-4730-8c8e-cc466a9ecc3c",
           "file_type": "Driver",
-          "length": 23726,
-          "attributes": 0,
+          "length": "0x5aae",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 23556,
+              "length": "0x5a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 70,
+              "length": "0x46",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -925,60 +937,27 @@
         {
           "name": "6c2004ef-4e0e-4be4-b14c-340eb4aa5891",
           "file_type": "Driver",
-          "length": 20146,
-          "attributes": 0,
+          "length": "0x4cb2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19972,
+              "length": "0x4c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 60,
+              "length": "0x3c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "80cf7257-87ab-47f9-a3fe-d50b76d89541",
-          "file_type": "Driver",
-          "length": 32538,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "Raw",
-              "length": 212,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "DxeDepex",
-              "length": 6,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 32260,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 18,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -986,27 +965,27 @@
         {
           "name": "f80697e9-7fd6-4665-8646-88e33ef71dfc",
           "file_type": "Driver",
-          "length": 41114,
-          "attributes": 0,
+          "length": "0xa09a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 40964,
+              "length": "0xa004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 36,
+              "length": "0x24",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1014,27 +993,27 @@
         {
           "name": "245cb4da-8e15-4a1b-87e3-9878ffa07520",
           "file_type": "Driver",
-          "length": 15470,
-          "attributes": 0,
+          "length": "0x3a6e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15364,
+              "length": "0x3a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 26,
+              "length": "0x1a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1042,27 +1021,27 @@
         {
           "name": "a19b1fe7-c1bc-49f8-875f-54a5d542443f",
           "file_type": "Driver",
-          "length": 17002,
-          "attributes": 0,
+          "length": "0x426a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 16900,
+              "length": "0x4204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1070,27 +1049,27 @@
         {
           "name": "c190fe35-44aa-41a1-8aea-4947bc60e09d",
           "file_type": "Driver",
-          "length": 15494,
-          "attributes": 0,
+          "length": "0x3c86",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15364,
+              "length": "0x3c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 16,
+              "length": "0x10",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1098,27 +1077,27 @@
         {
           "name": "f6697ac4-a776-4ee1-b643-1feff2b615bb",
           "file_type": "Driver",
-          "length": 15510,
-          "attributes": 0,
+          "length": "0x3a96",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15364,
+              "length": "0x3a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 68,
+              "length": "0x44",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1126,27 +1105,27 @@
         {
           "name": "11a6edf6-a9be-426d-a6cc-b22fe51d9224",
           "file_type": "Driver",
-          "length": 28302,
-          "attributes": 0,
+          "length": "0x6e8e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 28164,
+              "length": "0x6e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1154,27 +1133,27 @@
         {
           "name": "128fb770-5e79-4176-9e51-9bb268a17dd1",
           "file_type": "Driver",
-          "length": 55546,
-          "attributes": 0,
+          "length": "0xd4fa",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 166,
+              "length": "0xa6",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 55300,
+              "length": "0xd404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 38,
+              "length": "0x26",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1182,27 +1161,27 @@
         {
           "name": "93b80004-9fb3-11d4-9a3a-0090273fc14d",
           "file_type": "Driver",
-          "length": 77106,
-          "attributes": 0,
+          "length": "0x12d32",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 76804,
+              "length": "0x12c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1210,27 +1189,27 @@
         {
           "name": "4b28e4c7-ff36-4e10-93cf-a82159e777c5",
           "file_type": "Driver",
-          "length": 23190,
-          "attributes": 0,
+          "length": "0x5a96",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 23044,
+              "length": "0x5a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 48,
+              "length": "0x30",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1238,536 +1217,27 @@
         {
           "name": "c8339973-a563-4561-b858-d8476f9defc4",
           "file_type": "Driver",
-          "length": 15466,
-          "attributes": 0,
+          "length": "0x3c6a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15364,
+              "length": "0x3c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "378d7b65-8da9-4773-b6e4-a47826a833e1",
-          "file_type": "Driver",
-          "length": 30874,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 94,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 30724,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 16,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "f5e4f8d3-9975-4263-8bb5-67178988429e",
-          "file_type": "Driver",
-          "length": 14466,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 58,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 14340,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 26,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "83dd3b39-7caf-4fac-a542-e050b767e3a7",
-          "file_type": "Driver",
-          "length": 20806,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 20484,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 42,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "0170f60c-1d40-4651-956d-f0bd9879d527",
-          "file_type": "Driver",
-          "length": 28466,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 28164,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 22,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "11d92dfb-3ca9-4f93-ba2e-4780ed3e03b5",
-          "file_type": "Driver",
-          "length": 21818,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 21508,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 30,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "fab5d4f4-83c0-4aaf-8480-442d11df6cea",
-          "file_type": "Driver",
-          "length": 22842,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 22532,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 32,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "58e26f0d-cbac-4bba-b70f-18221415665a",
-          "file_type": "Driver",
-          "length": 20794,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 20484,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 30,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "b981a835-6ee8-4f4c-ae0b-210aa0bfbf01",
-          "file_type": "Driver",
-          "length": 18518,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 22,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 18436,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 18,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "f099d67f-71ae-4c36-b2a3-dceb0eb2b7d8",
-          "file_type": "Driver",
-          "length": 15510,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 76,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 15364,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 32,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "ad608272-d07f-4964-801e-7bd3b7888652",
-          "file_type": "Driver",
-          "length": 20146,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 76,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 19972,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 58,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "42857f0a-13f2-4b21-8a23-53d3f714b840",
-          "file_type": "Driver",
-          "length": 42710,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 130,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 42500,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 40,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "51ccf399-4fdf-4e55-a45b-e123f84d456a",
-          "file_type": "Driver",
-          "length": 27966,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 27652,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 34,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "408edcec-cf6d-477c-a5a8-b4844e3de281",
-          "file_type": "Driver",
-          "length": 41278,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 40964,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 34,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "cccb0c28-4b24-11d5-9a5a-0090273fc14d",
-          "file_type": "Driver",
-          "length": 34118,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 33796,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 42,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "9e863906-a40f-4875-977f-5b93ff237fc6",
-          "file_type": "Driver",
-          "length": 43318,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 238,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 43012,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 28,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "ebf8ed7c-0dd1-4787-84f1-f48d537dcacf",
-          "file_type": "Driver",
-          "length": 35118,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 130,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Raw",
-              "length": 76,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 34820,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 50,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "6d33944a-ec75-4855-a54d-809c75241f6c",
-          "file_type": "Driver",
-          "length": 404710,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 166,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 404484,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 18,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "806040ca-dad9-4978-a3b4-2d2ab0c8a48f",
-          "file_type": "Driver",
-          "length": 24778,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "DxeDepex",
-              "length": 112,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 24580,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 48,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1775,27 +1245,536 @@
         {
           "name": "9b680fce-ad6b-4f3a-b60b-f59899003443",
           "file_type": "Driver",
-          "length": 55394,
-          "attributes": 0,
+          "length": "0xd662",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 55300,
+              "length": "0xd604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 32,
+              "length": "0x20",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "378d7b65-8da9-4773-b6e4-a47826a833e1",
+          "file_type": "Driver",
+          "length": "0x709a",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x5e",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x7004",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x10",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "f5e4f8d3-9975-4263-8bb5-67178988429e",
+          "file_type": "Driver",
+          "length": "0x3682",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x3a",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x3604",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x1a",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "83dd3b39-7caf-4fac-a542-e050b767e3a7",
+          "file_type": "Driver",
+          "length": "0x5146",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x5004",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x2a",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "0170f60c-1d40-4651-956d-f0bd9879d527",
+          "file_type": "Driver",
+          "length": "0x7132",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x7004",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x16",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "11d92dfb-3ca9-4f93-ba2e-4780ed3e03b5",
+          "file_type": "Driver",
+          "length": "0x553a",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x5404",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x1e",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "fab5d4f4-83c0-4aaf-8480-442d11df6cea",
+          "file_type": "Driver",
+          "length": "0x593a",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x5804",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x20",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "58e26f0d-cbac-4bba-b70f-18221415665a",
+          "file_type": "Driver",
+          "length": "0x4f3a",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x4e04",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x1e",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "b981a835-6ee8-4f4c-ae0b-210aa0bfbf01",
+          "file_type": "Driver",
+          "length": "0x4856",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x16",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x4804",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x12",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "f099d67f-71ae-4c36-b2a3-dceb0eb2b7d8",
+          "file_type": "Driver",
+          "length": "0x3c96",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x4c",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x3c04",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x20",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "ad608272-d07f-4964-801e-7bd3b7888652",
+          "file_type": "Driver",
+          "length": "0x4cb2",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x4c",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x4c04",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x3a",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "42857f0a-13f2-4b21-8a23-53d3f714b840",
+          "file_type": "Driver",
+          "length": "0xa2d6",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x82",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0xa204",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x28",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "51ccf399-4fdf-4e55-a45b-e123f84d456a",
+          "file_type": "Driver",
+          "length": "0x6b3e",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x6a04",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x22",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "408edcec-cf6d-477c-a5a8-b4844e3de281",
+          "file_type": "Driver",
+          "length": "0xa13e",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0xa004",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x22",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "cccb0c28-4b24-11d5-9a5a-0090273fc14d",
+          "file_type": "Driver",
+          "length": "0x8346",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x8204",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x2a",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "9e863906-a40f-4875-977f-5b93ff237fc6",
+          "file_type": "Driver",
+          "length": "0xa936",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xee",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0xa804",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x1c",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "ebf8ed7c-0dd1-4787-84f1-f48d537dcacf",
+          "file_type": "Driver",
+          "length": "0x872e",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x82",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Raw",
+              "length": "0x4c",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x8604",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x32",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "6d33944a-ec75-4855-a54d-809c75241f6c",
+          "file_type": "Driver",
+          "length": "0x622e6",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0xa6",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x62204",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x12",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "806040ca-dad9-4978-a3b4-2d2ab0c8a48f",
+          "file_type": "Driver",
+          "length": "0x60ca",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "DxeDepex",
+              "length": "0x70",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x6004",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x30",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1803,27 +1782,27 @@
         {
           "name": "79e4a61c-ed73-4312-94fe-e3e7563362a9",
           "file_type": "Driver",
-          "length": 17002,
-          "attributes": 0,
+          "length": "0x426a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 16900,
+              "length": "0x4204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1831,27 +1810,27 @@
         {
           "name": "6b38f7b4-ad98-40e9-9093-aca2b5a253c4",
           "file_type": "Driver",
-          "length": 28466,
-          "attributes": 0,
+          "length": "0x6d32",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 28164,
+              "length": "0x6c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1859,27 +1838,27 @@
         {
           "name": "1fa1f39e-feff-4aae-bd7b-38a070a3b609",
           "file_type": "Driver",
-          "length": 36154,
-          "attributes": 0,
+          "length": "0x8b3a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 35844,
+              "length": "0x8a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1887,37 +1866,37 @@
         {
           "name": "28a03ff4-12b3-4305-a417-bb1a4f94081e",
           "file_type": "Driver",
-          "length": 56192,
-          "attributes": 0,
+          "length": "0xd980",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 130,
+              "length": "0x82",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 55812,
+              "length": "0xd804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 26,
+              "length": "0x1a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 128,
+              "length": "0x80",
               "compression_type": "uncompressed"
             }
           ]
@@ -1925,27 +1904,27 @@
         {
           "name": "cd3bafb6-50fb-4fe8-8e4e-ab74d2c1a600",
           "file_type": "Driver",
-          "length": 15158,
-          "attributes": 0,
+          "length": "0x3b36",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 14852,
+              "length": "0x3a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 26,
+              "length": "0x1a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1953,27 +1932,27 @@
         {
           "name": "0167ccc4-d0f7-4f21-a3ef-9e64b7cdce8b",
           "file_type": "Driver",
-          "length": 24878,
-          "attributes": 0,
+          "length": "0x612e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 24580,
+              "length": "0x6004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -1981,27 +1960,27 @@
         {
           "name": "0a66e322-3740-4cce-ad62-bd172cecca35",
           "file_type": "Driver",
-          "length": 56626,
-          "attributes": 0,
+          "length": "0xdd32",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 56324,
+              "length": "0xdc04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2009,27 +1988,27 @@
         {
           "name": "021722d8-522b-4079-852a-fe44c2c13f49",
           "file_type": "Driver",
-          "length": 21310,
-          "attributes": 0,
+          "length": "0x533e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 20996,
+              "length": "0x5204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 34,
+              "length": "0x22",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2037,27 +2016,27 @@
         {
           "name": "5e523cb4-d397-4986-87bd-a6dd8b22f455",
           "file_type": "Driver",
-          "length": 59718,
-          "attributes": 0,
+          "length": "0xe746",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 59396,
+              "length": "0xe604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 44,
+              "length": "0x2c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2065,27 +2044,27 @@
         {
           "name": "19df145a-b1d4-453f-8507-38816676d7f6",
           "file_type": "Driver",
-          "length": 34610,
-          "attributes": 0,
+          "length": "0x8732",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 34308,
+              "length": "0x8604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2093,27 +2072,27 @@
         {
           "name": "5be3bdf4-53cf-46a3-a6a9-73c34a6e5ee3",
           "file_type": "Driver",
-          "length": 51002,
-          "attributes": 0,
+          "length": "0xdb3a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 50692,
+              "length": "0xda04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 32,
+              "length": "0x20",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2121,27 +2100,27 @@
         {
           "name": "348c4d62-bfbd-4882-9ece-c80bb1c4783b",
           "file_type": "Driver",
-          "length": 144514,
-          "attributes": 0,
+          "length": "0x22a82",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 144388,
+              "length": "0x22a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 28,
+              "length": "0x1c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2149,27 +2128,27 @@
         {
           "name": "ebf342fe-b1d3-4ef8-957c-8048606ff671",
           "file_type": "Driver",
-          "length": 119994,
-          "attributes": 0,
+          "length": "0x1ceba",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 112,
+              "length": "0x70",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 119812,
+              "length": "0x1ce04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2177,27 +2156,27 @@
         {
           "name": "96b5c032-df4c-4b6e-8232-438dcf448d0e",
           "file_type": "Driver",
-          "length": 16014,
-          "attributes": 0,
+          "length": "0x3e8e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15876,
+              "length": "0x3e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2205,27 +2184,27 @@
         {
           "name": "864e1ca8-85eb-4d63-9dcc-6e0fc90ffd55",
           "file_type": "Driver",
-          "length": 21298,
-          "attributes": 0,
+          "length": "0x5332",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 20996,
+              "length": "0x5204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2233,27 +2212,27 @@
         {
           "name": "c4d1f932-821f-4744-bf06-6d30f7730f8d",
           "file_type": "Driver",
-          "length": 33598,
-          "attributes": 0,
+          "length": "0x813e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 33284,
+              "length": "0x8004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 34,
+              "length": "0x22",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2261,27 +2240,27 @@
         {
           "name": "f9d88642-0737-49bc-81b5-6889cd57d9ea",
           "file_type": "Driver",
-          "length": 33954,
-          "attributes": 0,
+          "length": "0x84a2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 96,
+              "length": "0x60",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 33796,
+              "length": "0x8404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2289,27 +2268,27 @@
         {
           "name": "4110465d-5ff3-4f4b-b580-24ed0d06747a",
           "file_type": "Driver",
-          "length": 20146,
-          "attributes": 0,
+          "length": "0x4cb2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 94,
+              "length": "0x5e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19972,
+              "length": "0x4c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2317,27 +2296,27 @@
         {
           "name": "9622e42c-8e38-4a08-9e8f-54f784652f6b",
           "file_type": "Driver",
-          "length": 42630,
-          "attributes": 0,
+          "length": "0xa486",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 42500,
+              "length": "0xa404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2345,27 +2324,27 @@
         {
           "name": "17985e6f-e778-4d94-aefa-c5dd2b77e186",
           "file_type": "Driver",
-          "length": 31418,
-          "attributes": 0,
+          "length": "0x76ba",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 94,
+              "length": "0x5e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 31236,
+              "length": "0x7604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 48,
+              "length": "0x30",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2373,27 +2352,27 @@
         {
           "name": "b8e62775-bb0a-43f0-a843-5be8b14f8ccd",
           "file_type": "Driver",
-          "length": 18778,
-          "attributes": 0,
+          "length": "0x475a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 18436,
+              "length": "0x4604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 62,
+              "length": "0x3e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2401,27 +2380,27 @@
         {
           "name": "961578fe-b6b7-44c3-af35-6bc705cd2b1f",
           "file_type": "Driver",
-          "length": 55078,
-          "attributes": 0,
+          "length": "0xd526",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 54788,
+              "length": "0xd404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 12,
+              "length": "0xc",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2429,27 +2408,27 @@
         {
           "name": "905f13b0-8f91-4b0a-bd76-e1e78f9422e4",
           "file_type": "Driver",
-          "length": 34606,
-          "attributes": 0,
+          "length": "0x872e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 34308,
+              "length": "0x8604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2457,27 +2436,27 @@
         {
           "name": "a487a478-51ef-48aa-8794-7bee2a0562f1",
           "file_type": "Driver",
-          "length": 51910,
-          "attributes": 0,
+          "length": "0xcac6",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 112,
+              "length": "0x70",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 51716,
+              "length": "0xca04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 42,
+              "length": "0x2a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2485,27 +2464,27 @@
         {
           "name": "19618bce-55ae-09c6-37e9-4ce04084c7a1",
           "file_type": "Driver",
-          "length": 61638,
-          "attributes": 0,
+          "length": "0xecc6",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 112,
+              "length": "0x70",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 61444,
+              "length": "0xec04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 42,
+              "length": "0x2a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2513,27 +2492,27 @@
         {
           "name": "17d0ef2a-5933-4007-8950-5749169d3dc5",
           "file_type": "Driver",
-          "length": 44250,
-          "attributes": 0,
+          "length": "0xacda",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 112,
+              "length": "0x70",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 44036,
+              "length": "0xac04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 62,
+              "length": "0x3e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2541,27 +2520,27 @@
         {
           "name": "2f30da26-f51b-4b6f-85c4-31873c281bca",
           "file_type": "Driver",
-          "length": 40158,
-          "attributes": 0,
+          "length": "0x9cde",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 112,
+              "length": "0x70",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 39940,
+              "length": "0x9c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 66,
+              "length": "0x42",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2569,27 +2548,27 @@
         {
           "name": "a210f973-229d-4f4d-aa37-9895e6c9eaba",
           "file_type": "Driver",
-          "length": 15974,
-          "attributes": 0,
+          "length": "0x3c66",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15876,
+              "length": "0x3c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2597,27 +2576,27 @@
         {
           "name": "a2f436ea-a127-4ef8-957c-8048606ff670",
           "file_type": "Driver",
-          "length": 38190,
-          "attributes": 0,
+          "length": "0x932e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 37892,
+              "length": "0x9204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2625,27 +2604,27 @@
         {
           "name": "025bbfc7-e6a9-4b8b-82ad-6815a1aeaf4a",
           "file_type": "Driver",
-          "length": 56110,
-          "attributes": 0,
+          "length": "0xd92e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 55812,
+              "length": "0xd804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2653,27 +2632,27 @@
         {
           "name": "529d3f93-e8e9-4e73-b1e1-bdf6a9d50113",
           "file_type": "Driver",
-          "length": 34094,
-          "attributes": 0,
+          "length": "0x872e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 33796,
+              "length": "0x8604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2681,27 +2660,27 @@
         {
           "name": "94734718-0bbc-47fb-96a5-ee7a5ae6a2ad",
           "file_type": "Driver",
-          "length": 58674,
-          "attributes": 0,
+          "length": "0xe332",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 58372,
+              "length": "0xe204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2709,32 +2688,32 @@
         {
           "name": "9fb1a1f3-3b71-4324-b39a-745cbb015fff",
           "file_type": "Driver",
-          "length": 99170,
-          "attributes": 0,
+          "length": "0x17d62",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 98820,
+              "length": "0x17c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2742,27 +2721,27 @@
         {
           "name": "6d6963ab-906d-4a65-a7ca-bd40e5d6af2b",
           "file_type": "Driver",
-          "length": 50478,
-          "attributes": 0,
+          "length": "0xc12e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 50180,
+              "length": "0xc004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2770,27 +2749,27 @@
         {
           "name": "dc3641b8-2fa8-4ed3-bc1f-f9962a03454b",
           "file_type": "Driver",
-          "length": 49970,
-          "attributes": 0,
+          "length": "0xc332",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 49668,
+              "length": "0xc204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2798,27 +2777,27 @@
         {
           "name": "95e3669d-34be-4775-a651-7ea41b69d89e",
           "file_type": "Driver",
-          "length": 62258,
-          "attributes": 0,
+          "length": "0xf332",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 61956,
+              "length": "0xf204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2826,32 +2805,32 @@
         {
           "name": "5bedb5cc-d830-4eb2-8742-2d4cc9b54f2c",
           "file_type": "Driver",
-          "length": 135010,
-          "attributes": 0,
+          "length": "0x20b62",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 134660,
+              "length": "0x20a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2859,27 +2838,27 @@
         {
           "name": "d912c7bc-f098-4367-92ba-e911083c7b0e",
           "file_type": "Driver",
-          "length": 50478,
-          "attributes": 0,
+          "length": "0xc32e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 50180,
+              "length": "0xc204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2887,27 +2866,27 @@
         {
           "name": "99f03b99-98d8-49dd-a8d3-3219d0ffe41e",
           "file_type": "Driver",
-          "length": 49970,
-          "attributes": 0,
+          "length": "0xc332",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 49668,
+              "length": "0xc204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2915,27 +2894,27 @@
         {
           "name": "1a7e4468-2f55-4a56-903c-01265eb7622b",
           "file_type": "Driver",
-          "length": 89918,
-          "attributes": 0,
+          "length": "0x1593e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 256,
+              "length": "0x100",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 89604,
+              "length": "0x15804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2943,27 +2922,27 @@
         {
           "name": "b95e9fda-26de-48d2-8807-1f9107ac5e3a",
           "file_type": "Driver",
-          "length": 89454,
-          "attributes": 0,
+          "length": "0x15d6e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 292,
+              "length": "0x124",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 89092,
+              "length": "0x15c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2971,27 +2950,27 @@
         {
           "name": "fa1bb8af-71f0-4e2e-ba78-0fb10f8367dd",
           "file_type": "Driver",
-          "length": 20606,
-          "attributes": 0,
+          "length": "0x4e7e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 20484,
+              "length": "0x4e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -2999,12 +2978,12 @@
         {
           "name": "e3624086-4fcd-446e-9d07-b6b913792071",
           "file_type": "Application",
-          "length": 90116,
-          "attributes": 0,
+          "length": "0xf533",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Compression",
-              "length": 90092,
+              "length": "0xf51b",
               "compression_type": "Standard Uefi compressed"
             }
           ]
@@ -3012,27 +2991,27 @@
         {
           "name": "3aceb0c0-3c72-11e4-9a56-74d435052646",
           "file_type": "Driver",
-          "length": 25406,
-          "attributes": 0,
+          "length": "0x653e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 256,
+              "length": "0x100",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 25092,
+              "length": "0x6404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3040,27 +3019,27 @@
         {
           "name": "b219e140-dffc-11e3-b956-0022681e6906",
           "file_type": "Driver",
-          "length": 62766,
-          "attributes": 0,
+          "length": "0xf72e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 62468,
+              "length": "0xf604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 18,
+              "length": "0x12",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3068,27 +3047,27 @@
         {
           "name": "2366c20f-e15a-11e3-8bf1-e4115b28bc50",
           "file_type": "Driver",
-          "length": 68398,
-          "attributes": 0,
+          "length": "0x10d2e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 68100,
+              "length": "0x10c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3096,27 +3075,27 @@
         {
           "name": "22ea234f-e72a-11e4-91f9-28d2447c4829",
           "file_type": "Driver",
-          "length": 19598,
-          "attributes": 0,
+          "length": "0x4a8e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19460,
+              "length": "0x4a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 38,
+              "length": "0x26",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3124,32 +3103,32 @@
         {
           "name": "ecebcb00-d9c8-11e4-af3d-8cdcd426c973",
           "file_type": "Driver",
-          "length": 85866,
-          "attributes": 0,
+          "length": "0x14f6a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 85508,
+              "length": "0x14e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 28,
+              "length": "0x1c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3157,27 +3136,27 @@
         {
           "name": "a92cdb4b-82f1-4e0b-a516-8a655d371524",
           "file_type": "Driver",
-          "length": 31546,
-          "attributes": 0,
+          "length": "0x7b3a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 31236,
+              "length": "0x7a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3185,27 +3164,27 @@
         {
           "name": "2fb92efa-2ee0-4bae-9eb6-7464125e1ef7",
           "file_type": "Driver",
-          "length": 38702,
-          "attributes": 0,
+          "length": "0x972e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 38404,
+              "length": "0x9604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3213,27 +3192,27 @@
         {
           "name": "bdfe430e-8f2a-4db0-9991-6f856594777e",
           "file_type": "Driver",
-          "length": 43822,
-          "attributes": 0,
+          "length": "0xab2e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 43524,
+              "length": "0xaa04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3241,27 +3220,27 @@
         {
           "name": "b7f50e91-a759-412c-ade4-dcd03e7f7c28",
           "file_type": "Driver",
-          "length": 69422,
-          "attributes": 0,
+          "length": "0x10f2e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 69124,
+              "length": "0x10e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3269,27 +3248,27 @@
         {
           "name": "240612b7-a063-11d4-9a3a-0090273fc14d",
           "file_type": "Driver",
-          "length": 51506,
-          "attributes": 0,
+          "length": "0xc732",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 51204,
+              "length": "0xc604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3297,27 +3276,27 @@
         {
           "name": "2d2e62cf-9ecf-43b7-8219-94e7fc713dfe",
           "file_type": "Driver",
-          "length": 36658,
-          "attributes": 0,
+          "length": "0x8f32",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 36356,
+              "length": "0x8e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3325,27 +3304,27 @@
         {
           "name": "9fb4b4a7-42c0-4bcd-8540-9bcc6711f83e",
           "file_type": "Driver",
-          "length": 32578,
-          "attributes": 0,
+          "length": "0x7f42",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 32260,
+              "length": "0x7e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3353,27 +3332,27 @@
         {
           "name": "e3752948-b9a1-4770-90c4-df41c38986be",
           "file_type": "Driver",
-          "length": 31562,
-          "attributes": 0,
+          "length": "0x7b4a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 256,
+              "length": "0x100",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 31236,
+              "length": "0x7a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3381,27 +3360,27 @@
         {
           "name": "dce1b094-7dc6-45d0-9fdd-d7fc3cc3e4ef",
           "file_type": "Driver",
-          "length": 28842,
-          "attributes": 0,
+          "length": "0x6eaa",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 96,
+              "length": "0x60",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 28676,
+              "length": "0x6e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3409,27 +3388,27 @@
         {
           "name": "8657015b-ea43-440d-949a-af3be365c0fc",
           "file_type": "Driver",
-          "length": 23658,
-          "attributes": 0,
+          "length": "0x5a6a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 23556,
+              "length": "0x5a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3437,60 +3416,27 @@
         {
           "name": "1206f7ca-a475-4624-a83e-e6fc9bb38e49",
           "file_type": "Driver",
-          "length": 24734,
-          "attributes": 0,
+          "length": "0x5c9e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 80,
+              "length": "0x50",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 24580,
+              "length": "0x5c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 34,
+              "length": "0x22",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "a0dbe438-701c-44af-ab4a-25545b86b565",
-          "file_type": "Peim",
-          "length": 5510,
-          "attributes": 16,
-          "sections": [
-            {
-              "section_type": "PeiDepex",
-              "length": 22,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Raw",
-              "length": 36,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 5380,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 30,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3498,12 +3444,58 @@
         {
           "name": "ffffffff-ffff-ffff-ffff-ffffffffffff",
           "file_type": "FfsPad",
-          "length": 120,
-          "attributes": 0,
+          "length": "0x90",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Invalid",
-              "length": 4294967295,
+              "length": "0xffffffff",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "a0dbe438-701c-44af-ab4a-25545b86b565",
+          "file_type": "Peim",
+          "length": "0x15c6",
+          "attributes": "0x10",
+          "sections": [
+            {
+              "section_type": "PeiDepex",
+              "length": "0x16",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Raw",
+              "length": "0x24",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Pe32",
+              "length": "0x1544",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "UserInterface",
+              "length": "0x1e",
+              "compression_type": "uncompressed"
+            },
+            {
+              "section_type": "Version",
+              "length": "0xe",
+              "compression_type": "uncompressed"
+            }
+          ]
+        },
+        {
+          "name": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+          "file_type": "FfsPad",
+          "length": "0x38",
+          "attributes": "0x0",
+          "sections": [
+            {
+              "section_type": "Invalid",
+              "length": "0xffffffff",
               "compression_type": "uncompressed"
             }
           ]
@@ -3511,32 +3503,32 @@
         {
           "name": "e6d1f588-f107-41de-9832-cea334b33c1f",
           "file_type": "Peim",
-          "length": 45822,
-          "attributes": 16,
+          "length": "0xa5fe",
+          "attributes": "0x10",
           "sections": [
             {
               "section_type": "PeiDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 48,
+              "length": "0x30",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 45636,
+              "length": "0xa544",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3544,32 +3536,32 @@
         {
           "name": "2907cb61-cdd4-423c-857a-13a79e246a1d",
           "file_type": "Peim",
-          "length": 20006,
-          "attributes": 16,
+          "length": "0x4d66",
+          "attributes": "0x10",
           "sections": [
             {
               "section_type": "PeiDepex",
-              "length": 6,
+              "length": "0x6",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19908,
+              "length": "0x4d04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 32,
+              "length": "0x20",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3577,27 +3569,27 @@
         {
           "name": "f0825f4f-d6a2-4f61-a6c0-5f01a86c80ff",
           "file_type": "Driver",
-          "length": 29334,
-          "attributes": 0,
+          "length": "0x7296",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 29188,
+              "length": "0x7204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3605,22 +3597,22 @@
         {
           "name": "4e4c89dc-a452-4b6b-b183-f16a2a223733",
           "file_type": "MmCoreStandalone",
-          "length": 186456,
-          "attributes": 0,
+          "length": "0x2ca58",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Pe32",
-              "length": 186372,
+              "length": "0x2ca04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 38,
+              "length": "0x26",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             }
           ]
@@ -3628,27 +3620,27 @@
         {
           "name": "e3121a26-bb1c-4a18-8e23-2ea3f0412248",
           "file_type": "MmStandalone",
-          "length": 19566,
-          "attributes": 0,
+          "length": "0x4a6e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19460,
+              "length": "0x4a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 42,
+              "length": "0x2a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3656,27 +3648,27 @@
         {
           "name": "834da76a-4ea1-41c7-9601-fe7a7c564757",
           "file_type": "MmStandalone",
-          "length": 26742,
-          "attributes": 0,
+          "length": "0x6876",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 26628,
+              "length": "0x6804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3684,27 +3676,27 @@
         {
           "name": "3aade4ec-63cc-4a48-a928-5a374dd463eb",
           "file_type": "MmStandalone",
-          "length": 36486,
-          "attributes": 0,
+          "length": "0x8c86",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 36356,
+              "length": "0x8c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 66,
+              "length": "0x42",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3712,27 +3704,27 @@
         {
           "name": "7ee2c0c1-c21a-4113-a53a-66824a95696f",
           "file_type": "MmStandalone",
-          "length": 89218,
-          "attributes": 0,
+          "length": "0x15882",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 89092,
+              "length": "0x15804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 46,
+              "length": "0x2e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3740,27 +3732,27 @@
         {
           "name": "9f7dcade-11ea-448a-a46f-76e003657dd1",
           "file_type": "Driver",
-          "length": 42170,
-          "attributes": 0,
+          "length": "0xa2ba",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 94,
+              "length": "0x5e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 41988,
+              "length": "0xa204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 48,
+              "length": "0x30",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3768,27 +3760,27 @@
         {
           "name": "06e49122-4ef4-45fe-9766-e2eaf2f9472f",
           "file_type": "Driver",
-          "length": 32930,
-          "attributes": 0,
+          "length": "0x7ea2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 32772,
+              "length": "0x7e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 42,
+              "length": "0x2a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3796,27 +3788,27 @@
         {
           "name": "c5d0e6b2-a841-4c67-a0e3-92354de07e51",
           "file_type": "Driver",
-          "length": 16562,
-          "attributes": 0,
+          "length": "0x3eb2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 16388,
+              "length": "0x3e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3824,27 +3816,27 @@
         {
           "name": "c9b8b0b7-9c85-46e8-b343-362fbd26e8f3",
           "file_type": "Driver",
-          "length": 21634,
-          "attributes": 0,
+          "length": "0x5482",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 21508,
+              "length": "0x5404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 28,
+              "length": "0x1c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3852,27 +3844,27 @@
         {
           "name": "00160f8d-2b35-4df2-bbe0-b272a8d631f0",
           "file_type": "Driver",
-          "length": 22698,
-          "attributes": 0,
+          "length": "0x56aa",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 22532,
+              "length": "0x5604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 50,
+              "length": "0x32",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3880,27 +3872,27 @@
         {
           "name": "3977d4c4-b0eb-4548-96b9-671fa2e36820",
           "file_type": "Driver",
-          "length": 14498,
-          "attributes": 0,
+          "length": "0x38a2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 14340,
+              "length": "0x3804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 42,
+              "length": "0x2a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3908,27 +3900,27 @@
         {
           "name": "995f045b-0265-46a4-8d21-001211a24a4f",
           "file_type": "Driver",
-          "length": 31898,
-          "attributes": 0,
+          "length": "0x7a9a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 31748,
+              "length": "0x7a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 36,
+              "length": "0x24",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3936,27 +3928,27 @@
         {
           "name": "da2ed037-5994-4ef6-a1ff-9c7690fc72d5",
           "file_type": "MmStandalone",
-          "length": 22686,
-          "attributes": 0,
+          "length": "0x569e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 22532,
+              "length": "0x5604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 54,
+              "length": "0x36",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -3964,55 +3956,27 @@
         {
           "name": "eaeedef9-abe7-4b95-82b0-5a534c899b46",
           "file_type": "MmStandalone",
-          "length": 19598,
-          "attributes": 0,
+          "length": "0x4c8e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19460,
+              "length": "0x4c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 74,
+              "length": "0x4a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
-              "compression_type": "uncompressed"
-            }
-          ]
-        },
-        {
-          "name": "ea5dcd04-3861-4b95-a6b1-ec5e944c350e",
-          "file_type": "Mm",
-          "length": 18118,
-          "attributes": 0,
-          "sections": [
-            {
-              "section_type": "MmDepex",
-              "length": 76,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Pe32",
-              "length": 17924,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "UserInterface",
-              "length": 78,
-              "compression_type": "uncompressed"
-            },
-            {
-              "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4020,27 +3984,27 @@
         {
           "name": "827ac29d-e52d-4b1a-874a-c6577e0699cf",
           "file_type": "MmStandalone",
-          "length": 18582,
-          "attributes": 0,
+          "length": "0x4696",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 18436,
+              "length": "0x4604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 68,
+              "length": "0x44",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4048,27 +4012,27 @@
         {
           "name": "8c7db881-da76-4486-8654-8152ee3470a3",
           "file_type": "Driver",
-          "length": 16046,
-          "attributes": 0,
+          "length": "0x3cae",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15876,
+              "length": "0x3c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 54,
+              "length": "0x36",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4076,27 +4040,27 @@
         {
           "name": "47f4201b-6de1-4a65-b922-5e026e0ff436",
           "file_type": "Driver",
-          "length": 19654,
-          "attributes": 0,
+          "length": "0x4cc6",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 94,
+              "length": "0x5e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19460,
+              "length": "0x4c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 60,
+              "length": "0x3c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4104,27 +4068,27 @@
         {
           "name": "bb3d60c4-210b-4076-b596-3dd298afea49",
           "file_type": "MmStandalone",
-          "length": 29798,
-          "attributes": 0,
+          "length": "0x7266",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 6,
+              "length": "0x6",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 29700,
+              "length": "0x7204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4132,27 +4096,27 @@
         {
           "name": "e9badbb6-0228-43fb-a367-5f3677cdc9e0",
           "file_type": "Driver",
-          "length": 19098,
-          "attributes": 0,
+          "length": "0x489a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 18948,
+              "length": "0x4804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 50,
+              "length": "0x32",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4160,27 +4124,27 @@
         {
           "name": "ff626da9-17ee-4949-a8b8-b10fa0044e9f",
           "file_type": "Driver",
-          "length": 20610,
-          "attributes": 0,
+          "length": "0x4e82",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 20484,
+              "length": "0x4e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 26,
+              "length": "0x1a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4188,27 +4152,27 @@
         {
           "name": "4ea43463-747c-46eb-97fb-b0e5c5f05306",
           "file_type": "Driver",
-          "length": 25430,
-          "attributes": 0,
+          "length": "0x6356",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 238,
+              "length": "0xee",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 25092,
+              "length": "0x6204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4216,32 +4180,32 @@
         {
           "name": "ae8f0389-6ba2-47d3-9e55-80b3dd9b8a98",
           "file_type": "Driver",
-          "length": 100178,
-          "attributes": 0,
+          "length": "0x18352",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 220,
+              "length": "0xdc",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 99844,
+              "length": "0x18204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4249,27 +4213,27 @@
         {
           "name": "ea205b85-27e0-44e6-9643-7e808368550f",
           "file_type": "Driver",
-          "length": 19122,
-          "attributes": 0,
+          "length": "0x4ab2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 94,
+              "length": "0x5e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 18948,
+              "length": "0x4a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4277,27 +4241,27 @@
         {
           "name": "63e3bdcf-2ac7-4ac0-9b92-03a7541422ff",
           "file_type": "Driver",
-          "length": 20302,
-          "attributes": 0,
+          "length": "0x514e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 256,
+              "length": "0x100",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 19972,
+              "length": "0x5004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 34,
+              "length": "0x22",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4305,27 +4269,27 @@
         {
           "name": "d118a4c4-deb6-4b7a-b3eb-e071148c1c6c",
           "file_type": "Driver",
-          "length": 17534,
-          "attributes": 0,
+          "length": "0x427e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 17412,
+              "length": "0x4204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4333,27 +4297,27 @@
         {
           "name": "bdee011f-87f2-4a7f-bc5e-44b6b61f2d20",
           "file_type": "Driver",
-          "length": 1036416,
-          "attributes": 0,
+          "length": "0xfd080",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 1036292,
+              "length": "0xfd004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 50,
+              "length": "0x32",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             }
           ]
@@ -4361,27 +4325,27 @@
         {
           "name": "bdee011f-87f2-4a7f-bc5e-44b6b61f2d40",
           "file_type": "MmStandalone",
-          "length": 547484,
-          "attributes": 0,
+          "length": "0x85a9c",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 547332,
+              "length": "0x85a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 80,
+              "length": "0x50",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 24,
+              "length": "0x18",
               "compression_type": "uncompressed"
             }
           ]
@@ -4389,12 +4353,12 @@
         {
           "name": "c22c63ad-fedf-4e64-9137-4a8336dd6c35",
           "file_type": "Application",
-          "length": 16001,
-          "attributes": 0,
+          "length": "0x3cbc",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Compression",
-              "length": 15977,
+              "length": "0x3ca4",
               "compression_type": "Standard Uefi compressed"
             }
           ]
@@ -4402,27 +4366,27 @@
         {
           "name": "18d93d57-0b00-4213-b0a2-a2ff5ec214e4",
           "file_type": "Driver",
-          "length": 24710,
-          "attributes": 0,
+          "length": "0x5e86",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 24580,
+              "length": "0x5e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4430,27 +4394,27 @@
         {
           "name": "dc2a58a6-5927-4776-b995-d118a27335a2",
           "file_type": "Driver",
-          "length": 17586,
-          "attributes": 0,
+          "length": "0x42b2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 17412,
+              "length": "0x4204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 74,
+              "length": "0x4a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4458,27 +4422,27 @@
         {
           "name": "5a6cf42b-8bb4-472c-a233-5c4dc4033dc7",
           "file_type": "Driver",
-          "length": 17574,
-          "attributes": 0,
+          "length": "0x42a6",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 17412,
+              "length": "0x4204",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 62,
+              "length": "0x3e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4486,27 +4450,27 @@
         {
           "name": "226a500a-e14f-414a-a956-40e5762d3d1e",
           "file_type": "Driver",
-          "length": 29318,
-          "attributes": 0,
+          "length": "0x7086",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 29188,
+              "length": "0x7004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 30,
+              "length": "0x1e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4514,32 +4478,32 @@
         {
           "name": "b0423e2f-3b2c-4a36-bf98-3eb3b4b7cb0e",
           "file_type": "Driver",
-          "length": 16369,
-          "attributes": 0,
+          "length": "0x3df1",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 76,
+              "length": "0x4c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15876,
+              "length": "0x3c04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 337,
+              "length": "0x151",
               "compression_type": "uncompressed"
             }
           ]
@@ -4547,12 +4511,12 @@
         {
           "name": "717f2543-3bb6-9d4f-a6fc-58e8a78dbd27",
           "file_type": "FreeForm",
-          "length": 3586,
-          "attributes": 0,
+          "length": "0xe02",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 3562,
+              "length": "0xdea",
               "compression_type": "uncompressed"
             }
           ]
@@ -4560,12 +4524,12 @@
         {
           "name": "ba8e0276-1ec6-4eac-b78f-612fe7694438",
           "file_type": "FreeForm",
-          "length": 1852,
-          "attributes": 0,
+          "length": "0x73c",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 1828,
+              "length": "0x724",
               "compression_type": "uncompressed"
             }
           ]
@@ -4573,27 +4537,27 @@
         {
           "name": "f8126429-7b88-4ad2-98c4-402cbe26f9a8",
           "file_type": "Driver",
-          "length": 139070,
-          "attributes": 0,
+          "length": "0x21b3e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 220,
+              "length": "0xdc",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 138756,
+              "length": "0x21a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 56,
+              "length": "0x38",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4601,27 +4565,27 @@
         {
           "name": "0ccf27cf-e68d-4279-96b0-8a4e1cdff10c",
           "file_type": "Driver",
-          "length": 197410,
-          "attributes": 0,
+          "length": "0x2ff22",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 202,
+              "length": "0xca",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 197124,
+              "length": "0x2fe04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 42,
+              "length": "0x2a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4629,27 +4593,27 @@
         {
           "name": "16a5dd36-4c29-4e85-b0b9-c05883753de7",
           "file_type": "Driver",
-          "length": 35470,
-          "attributes": 0,
+          "length": "0x8a8e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 35332,
+              "length": "0x8a04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 40,
+              "length": "0x28",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4657,27 +4621,27 @@
         {
           "name": "02aa389e-ca29-43bf-be05-a4ca038812f2",
           "file_type": "Driver",
-          "length": 24722,
-          "attributes": 0,
+          "length": "0x5e92",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 24580,
+              "length": "0x5e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 42,
+              "length": "0x2a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4685,32 +4649,32 @@
         {
           "name": "c09e4ce4-ae29-4340-b941-078871bd89d1",
           "file_type": "Driver",
-          "length": 83726,
-          "attributes": 0,
+          "length": "0x1470e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 166,
+              "length": "0xa6",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 28,
+              "length": "0x1c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 83460,
+              "length": "0x14604",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 32,
+              "length": "0x20",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4718,32 +4682,32 @@
         {
           "name": "8d865e53-bd58-4e4c-8eca-ee96b620f40f",
           "file_type": "Driver",
-          "length": 346378,
-          "attributes": 0,
+          "length": "0x5510a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 148,
+              "length": "0x94",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 346116,
+              "length": "0x55004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4751,27 +4715,27 @@
         {
           "name": "d91fb421-e24f-4839-9a44-dc77189e87d2",
           "file_type": "Driver",
-          "length": 16014,
-          "attributes": 0,
+          "length": "0x3e8e",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 58,
+              "length": "0x3a",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 15876,
+              "length": "0x3e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 38,
+              "length": "0x26",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4779,17 +4743,17 @@
         {
           "name": "4042708a-0f2d-4823-ac60-0d77b3111889",
           "file_type": "Application",
-          "length": 94840,
-          "attributes": 0,
+          "length": "0x18404",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Compression",
-              "length": 94763,
+              "length": "0x183b5",
               "compression_type": "Standard Uefi compressed"
             },
             {
               "section_type": "Raw",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             }
           ]
@@ -4797,12 +4761,12 @@
         {
           "name": "50670071-478f-4be7-ad13-8754f379c62f",
           "file_type": "Application",
-          "length": 56515,
-          "attributes": 0,
+          "length": "0xd659",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Compression",
-              "length": 56491,
+              "length": "0xd641",
               "compression_type": "Standard Uefi compressed"
             }
           ]
@@ -4810,27 +4774,27 @@
         {
           "name": "e622443c-284e-4b47-a984-fd66b482dac0",
           "file_type": "Driver",
-          "length": 25802,
-          "attributes": 0,
+          "length": "0x60ca",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 112,
+              "length": "0x70",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 25604,
+              "length": "0x6004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 46,
+              "length": "0x2e",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4838,27 +4802,27 @@
         {
           "name": "07f1b357-4270-4122-a32a-7eab3c013bac",
           "file_type": "Driver",
-          "length": 37722,
-          "attributes": 0,
+          "length": "0x8f5a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 274,
+              "length": "0x112",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 37380,
+              "length": "0x8e04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 28,
+              "length": "0x1c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4866,27 +4830,27 @@
         {
           "name": "d4abc208-e91f-4a5c-880b-7063a0393e4c",
           "file_type": "Driver",
-          "length": 54466,
-          "attributes": 0,
+          "length": "0xd0c2",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 130,
+              "length": "0x82",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 54276,
+              "length": "0xd004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4894,27 +4858,27 @@
         {
           "name": "917c56f2-2fe3-498f-affb-87ac0e19fe5e",
           "file_type": "Driver",
-          "length": 100182,
-          "attributes": 0,
+          "length": "0x18556",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 256,
+              "length": "0x100",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 99844,
+              "length": "0x18404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 44,
+              "length": "0x2c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4922,32 +4886,32 @@
         {
           "name": "8e747032-7d55-4d95-9a84-77f83370b3a4",
           "file_type": "Driver",
-          "length": 60794,
-          "attributes": 0,
+          "length": "0xeb7a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "DxeDepex",
-              "length": 256,
+              "length": "0x100",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Raw",
-              "length": 28,
+              "length": "0x1c",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 60420,
+              "length": "0xea04",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 50,
+              "length": "0x32",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4955,12 +4919,12 @@
         {
           "name": "08891c80-1658-443a-bcb2-a0b5e5783ec7",
           "file_type": "Application",
-          "length": 21157,
-          "attributes": 0,
+          "length": "0x5089",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Compression",
-              "length": 21133,
+              "length": "0x5071",
               "compression_type": "Standard Uefi compressed"
             }
           ]
@@ -4968,27 +4932,27 @@
         {
           "name": "930a5e37-9771-4261-9c54-86f821e25b72",
           "file_type": "MmStandalone",
-          "length": 19062,
-          "attributes": 0,
+          "length": "0x4876",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "MmDepex",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Pe32",
-              "length": 18948,
+              "length": "0x4804",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 52,
+              "length": "0x34",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "Version",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -4996,17 +4960,17 @@
         {
           "name": "c57ad6b7-0515-40a8-9d21-551652854e37",
           "file_type": "Application",
-          "length": 1128498,
-          "attributes": 0,
+          "length": "0x113432",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Pe32",
-              "length": 1128452,
+              "length": "0x113404",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 22,
+              "length": "0x16",
               "compression_type": "uncompressed"
             }
           ]
@@ -5014,17 +4978,17 @@
         {
           "name": "7bb28b99-61bb-11d5-9a5d-0090273fc14d",
           "file_type": "FreeForm",
-          "length": 120098,
-          "attributes": 0,
+          "length": "0x1d522",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 120058,
+              "length": "0x1d4fa",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 14,
+              "length": "0xe",
               "compression_type": "uncompressed"
             }
           ]
@@ -5032,12 +4996,12 @@
         {
           "name": "afdaeab5-3f81-4e93-8ee3-228434ba283d",
           "file_type": "FreeForm",
-          "length": 3706,
-          "attributes": 0,
+          "length": "0xe7a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 3682,
+              "length": "0xe62",
               "compression_type": "uncompressed"
             }
           ]
@@ -5045,12 +5009,12 @@
         {
           "name": "d2af039e-9f1f-4616-97af-be4509a365ea",
           "file_type": "FreeForm",
-          "length": 3706,
-          "attributes": 0,
+          "length": "0xe7a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 3682,
+              "length": "0xe62",
               "compression_type": "uncompressed"
             }
           ]
@@ -5058,12 +5022,12 @@
         {
           "name": "7c3a8851-a6d2-445b-a53b-155f867ab4da",
           "file_type": "FreeForm",
-          "length": 3706,
-          "attributes": 0,
+          "length": "0xe7a",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 3682,
+              "length": "0xe62",
               "compression_type": "uncompressed"
             }
           ]
@@ -5071,12 +5035,12 @@
         {
           "name": "ae2d011c-4128-4960-a536-b424ccc3d1ea",
           "file_type": "FreeForm",
-          "length": 5010,
-          "attributes": 0,
+          "length": "0x1392",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 4986,
+              "length": "0x137a",
               "compression_type": "uncompressed"
             }
           ]
@@ -5084,12 +5048,12 @@
         {
           "name": "4ffee6d5-b396-40f9-9246-7a8e4a821720",
           "file_type": "FreeForm",
-          "length": 5010,
-          "attributes": 0,
+          "length": "0x1392",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 4986,
+              "length": "0x137a",
               "compression_type": "uncompressed"
             }
           ]
@@ -5097,12 +5061,12 @@
         {
           "name": "f1e7a352-46ae-4912-92af-36ab51781d8e",
           "file_type": "FreeForm",
-          "length": 2066,
-          "attributes": 0,
+          "length": "0x812",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 2042,
+              "length": "0x7fa",
               "compression_type": "uncompressed"
             }
           ]
@@ -5110,12 +5074,12 @@
         {
           "name": "81ff0793-3e18-489b-9a08-a1eb71b23d20",
           "file_type": "FreeForm",
-          "length": 364,
-          "attributes": 0,
+          "length": "0x16c",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Raw",
-              "length": 340,
+              "length": "0x154",
               "compression_type": "uncompressed"
             }
           ]
@@ -5124,24 +5088,24 @@
     },
     {
       "fv_name": "00000000-0000-0000-0000-000000000000",
-      "fv_length": 2097152,
+      "fv_length": "0x200000",
       "fv_base_address": "0x1300000",
-      "fv_attributes": 327423,
+      "fv_attributes": "0x4feff",
       "files": [
         {
           "name": "23c9322f-2af2-476a-bc4c-26bc88266c71",
           "file_type": "DxeCore",
-          "length": 108592,
-          "attributes": 0,
+          "length": "0x1e030",
+          "attributes": "0x0",
           "sections": [
             {
               "section_type": "Pe32",
-              "length": 108548,
+              "length": "0x1e004",
               "compression_type": "uncompressed"
             },
             {
               "section_type": "UserInterface",
-              "length": 20,
+              "length": "0x14",
               "compression_type": "uncompressed"
             }
           ]
