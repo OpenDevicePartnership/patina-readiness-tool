@@ -218,9 +218,8 @@ impl<'a> HobValidator<'a> {
                 // Ensure exactly one cache attribute is set:
                 // 1. Check if none of the cache bits are set
                 // 2. Check if more than one bit is set by checking if it is not a power of 2
-
                 if (v1.resource_type != EFI_RESOURCE_IO && v1.resource_type != EFI_RESOURCE_IO_RESERVED)
-                    && (attributes & mask == 0 || attributes & (attributes - 1) != 0)
+                    && (attributes & mask == 0 || ((attributes & mask) & (attributes - 1)) != 0)
                 {
                     validation_report.add_violation(ValidationKind::Hob(
                         HobValidationKind::V2MissingValidCacheabilityAttribute { hob1: v1, attributes: *attributes },
@@ -470,5 +469,26 @@ mod tests {
         assert!(result.is_ok());
         let validation_report = result.unwrap();
         assert_ne!(validation_report.violation_count(), 0);
+    }
+
+    #[test]
+    fn test_memory_v2_access_protection_attributes() {
+        // +ve test - valid cacheability attribute specified with a single access protection attribute
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_UC | efi::MEMORY_RO);
+        let hob_list = vec![v2_hob];
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_cacheability_attribute();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        assert_eq!(validation_report.violation_count(), 0);
+
+        // +ve test - valid cacheability attribute specified with multiple access protection attributes
+        let v2_hob = create_v2_hob(100, 100, 3, 0, "owner1", efi::MEMORY_UC | efi::MEMORY_RO | efi::MEMORY_XP);
+        let hob_list = vec![v2_hob];
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_cacheability_attribute();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        assert_eq!(validation_report.violation_count(), 0);
     }
 }
