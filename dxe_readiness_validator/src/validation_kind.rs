@@ -23,6 +23,9 @@ pub enum HobValidationKind<'a> {
 
     // V2 resource descriptor must have at most one valid Cacheability attribute set
     V2MissingValidCacheabilityAttribute { hob1: &'a ResourceDescriptorSerDe, attributes: u64 },
+
+    // V2 resource descriptor for io must have no cacheability or memory protection attributes set
+    V2InvalidIoCacheabilityAttributes { hob1: &'a ResourceDescriptorSerDe, attributes: u64 },
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -71,6 +74,9 @@ impl ValidationKind<'_> {
                 HobValidationKind::V2MissingValidCacheabilityAttribute { .. } => {
                     "HOB: V2 Missing Valid Cacheability Attribute"
                 }
+                HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => {
+                    "HOB: V2 Invalid IO Cacheability Attributes"
+                }
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "FV: Combined Drivers Present",
@@ -98,6 +104,8 @@ impl ValidationKind<'_> {
                                                                                      fields with the cacheability attribute set as the only additional field in the\n   \
                                                                                      v2 HOB.\n   \
                                                                                      Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => "   Platforms must produce Resource Descriptor HOB v2s with no cacheability or memory protection\n   \
+                                                                                        attributes set for IO resource types.",
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "   Firmware volume contains prohibited combined drivers. \nBelow file types are prohibited\n- COMBINED_MM_DXE(0x0C)\n- COMBINED_PEIM_DRIVER(0x08).\n   \
@@ -131,6 +139,9 @@ impl ValidationKind<'_> {
                 HobValidationKind::V2MissingValidCacheabilityAttribute { .. } => {
                     "V2MissingValidCacheabilityAttribute".to_string()
                 }
+                HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => {
+                    "V2InvalidIoCacheabilityAttributes".to_string()
+                }
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "CombinedDriversPresent".to_string(),
@@ -163,6 +174,9 @@ impl PrettyPrintTable for ValidationKind<'_> {
                 HobValidationKind::V1MemoryRangeNotContainedInV2 { .. } => vec!["#", "V1 Hob", "Violation/Resolution"],
                 HobValidationKind::V2ContainsUceAttribute { .. } => vec!["#", "V2 Hob", "Violation/Resolution"],
                 HobValidationKind::V2MissingValidCacheabilityAttribute { .. } => {
+                    vec!["#", "V2 Hob", "Violation/Resolution"]
+                }
+                HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => {
                     vec!["#", "V2 Hob", "Violation/Resolution"]
                 }
             },
@@ -243,6 +257,15 @@ impl PrettyPrintTable for ValidationKind<'_> {
                         let attributes = format!("{:X}", attributes);
                         let resolution =
                         "V2 Hob should contain exactly\none valid cacheability attributes\n - MEMORY_UC(0x1)\n - MEMORY_WC(0x2)\n - MEMORY_WT(0x4)\n - MEMORY_WB(0x8)\n - MEMORY_UCE(0x10)\n - MEMORY_WP(0x1000)".to_string();
+                        vec![row_num, hob1_column, attributes, resolution]
+                    }
+                    HobValidationKind::V2InvalidIoCacheabilityAttributes { hob1, attributes } => {
+                        let hob1_column =
+                            serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
+                        let attributes = format!("{:X}", attributes);
+                        let resolution =
+                            "V2 Hob should not contain cacheability or memory protection attributes for IO ranges"
+                                .to_string();
                         vec![row_num, hob1_column, attributes, resolution]
                     }
                 }

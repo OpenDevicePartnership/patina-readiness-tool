@@ -229,6 +229,24 @@ impl<'a> HobValidator<'a> {
         }
         Ok(validation_report)
     }
+
+    /// Validates that each V2 resource descriptor with an IO resource type has
+    /// no attributes set.
+    fn validate_memory_cacheability_attribute_io_resource_hob(&self) -> ValidationResult {
+        let mut validation_report = ValidationReport::new();
+        for hob in self.hob_list {
+            if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
+                if (v1.resource_type == EFI_RESOURCE_IO || v1.resource_type == EFI_RESOURCE_IO_RESERVED)
+                    && *attributes != 0
+                {
+                    validation_report.add_violation(ValidationKind::Hob(
+                        HobValidationKind::V2InvalidIoCacheabilityAttributes { hob1: v1, attributes: *attributes },
+                    ));
+                }
+            }
+        }
+        Ok(validation_report)
+    }
 }
 
 impl Validator for HobValidator<'_> {
@@ -244,6 +262,7 @@ impl Validator for HobValidator<'_> {
         validation_report.append_report(self.validate_page0_memory_allocation()?);
         validation_report.append_report(self.validate_memory_uce_attribute()?);
         validation_report.append_report(self.validate_memory_cacheability_attribute()?);
+        validation_report.append_report(self.validate_memory_cacheability_attribute_io_resource_hob()?);
         Ok(validation_report)
     }
 }
@@ -252,7 +271,7 @@ impl Validator for HobValidator<'_> {
 mod tests {
     use super::*;
     use common::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
-    use mu_pi::hob::EfiPhysicalAddress;
+    use mu_pi::hob::{EfiPhysicalAddress, EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
 
     fn create_v1_hob(
         start: EfiPhysicalAddress,
@@ -490,5 +509,26 @@ mod tests {
         assert!(result.is_ok());
         let validation_report = result.unwrap();
         assert_eq!(validation_report.violation_count(), 0);
+    }
+
+    #[test]
+    fn test_memory_v2_io_cacheability_attributes() {
+        // -ve test - an io resource descriptor should not have any cacheability attributes
+        let v2_hob = create_v2_hob(100, 100, EFI_RESOURCE_IO, 0, "owner1", efi::MEMORY_UC);
+        let hob_list = vec![v2_hob];
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_cacheability_attribute_io_resource_hob();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        assert_ne!(validation_report.violation_count(), 0);
+
+        // -ve test - an io reserved resource descriptor should not have any cacheability attributes
+        let v2_hob = create_v2_hob(100, 100, EFI_RESOURCE_IO_RESERVED, 0, "owner1", efi::MEMORY_UC);
+        let hob_list = vec![v2_hob];
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_cacheability_attribute_io_resource_hob();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        assert_ne!(validation_report.violation_count(), 0);
     }
 }
