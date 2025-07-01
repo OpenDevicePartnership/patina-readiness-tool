@@ -3,6 +3,8 @@ use common::{
     serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
     Interval,
 };
+use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
+use patina_sdk::base::UEFI_PAGE_SIZE;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum HobValidationKind<'a> {
@@ -59,6 +61,9 @@ pub enum FvValidationKind<'a> {
         section: &'a FirmwareSectionSerDe,
     },
 }
+
+// Required alignment value for ARM64 DXE_RUNTIME_DRIVERs.
+pub const FV_ARM64_RUNTIME_DRIVER_ALIGNMENT: usize = 0x10000;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum ValidationKind<'a> {
@@ -296,11 +301,20 @@ impl PrettyPrintTable for ValidationKind<'_> {
                     vec![row_num, file_column, resolution]
                 }
                 FvValidationKind::InvalidSectionAlignment { fv, file, section } => {
+                    let pe_info = section.pe_info.unwrap();
+                    let required_alignment = if pe_info.machine == COFF_MACHINE_ARM64
+                        && pe_info.subsystem == IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
+                    {
+                        FV_ARM64_RUNTIME_DRIVER_ALIGNMENT
+                    } else {
+                        UEFI_PAGE_SIZE
+                    };
                     let file_column = format!(
-                        "FV: {}\nSMM Driver File: {}\nSection Alignment: {}",
+                        "FV: {}\nFile: {}\nSection Alignment: {}\nRequired Alignment:{}\n",
                         fv.fv_name,
                         file.name,
                         section.pe_info.as_ref().unwrap().section_alignment,
+                        required_alignment,
                     );
                     let resolution =
                         "PE images must have section alignment that is a positive multiple of UEFI_PAGE_SIZE. \n ARM64 DXE_RUNTIME_DRIVERs must have section alignment that is a positive multiple of 64k." 

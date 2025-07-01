@@ -1,5 +1,5 @@
 use crate::{
-    validation_kind::{FvValidationKind, ValidationKind},
+    validation_kind::{FvValidationKind, ValidationKind, FV_ARM64_RUNTIME_DRIVER_ALIGNMENT},
     validation_report::ValidationReport,
     validator::Validator,
     ValidationAppError,
@@ -92,9 +92,6 @@ impl<'a> FvValidator<'a> {
     /// For PE images, validates that the section alignment is correct.
     /// Reports violations if any are found.
     pub(super) fn validate_fv_file_sections(&self) -> ValidationResult {
-        // ARM64 drivers require 64k alignment for Linux compat.
-        const ARM64_DRIVER_ALIGNMENT: usize = 0x10000;
-
         let mut validation_report = ValidationReport::new();
 
         for fv in self.fv_list {
@@ -113,14 +110,14 @@ impl<'a> FvValidator<'a> {
                             // ARM64 DXE_RUNTIME_DRIVER needs 64k alignment.
                             if pe_header_info.machine == COFF_MACHINE_ARM64
                                 && pe_header_info.subsystem == IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
-                                && (pe_header_info.section_alignment as usize) % ARM64_DRIVER_ALIGNMENT != 0
+                                && (pe_header_info.section_alignment as usize) % FV_ARM64_RUNTIME_DRIVER_ALIGNMENT != 0
                             {
                                 validation_report.add_violation(ValidationKind::Fv(
                                     FvValidationKind::InvalidSectionAlignment { fv, file, section },
                                 ));
                             }
-                            // Other sections can be just page-aligned.
-                            if pe_header_info.section_alignment == 0
+                            // Other sections can be just page-aligned (4k).
+                            else if pe_header_info.section_alignment == 0
                                 || (pe_header_info.section_alignment as usize) % UEFI_PAGE_SIZE != 0
                             {
                                 validation_report.add_violation(ValidationKind::Fv(
@@ -158,10 +155,10 @@ mod tests {
     use common::serializable_fv::FirmwareFileSerDe;
     use common::serializable_fv::FirmwareSectionSerDe;
     use common::serializable_fv::FirmwareVolumeSerDe;
+    use common::serializable_fv::PeHeaderInfo;
     use goblin::pe::header::COFF_MACHINE_X86_64;
     use goblin::pe::subsystem::IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER;
     use goblin::pe::subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER;
-    use common::serializable_fv::PeHeaderInfo;
 
     #[test]
     fn test_validate_fv_for_traditional_smm() {

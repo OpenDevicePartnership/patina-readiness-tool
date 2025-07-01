@@ -57,7 +57,7 @@ pub struct FirmwareSectionSerDe {
 }
 
 // Serialized wrapper for PE-related fields.
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Copy)]
 pub struct PeHeaderInfo {
     pub section_alignment: u32,
     pub machine: u16,
