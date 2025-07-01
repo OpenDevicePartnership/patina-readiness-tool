@@ -13,12 +13,14 @@ pub enum ValidationAppError {
     JSONFileNotFound(String),
 
     /// Indicates that the specified JSON file contain invalid 'utf-8' byte
-    /// sequence. The `String` contains the filename that failed to be read.
+    /// sequence. The `String` contains the filename that failed to be read. The
+    /// other `String` contains the error message.
     JSONFileContentError(String, String),
 
     /// Indicates a failure in deserializing the JSON file. The `String`
-    /// contains the filename that failed to deserialize.
-    JSONSerializationFailed(String),
+    /// contains the filename that failed to deserialize. The other `String`
+    /// contains the error message.
+    JSONSerializationFailed(String, String),
 
     /// Indicates that the parsed data contains an empty HOB list.
     EmptyHobList,
@@ -43,8 +45,8 @@ impl fmt::Display for ValidationAppError {
             ValidationAppError::JSONFileContentError(path, err) => {
                 write!(f, "Error reading the JSON file {} contents. Error: {}", path, err)
             }
-            ValidationAppError::JSONSerializationFailed(reason) => {
-                write!(f, "Failed to serialize/deserialize JSON: {}", reason)
+            ValidationAppError::JSONSerializationFailed(path, err) => {
+                write!(f, "Failed to serialize/deserialize JSON: {}. Error: {}", path, err)
             }
             ValidationAppError::EmptyHobList => {
                 write!(f, "The HOB list is empty.")
