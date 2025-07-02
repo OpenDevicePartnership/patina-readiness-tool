@@ -59,11 +59,9 @@ pub enum FvValidationKind<'a> {
         fv: &'a FirmwareVolumeSerDe,
         file: &'a FirmwareFileSerDe,
         section: &'a FirmwareSectionSerDe,
+        required_alignment: usize,
     },
 }
-
-// Required alignment value for ARM64 DXE_RUNTIME_DRIVERs.
-pub const FV_ARM64_RUNTIME_DRIVER_ALIGNMENT: usize = 0x10000;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum ValidationKind<'a> {
@@ -300,20 +298,12 @@ impl PrettyPrintTable for ValidationKind<'_> {
                             .to_string();
                     vec![row_num, file_column, resolution]
                 }
-                FvValidationKind::InvalidSectionAlignment { fv, file, section } => {
-                    let pe_info = section.pe_info.unwrap();
-                    let required_alignment = if pe_info.machine == COFF_MACHINE_ARM64
-                        && pe_info.subsystem == IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
-                    {
-                        FV_ARM64_RUNTIME_DRIVER_ALIGNMENT
-                    } else {
-                        UEFI_PAGE_SIZE
-                    };
+                FvValidationKind::InvalidSectionAlignment { fv, file, section, required_alignment } => {
                     let file_column = format!(
                         "FV: {}\nFile: {}\nSection Alignment: {}\nRequired Alignment:{}\n",
                         fv.fv_name,
                         file.name,
-                        section.pe_info.as_ref().unwrap().section_alignment,
+                        section.pe_info.unwrap().section_alignment,
                         required_alignment,
                     );
                     let resolution =

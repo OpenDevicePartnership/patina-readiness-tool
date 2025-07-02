@@ -1,5 +1,5 @@
 use crate::{
-    validation_kind::{FvValidationKind, ValidationKind, FV_ARM64_RUNTIME_DRIVER_ALIGNMENT},
+    validation_kind::{FvValidationKind, ValidationKind},
     validation_report::ValidationReport,
     validator::Validator,
     ValidationAppError,
@@ -92,6 +92,7 @@ impl<'a> FvValidator<'a> {
     /// For PE images, validates that the section alignment is correct.
     /// Reports violations if any are found.
     pub(super) fn validate_fv_file_sections(&self) -> ValidationResult {
+        const FV_ARM64_RUNTIME_DRIVER_ALIGNMENT: usize = 0x10000;
         let mut validation_report = ValidationReport::new();
 
         for fv in self.fv_list {
@@ -113,7 +114,12 @@ impl<'a> FvValidator<'a> {
                                 && (pe_header_info.section_alignment as usize) % FV_ARM64_RUNTIME_DRIVER_ALIGNMENT != 0
                             {
                                 validation_report.add_violation(ValidationKind::Fv(
-                                    FvValidationKind::InvalidSectionAlignment { fv, file, section },
+                                    FvValidationKind::InvalidSectionAlignment {
+                                        fv,
+                                        file,
+                                        section,
+                                        required_alignment: FV_ARM64_RUNTIME_DRIVER_ALIGNMENT,
+                                    },
                                 ));
                             }
                             // Other sections can be just page-aligned (4k).
@@ -121,7 +127,12 @@ impl<'a> FvValidator<'a> {
                                 || (pe_header_info.section_alignment as usize) % UEFI_PAGE_SIZE != 0
                             {
                                 validation_report.add_violation(ValidationKind::Fv(
-                                    FvValidationKind::InvalidSectionAlignment { fv, file, section },
+                                    FvValidationKind::InvalidSectionAlignment {
+                                        fv,
+                                        file,
+                                        section,
+                                        required_alignment: UEFI_PAGE_SIZE,
+                                    },
                                 ));
                             }
                         }
