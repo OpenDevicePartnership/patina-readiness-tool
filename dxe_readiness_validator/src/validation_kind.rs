@@ -3,8 +3,6 @@ use common::{
     serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
     Interval,
 };
-use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
-use patina_sdk::base::UEFI_PAGE_SIZE;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum HobValidationKind<'a> {
@@ -307,7 +305,7 @@ impl PrettyPrintTable for ValidationKind<'_> {
                         required_alignment,
                     );
                     let resolution =
-                        "PE images must have section alignment that is a positive multiple of UEFI_PAGE_SIZE. \n ARM64 DXE_RUNTIME_DRIVERs must have section alignment that is a positive multiple of 64k." 
+                        "PE images must have section alignment that is a positive multiple of UEFI_PAGE_SIZE (4k). \n ARM64 DXE_RUNTIME_DRIVERs must have section alignment that is a positive multiple of 64k." 
                             .to_string();
                     vec![row_num, file_column, resolution]
                 }
