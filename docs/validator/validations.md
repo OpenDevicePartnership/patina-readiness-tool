@@ -13,6 +13,7 @@ This serves as a living document to track and evolve the set of validations impl
 | **V1 Memory Range Not Contained In V2**      | Identifies V1 HOBs with memory ranges not covered by V2 (prohibited).                                    |
 | **V2 Contains UCE Attribute**                | Identifies V2 HOBs that use the prohibited `EFI_MEMORY_UCE` cacheability attribute.                      |
 | **V2 Missing Valid Cacheability Attributes** | Identifies V2 HOBs have valid cacheability attribute set(at most one).                                   |
+| **V2 Invalid IO Cacheability Attributes**    | Identifies V2 HOBs for IO resource types with non-zero attributes. Zero is expected at this time.        |
 
 ## Firmware Volume (FV) Validations
 
