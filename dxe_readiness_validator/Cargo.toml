@@ -8,6 +8,7 @@ clap = { workspace = true }
 colored = "3.0.0"
 comfy-table = "7.1.4"
 common = { path = "../common" }
+goblin = { workspace = true }
 log = { workspace = true }
 mu_pi = { workspace = true }
 patina_sdk = { workspace = true }

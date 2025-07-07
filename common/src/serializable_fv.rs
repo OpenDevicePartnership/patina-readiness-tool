@@ -10,6 +10,7 @@ use mu_pi::fw_fs::guid::LZMA_SECTION;
 use mu_pi::fw_fs::guid::TIANO_DECOMPRESS_SECTION;
 use mu_pi::fw_fs::FfsSectionHeader::NOT_COMPRESSED;
 use mu_pi::fw_fs::FfsSectionHeader::STANDARD_COMPRESSION;
+use mu_pi::fw_fs::FfsSectionType;
 use mu_pi::fw_fs::FirmwareVolume;
 use mu_pi::fw_fs::SectionMetaData;
 use r_efi::efi;
@@ -51,6 +52,16 @@ pub struct FirmwareSectionSerDe {
     pub length: usize,
     pub compression_type: String,
     // pub attributes: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pe_info: Option<PeHeaderInfo>,
+}
+
+// Serialized wrapper for PE-related fields.
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Copy)]
+pub struct PeHeaderInfo {
+    pub section_alignment: u32,
+    pub machine: u16,
+    pub subsystem: u16,
 }
 
 impl From<FirmwareVolume<'_>> for FirmwareVolumeSerDe {
@@ -79,7 +90,7 @@ impl From<FirmwareVolume<'_>> for FirmwareVolumeSerDe {
                             return None;
                         };
                         let section_length = section.section_size();
-                        let section_type = section
+                        let section_type_str = section
                             .section_type()
                             .map(|st| format!("{:#x?}", st))
                             .unwrap_or_else(|| "Invalid".to_string());
@@ -101,10 +112,35 @@ impl From<FirmwareVolume<'_>> for FirmwareVolumeSerDe {
                             _ => "uncompressed".to_string(),
                         };
 
+                        if let Some(section_type) = section.section_type() {
+                            if section_type == FfsSectionType::Pe32 {
+                                // If parsing fails or the header is missing PE data (in the coff.optional headers), we treat it as a non-PE section (skip the `pe_info`).
+                                let pe = goblin::pe::PE::parse(section.section_data());
+                                if let Ok(pe_parsed) = pe {
+                                    if let Some(optional_header) = pe_parsed.header.optional_header {
+                                        let alignment = optional_header.windows_fields.section_alignment;
+                                        let machine = pe_parsed.header.coff_header.machine;
+                                        let subsystem = optional_header.windows_fields.subsystem;
+                                        return Some(FirmwareSectionSerDe {
+                                            section_type: section_type_str,
+                                            length: section_length,
+                                            compression_type: section_compression_type,
+                                            pe_info: Some(PeHeaderInfo {
+                                                section_alignment: alignment,
+                                                machine,
+                                                subsystem,
+                                            }),
+                                        });
+                                    }
+                                }
+                            }
+                        }
+
                         Some(FirmwareSectionSerDe {
-                            section_type,
+                            section_type: section_type_str,
                             length: section_length,
                             compression_type: section_compression_type,
+                            pe_info: None,
                         })
                     })
                     .collect::<Vec<_>>();

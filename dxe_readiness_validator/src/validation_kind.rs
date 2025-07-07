@@ -54,6 +54,14 @@ pub enum FvValidationKind<'a> {
         fv: &'a FirmwareVolumeSerDe,
         file: &'a FirmwareFileSerDe,
     },
+
+    // PE images must have page-aligned section alignments
+    InvalidSectionAlignment {
+        fv: &'a FirmwareVolumeSerDe,
+        file: &'a FirmwareFileSerDe,
+        section: &'a FirmwareSectionSerDe,
+        required_alignment: usize,
+    },
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -83,6 +91,7 @@ impl ValidationKind<'_> {
                 FvValidationKind::LzmaCompressedSections { .. } => "FV: LZMA Compressed Sections Present",
                 FvValidationKind::ProhibitedAprioriFile { .. } => "FV: Prohibited Apriori File Present",
                 FvValidationKind::UsesTraditionalSmm { .. } => "FV: Uses Traditional SMM Driver",
+                FvValidationKind::InvalidSectionAlignment { .. } => "FV: PE Image Invalid Section Alignment",
             },
         }
     }
@@ -124,6 +133,10 @@ impl ValidationKind<'_> {
                                                                    using the provided guidance. All combined modules must be dropped in favor of\n   \
                                                                    single phase modules.\n   \
                                                                    Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                FvValidationKind::InvalidSectionAlignment { .. } => "   All PE images must have section alignment that is a multiple of page size. \n   \
+                                                                        This is not a PI spec requirement, but is a Patina requirement.\n    \
+                                                                        Platforms should drop unaligned images or re-build images to ensure section alignment is page-aligned.    \n
+                                                                        Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md" 
             },
         }
     }
@@ -148,6 +161,7 @@ impl ValidationKind<'_> {
                 FvValidationKind::LzmaCompressedSections { .. } => "LzmaCompressedSections".to_string(),
                 FvValidationKind::ProhibitedAprioriFile { .. } => "ProhibitedAprioriFile".to_string(),
                 FvValidationKind::UsesTraditionalSmm { .. } => "UsesTraditionalSmm".to_string(),
+                FvValidationKind::InvalidSectionAlignment { .. } => "InvalidSectionAlignment".to_string(),
             },
         }
     }
@@ -186,6 +200,9 @@ impl PrettyPrintTable for ValidationKind<'_> {
                 FvValidationKind::ProhibitedAprioriFile { .. } => vec!["#", "A Priori File", "Violation/Resolution"],
                 FvValidationKind::UsesTraditionalSmm { .. } => {
                     vec!["#", "Traditional SMM Driver", "Violation/Resolution"]
+                }
+                FvValidationKind::InvalidSectionAlignment { .. } => {
+                    vec!["#", "PE Image Section Alignment", "Violation/Resolution"]
                 }
             },
         }
@@ -295,6 +312,19 @@ impl PrettyPrintTable for ValidationKind<'_> {
                     );
                     let resolution =
                         "File types should not be\n - COMBINED_MM_DXE(0x0C)\n - COMBINED_PEIM_DRIVER(0x08)\n - MM(0x0A)\n - MM_CORE(0x0D)."
+                            .to_string();
+                    vec![row_num, file_column, resolution]
+                }
+                FvValidationKind::InvalidSectionAlignment { fv, file, section, required_alignment } => {
+                    let file_column = format!(
+                        "FV: {}\nFile: {}\nSection Alignment: {}\nRequired Alignment:{}\n",
+                        fv.fv_name,
+                        file.name,
+                        section.pe_info.unwrap().section_alignment,
+                        required_alignment,
+                    );
+                    let resolution =
+                        "PE images must have section alignment that is a positive multiple of UEFI_PAGE_SIZE (4k). \n ARM64 DXE_RUNTIME_DRIVERs must have section alignment that is a positive multiple of 64k." 
                             .to_string();
                     vec![row_num, file_column, resolution]
                 }
