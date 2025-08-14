@@ -391,126 +391,91 @@ mod tests {
         assert_eq!(validation_report.violation_count(), 0);
     }
 
+    // Helper function to run alignment validation and return violation count
+    fn run_alignment_test(
+        fv_name: &str,
+        file_name: &str,
+        file_type: &str,
+        section_alignment: u32,
+        machine: u16,
+        subsystem: u16,
+    ) -> usize {
+        let fv_list = vec![FirmwareVolumeSerDe {
+            fv_name: fv_name.to_string(),
+            fv_length: 1024,
+            fv_base_address: 0x1000,
+            fv_attributes: 0,
+            files: vec![FirmwareFileSerDe {
+                name: file_name.to_string(),
+                file_type: file_type.to_string(),
+                length: 512,
+                attributes: 0,
+                sections: vec![FirmwareSectionSerDe {
+                    section_type: "Pe32".to_string(),
+                    length: 256,
+                    compression_type: "uncompressed ".to_string(),
+                    pe_info: Some(PeHeaderInfo { section_alignment, machine, subsystem }),
+                }],
+            }],
+        }];
+
+        let validator = FvValidator::new(&fv_list);
+        let result = validator.validate_fv_file_sections();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        validation_report.violation_count()
+    }
+
     #[test]
-    fn test_validate_fv_image_alignment() {
-        let fv_list = vec![FirmwareVolumeSerDe {
-            fv_name: "FV1".to_string(),
-            fv_length: 1024,
-            fv_base_address: 0x1000,
-            fv_attributes: 0,
-            files: vec![FirmwareFileSerDe {
-                name: "File1".to_string(),
-                file_type: "CombinedPeimDriver".to_string(),
-                length: 512,
-                attributes: 0,
-                sections: vec![FirmwareSectionSerDe {
-                    section_type: "Pe32".to_string(),
-                    length: 256,
-                    compression_type: "uncompressed ".to_string(),
-                    pe_info: Some(PeHeaderInfo {
-                        section_alignment: 12345, // Not a valid multiple of page size
-                        machine: COFF_MACHINE_X86_64,
-                        subsystem: IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER,
-                    }),
-                }],
-            }],
-        }];
+    fn test_invalid_alignment_not_multiple_of_page_size() {
+        let violation_count = run_alignment_test(
+            "FV1",
+            "File1",
+            "Driver",
+            12345, // Not a valid multiple of page size
+            COFF_MACHINE_X86_64,
+            IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER,
+        );
+        assert_eq!(violation_count, 1);
+    }
 
-        let validator = FvValidator::new(&fv_list);
-        let result = validator.validate_fv_file_sections();
-        assert!(result.is_ok());
-        let validation_report = result.unwrap();
-        // Invalid section alignment error should be captured
-        assert_eq!(validation_report.violation_count(), 1);
+    #[test]
+    fn test_invalid_alignment_zero() {
+        let violation_count = run_alignment_test(
+            "FV1",
+            "File1",
+            "Driver",
+            0, // Zero alignment not allowed
+            COFF_MACHINE_X86_64,
+            IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER,
+        );
+        assert_eq!(violation_count, 1);
+    }
 
-        let fv_list = vec![FirmwareVolumeSerDe {
-            fv_name: "FV1".to_string(),
-            fv_length: 1024,
-            fv_base_address: 0x1000,
-            fv_attributes: 0,
-            files: vec![FirmwareFileSerDe {
-                name: "File1".to_string(),
-                file_type: "CombinedPeimDriver".to_string(),
-                length: 512,
-                attributes: 0,
-                sections: vec![FirmwareSectionSerDe {
-                    section_type: "Pe32".to_string(),
-                    length: 256,
-                    compression_type: "uncompressed ".to_string(),
-                    pe_info: Some(PeHeaderInfo {
-                        section_alignment: 0, // Must be a positive multiple of page size. Zero alignment not allowed for PE
-                        machine: COFF_MACHINE_X86_64,
-                        subsystem: IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER,
-                    }),
-                }],
-            }],
-        }];
+    #[test]
+    fn test_valid_alignment_multiple_of_page_size() {
+        let violation_count = run_alignment_test(
+            "FV2",
+            "File3",
+            "MmCore",
+            (UEFI_PAGE_SIZE * 2) as u32, // Valid multiple of page size
+            COFF_MACHINE_X86_64,
+            IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER,
+        );
+        assert_eq!(violation_count, 0);
+    }
 
-        let validator = FvValidator::new(&fv_list);
-        let result = validator.validate_fv_file_sections();
-        assert!(result.is_ok());
-        let validation_report = result.unwrap();
-        // Invalid section alignment error should be captured
-        assert_eq!(validation_report.violation_count(), 1);
-
-        let fv_list = vec![FirmwareVolumeSerDe {
-            fv_name: "FV2".to_string(),
-            fv_length: 2048,
-            fv_base_address: 0x2000,
-            fv_attributes: 0,
-            files: vec![FirmwareFileSerDe {
-                name: "File3".to_string(),
-                file_type: "MmCore".to_string(),
-                length: 128,
-                attributes: 0,
-                sections: vec![FirmwareSectionSerDe {
-                    section_type: "Pe32".to_string(),
-                    length: 128,
-                    compression_type: "uncompressed".to_string(),
-                    pe_info: Some(PeHeaderInfo {
-                        section_alignment: (UEFI_PAGE_SIZE * 2) as u32, // Valid multiple of page size
-                        machine: COFF_MACHINE_X86_64,
-                        subsystem: IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER,
-                    }),
-                }],
-            }],
-        }];
-
-        let validator = FvValidator::new(&fv_list);
-        let result = validator.validate_fv_file_sections();
-        assert!(result.is_ok());
-        let validation_report = result.unwrap();
-        assert_eq!(validation_report.violation_count(), 0);
-
-        let fv_list = vec![FirmwareVolumeSerDe {
-            fv_name: "FV2".to_string(),
-            fv_length: 2048,
-            fv_base_address: 0x2000,
-            fv_attributes: 0,
-            files: vec![FirmwareFileSerDe {
-                name: "File3".to_string(),
-                file_type: "MmCore".to_string(),
-                length: 128,
-                attributes: 0,
-                sections: vec![FirmwareSectionSerDe {
-                    section_type: "Pe32".to_string(),
-                    length: 128,
-                    compression_type: "uncompressed".to_string(),
-                    pe_info: Some(PeHeaderInfo {
-                        section_alignment: (UEFI_PAGE_SIZE * 2) as u32, // Valid multiple of page size but NOT valid for ARM64 DXE_RUNTIME_DRIVER
-                        machine: COFF_MACHINE_ARM64,
-                        subsystem: IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER,
-                    }),
-                }],
-            }],
-        }];
-
-        let validator = FvValidator::new(&fv_list);
-        let result = validator.validate_fv_file_sections();
-        assert!(result.is_ok());
-        let validation_report = result.unwrap();
-        // Invalid section alignment error should be captured
-        assert_eq!(validation_report.violation_count(), 1);
+    #[test]
+    fn test_invalid_alignment_arm64_runtime_driver() {
+        let violation_count = run_alignment_test(
+            "FV2",
+            "File3",
+            "MmCore",
+            (UEFI_PAGE_SIZE * 2) as u32, // Valid multiple of page size but NOT valid for ARM64 DXE_RUNTIME_DRIVER
+            COFF_MACHINE_ARM64,
+            IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER,
+        );
+        assert_eq!(violation_count, 1);
     }
 
     #[test]
