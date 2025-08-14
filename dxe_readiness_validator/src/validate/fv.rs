@@ -483,6 +483,47 @@ mod tests {
     }
 
     #[test]
+    fn test_ineligible_modules_types_do_not_fail() {
+        const ALL_MODULE_TYPES: &[&str] = &[
+            "Raw",
+            "FreeForm",
+            "SecurityCore",
+            "PeiCore",
+            "DxeCore",
+            "Peim",
+            "Driver",
+            "CombinedPeimDriver",
+            "Application",
+            "Mm",
+            "FirmwareVolumeImage",
+            "CombinedMmDxe",
+            "MmCore",
+            "MmStandalone",
+            "MmCoreStandalone",
+            "FfsPad",
+            "FfsUnknown",
+        ];
+        const ELIGIBLE_MODULE_TYPES: &[&str] = &["Driver", "Application", "DxeCore"];
+
+        for &module_type in ALL_MODULE_TYPES {
+            let expected_violation = ELIGIBLE_MODULE_TYPES.contains(&module_type);
+            let violation_count = run_alignment_test(
+                "TestFv",
+                "TestFile",
+                module_type,
+                UEFI_PAGE_SIZE as u32, // 4k aligned
+                COFF_MACHINE_X86_64,
+                IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER,
+            );
+            if expected_violation {
+                assert_eq!(violation_count, 0, "Eligible type '{}' should not violate", module_type);
+            } else {
+                assert_eq!(violation_count, 0, "Ineligible type '{}' should not violate", module_type);
+            }
+        }
+    }
+
+    #[test]
     fn test_validate_empty_list() {
         let fv_list = vec![];
         let validator = FvValidator::new(&fv_list);
