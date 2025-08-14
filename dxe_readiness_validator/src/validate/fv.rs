@@ -1,3 +1,4 @@
+use super::ValidationResult;
 use crate::{
     validation_kind::{FvValidationKind, ValidationKind},
     validation_report::ValidationReport,
@@ -8,8 +9,6 @@ use common::{format_guid, serializable_fv::FirmwareVolumeSerDe};
 use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
 use patina_sdk::base::UEFI_PAGE_SIZE;
 use r_efi::efi::Guid;
-
-use super::ValidationResult;
 
 /// Performs validation on a list of firmware volumes to check for violations of
 /// Patina requirements.
@@ -96,7 +95,12 @@ impl<'a> FvValidator<'a> {
         let mut validation_report = ValidationReport::new();
 
         for fv in self.fv_list {
+            // Only process files whose type matches any of the allowed types.
+            const ELIGIBLE_MODULE_TYPES: &[&str] = &["Driver", "Application", "DxeCore"];
             for file in &fv.files {
+                if !ELIGIBLE_MODULE_TYPES.contains(&file.file_type.as_str()) {
+                    continue;
+                }
                 for section in &file.sections {
                     if section.compression_type.starts_with("LZMA ") {
                         validation_report.add_violation(ValidationKind::Fv(FvValidationKind::LzmaCompressedSections {
@@ -347,7 +351,7 @@ mod tests {
             fv_attributes: 0,
             files: vec![FirmwareFileSerDe {
                 name: "File1".to_string(),
-                file_type: "CombinedPeimDriver".to_string(),
+                file_type: "Driver".to_string(),
                 length: 512,
                 attributes: 0,
                 sections: vec![FirmwareSectionSerDe {
@@ -372,7 +376,7 @@ mod tests {
             fv_attributes: 0,
             files: vec![FirmwareFileSerDe {
                 name: "File3".to_string(),
-                file_type: "MmCore".to_string(),
+                file_type: "MmCoreStandalone".to_string(),
                 length: 128,
                 attributes: 0,
                 sections: vec![FirmwareSectionSerDe {
@@ -470,7 +474,7 @@ mod tests {
         let violation_count = run_alignment_test(
             "FV2",
             "File3",
-            "MmCore",
+            "Driver",
             (UEFI_PAGE_SIZE * 2) as u32, // Valid multiple of page size but NOT valid for ARM64 DXE_RUNTIME_DRIVER
             COFF_MACHINE_ARM64,
             IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER,
