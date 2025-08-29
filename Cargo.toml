@@ -20,7 +20,7 @@ log = { version = "^0.4", default-features = false, features = [
   "release_max_level_warn",
 ] }
 spin = "^0.9"
-mu_pi = { path = "C:/Users/sherryfan/mu_rust_pi", features = ["serde"] }
+mu_pi = { version = "5", features = ["serde"] }
 serde = { version = "1", default-features = false, features = [
   "alloc",
   "derive",
