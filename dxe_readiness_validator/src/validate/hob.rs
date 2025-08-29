@@ -1,6 +1,6 @@
-use common::serializable_hob::HobSerDe;
-use common::serializable_hob::ResourceDescriptorSerDe;
 use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
+use mu_pi::serializable::serializable_hob::{HobSerDe, ResourceDescriptorSerDe};
+use mu_pi::serializable::Interval;
 use patina_sdk::base::UEFI_PAGE_SIZE;
 use r_efi::efi;
 
@@ -8,7 +8,6 @@ use crate::validation_kind::HobValidationKind;
 use crate::validation_kind::ValidationKind;
 use crate::validator::Validator;
 use crate::ValidationAppError;
-use common::Interval;
 
 use super::ValidationReport;
 use super::ValidationResult;
