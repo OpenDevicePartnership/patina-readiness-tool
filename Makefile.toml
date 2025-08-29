@@ -5,102 +5,60 @@ default_to_workspace = false
 # This is needed due to uefi-sdk's use of unstable features.
 RUSTC_BOOTSTRAP = 1
 
-# Dxe Readiness Capture UEFI binaries to run from Uefi Shell.
+AARCH64_UEFI_TARGET = "--target aarch64-unknown-uefi"
+X86_64_UEFI_TARGET = "--target x86_64-unknown-uefi"
+
+NO_STD_FLAGS = "-Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem -Zunstable-options"
+DXE_READINESS_PKG = "-p dxe_readiness_capture"
+CAPTURE_BIN_FLAGS = "${NO_STD_FLAGS} ${DXE_READINESS_PKG}"
+CAPTURE_UEFI_SHELL_FLAGS = "${DXE_READINESS_PKG} --features uefishell --bin uefishell_dxe_readiness_capture"
+
+# DXE Readiness Capture UEFI binaries to run from UEFI Shell.
 [tasks.build-x64-uefishell]
-description = "Builds the Dxe Readiness Capture UEFI binary to run in Uefi Shell."
+description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell."
 command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_capture",
-    "--target",
-    "x86_64-unknown-uefi",
-    "--bin",
-    "uefishell_dxe_readiness_capture",
-    "--features",
-    "uefishell",
-    "${@}",
-]
+args = [ "build", "@@split(CAPTURE_UEFI_SHELL_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "${@}", ]
 
 [tasks.build-aarch64-uefishell]
-description = "Builds the Dxe Readiness Capture UEFI binary to run in Uefi Shell."
+description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell."
 command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_capture",
-    "--target",
-    "aarch64-unknown-uefi",
-    "--bin",
-    "uefishell_dxe_readiness_capture",
-    "--features",
-    "uefishell",
-    "${@}",
-]
+args = [ "build", "@@split(CAPTURE_UEFI_SHELL_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "${@}", ]
 
-# Builds EFI binaries for hardware platforms.
+# Right now, both Intel Lunar Lake and Panther Lake can use the same binary.
+# They are available as separate commands, so they can implement different behavior
+# in the future if needed without impacting callers.
+[tasks.build-intel-common]
+description = "Builds the Intel DXE Readiness Capture UEFI binary."
+private = true
+command = "cargo"
+args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "--bin", "intel_dxe_readiness_capture", "${@}"]
+
+# Intel Lunar Lake capture binary.
 [tasks.build-intel-lnl]
-description = "Builds the Intel Lunar Lake Dxe Readiness Capture UEFI binary."
-command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_capture",
-    "--target",
-    "x86_64-unknown-uefi",
-    "--bin",
-    "intel_lnl_dxe_readiness_capture",
-    "-Zbuild-std=core,compiler_builtins,alloc",
-    "-Zbuild-std-features=compiler-builtins-mem",
-    "-Zunstable-options",
-    "${@}",
-]
+description = "Builds the Intel DXE Readiness Capture UEFI binary for Lunar Lake."
+dependencies = ["build-intel-common"]
 
-# Builds EFI binaries for virtual platform(QEMU).
+# Intel Panther Lake capture binary.
+[tasks.build-intel-ptl]
+description = "Builds the Intel DXE Readiness Capture UEFI binary for Panther Lake."
+dependencies = ["build-intel-common"]
+
+# Builds EFI binaries for virtual platform (QEMU).
 [tasks.build-x64-uefi]
-description = "Builds the x64 Dxe Readiness Capture UEFI binary."
+description = "Builds the x64 DXE Readiness Capture UEFI binary."
 command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_capture",
-    "--target",
-    "x86_64-unknown-uefi",
-    "--bin",
-    "qemu_dxe_readiness_capture",
-    "-Zbuild-std=core,compiler_builtins,alloc",
-    "-Zbuild-std-features=compiler-builtins-mem",
-    "-Zunstable-options",
-    "${@}",
-]
+args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
 
 [tasks.build-aarch64-uefi]
-description = "Builds the aarch64 Dxe Readiness Capture UEFI binary."
+description = "Builds the aarch64 DXE Readiness Capture UEFI binary."
 command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_capture",
-    "--target",
-    "aarch64-unknown-uefi",
-    "--bin",
-    "qemu_dxe_readiness_capture",
-    "-Zbuild-std=core,compiler_builtins,alloc",
-    "-Zbuild-std-features=compiler-builtins-mem",
-    "-Zunstable-options",
-    "${@}",
-]
+args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
 
-# Builds Validation binary for host platform.
+# Builds Validation binary for the host platform.
 [tasks.build-validation-binary]
-description = "Builds the Dxe Readiness Validation binary."
+description = "Builds the DXE Readiness Validation binary."
 command = "cargo"
-args = [
-    "build",
-    "-p",
-    "dxe_readiness_validator",
-    "${@}",
-]
+args = [ "build", "-p", "dxe_readiness_validator", "${@}", ]
 
 [tasks.build]
 description = "Build all binaries."
@@ -109,6 +67,7 @@ dependencies = [
     "build-x64-uefishell",
     "build-aarch64-uefishell",
     "build-intel-lnl",
+    "build-intel-ptl",
     "build-x64-uefi",
     "build-aarch64-uefi",
     "build-validation-binary",
@@ -116,12 +75,12 @@ dependencies = [
 
 # Tests will be built and run based on the host platform.
 [tasks.test-capture-binary]
-description = "Build and run tests for Dxe Readiness Capture UEFI binary."
+description = "Build and run tests for DXE Readiness Capture UEFI binary."
 command = "cargo"
 args = ["test", "-p", "dxe_readiness_capture", "${@}"]
 
 [tasks.test-validation-binary]
-description = "Build and run tests for Dxe Readiness Validation binary."
+description = "Build and run tests for DXE Readiness Validation binary."
 command = "cargo"
 args = ["test", "-p", "dxe_readiness_validator", "${@}"]
 
@@ -137,7 +96,7 @@ dependencies = ["test-capture-binary", "test-validation-binary", "test-common"]
 
 # Run validator binary for all supported targets.
 [tasks.run-validator]
-description = "Run the Dxe Readiness Validation binary."
+description = "Run the DXE Readiness Validation binary."
 command = "cargo"
 args = ["run", "-p", "dxe_readiness_validator", "${@}"]
 

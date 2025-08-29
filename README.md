@@ -24,9 +24,10 @@ The `cargo make build` command, along with the QEMU-based UEFI
 `qemu_dxe_readiness_capture.efi`, also builds the following hardware
 platform-specific binaries:
 
-| Platform             | Binary                                                                 |
-| -------------------- | ---------------------------------------------------------------------- |
-| **Intel Lunar Lake** | `target\x86_64-unknown-uefi\debug\intel_lnl_dxe_readiness_capture.efi` |
+| Platform                               | Binary                                                             |
+| -------------------------------------- | ------------------------------------------------------------------ |
+| **Intel Lunar Lake & Panther Lake**    | `target\x86_64-unknown-uefi\debug\intel_dxe_readiness_capture.efi` |
+
 
 ## **Running Tests**
 
