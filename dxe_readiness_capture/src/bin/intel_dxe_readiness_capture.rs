@@ -1,4 +1,4 @@
-//! Dxe Readiness Capture Tool - X64/Intel Lunar Lake(LNL)
+//! Dxe Readiness Capture Tool - X64/Intel
 //!
 //! ## License
 //!

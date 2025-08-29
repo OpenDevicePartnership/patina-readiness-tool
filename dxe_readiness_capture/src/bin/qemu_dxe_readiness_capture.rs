@@ -1,4 +1,4 @@
-//! Dxe Readiness Capture Tool - X64/Intel LNL
+//! Dxe Readiness Capture Tool - X64/Intel QEMU
 //!
 //! ## License
 //!
