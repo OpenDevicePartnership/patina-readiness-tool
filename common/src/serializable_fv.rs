@@ -1,3 +1,11 @@
+//! Serialization and deserialization logic for Firmware Volume (FV) structures.
+//!
+//! ## License
+//!
+//! Copyright (C) Microsoft Corporation. All rights reserved.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use crate::hex_format;
 use alloc::string::String;
 use alloc::string::ToString;

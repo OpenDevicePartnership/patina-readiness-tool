@@ -1,3 +1,11 @@
+//! Serialization and deserialization logic for HOB (Hand-Off Block) structures.
+//!
+//! ## License
+//!
+//! Copyright (C) Microsoft Corporation. All rights reserved.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use core::cmp::Ordering;
 
 use crate::hex_format;
