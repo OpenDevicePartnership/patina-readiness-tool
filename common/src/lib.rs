@@ -1,3 +1,11 @@
+//! Common utilities, types, and serialization helpers.
+//!
+//! ## License
+//!
+//! Copyright (C) Microsoft Corporation. All rights reserved.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 #![cfg_attr(not(test), no_std)]
 
 use r_efi::efi::Guid;

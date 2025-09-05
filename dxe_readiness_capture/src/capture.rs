@@ -1,3 +1,11 @@
+//! Capture logic for extracting HOBs and Firmware Volumes from memory.
+//!
+//! ## License
+//!
+//! Copyright (C) Microsoft Corporation. All rights reserved.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 // Clippy runs with "--all-targets," which includes "--tests." This module is
 // marked to allow dead code to suppress Clippy warnings. Remove this once
 // enough tests have been added.

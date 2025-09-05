@@ -1,3 +1,11 @@
+//! Command-line argument parsing for the DXE readiness validator.
+//!
+//! ## License
+//!
+//! Copyright (C) Microsoft Corporation. All rights reserved.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use clap::Parser;
 
 #[derive(Default, Parser, Debug)]

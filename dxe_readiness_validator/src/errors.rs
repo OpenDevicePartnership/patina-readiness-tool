@@ -1,3 +1,11 @@
+//! Error types used throughout the DXE readiness validator application.
+//!
+//! ## License
+//!
+//! Copyright (C) Microsoft Corporation. All rights reserved.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use std::fmt;
 
 /// Represents possible errors that can occur during the validation app's
