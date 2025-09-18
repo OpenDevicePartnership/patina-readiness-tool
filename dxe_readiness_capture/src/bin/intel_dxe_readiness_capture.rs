@@ -28,16 +28,15 @@ cfg_if::cfg_if! {
         const ASSUMED_UART_ADDRESS: usize = 0xFE02E000;
         const UART_COMPONENT_REG: usize = 0x3F;
         const UART_COMPONENT_IDENTIFICATION_CODE: u32 = 0x44570110;
+        const UART_UNINITIALIZED: u32 = 0xFFFFFFFF;
+        const IO_UART_ADDRESS: u16 = 0x3F8;
 
         pub(crate) fn get_logger() -> SerialLogger<'static, Uart16550> {
             SerialLogger::new(
                 Format::Standard,
                 &[],
                 log::LevelFilter::Trace,
-                Uart16550::Mmio {
-                    base: ASSUMED_UART_ADDRESS,
-                    reg_stride: get_intel_uart_reg_stride(ASSUMED_UART_ADDRESS),
-                },
+                get_intel_uart_device(ASSUMED_UART_ADDRESS),
             )
         }
 
@@ -52,6 +51,18 @@ cfg_if::cfg_if! {
             match unsafe { core::ptr::read_volatile(component_register.load(Ordering::Relaxed)) } {
                 UART_COMPONENT_IDENTIFICATION_CODE => ASSUMED_REGISTER_STRIDE,
                 _ => ALTERNATIVE_REGISTER_STRIDE,
+            }
+        }
+
+        fn get_intel_uart_device(mmio_base: usize) -> Uart16550 {
+            // Get the base register at the assumed register stride
+            let base_register: AtomicPtr<u32> = AtomicPtr::new(mmio_base as *mut u32);
+
+            // Read the base register. If the UART device is not configured, fall back to IO UART.
+            // Otherwise, use MMIO UART.
+            match unsafe { *base_register.load(Ordering::Relaxed) } {
+                UART_UNINITIALIZED => Uart16550::Io { base: IO_UART_ADDRESS },
+                _ => Uart16550::Mmio { base: mmio_base, reg_stride: get_intel_uart_reg_stride(mmio_base) },
             }
         }
 
