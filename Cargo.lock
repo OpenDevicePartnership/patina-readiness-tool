@@ -189,7 +189,7 @@ name = "common"
 version = "0.1.0"
 dependencies = [
  "goblin",
- "mu_pi 5.2.4",
+ "mu_pi 6.0.2",
  "patina_section_extractor",
  "r-efi",
  "serde",
@@ -235,7 +235,7 @@ dependencies = [
  "common",
  "linked_list_allocator",
  "log",
- "mu_pi 5.2.4",
+ "mu_pi 6.0.2",
  "patina_sdk",
  "patina_section_extractor",
  "patina_stacktrace",
@@ -256,7 +256,7 @@ dependencies = [
  "common",
  "goblin",
  "log",
- "mu_pi 5.2.4",
+ "mu_pi 6.0.2",
  "patina_sdk",
  "r-efi",
  "serde",
@@ -404,7 +404,9 @@ dependencies = [
 
 [[package]]
 name = "mu_pi"
-version = "5.2.4"
+version = "6.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d0cdb8b6c0d68ab80a720e84560635a0d1c6546414e8e15472d8cd96fbb596c"
 dependencies = [
  "indoc",
  "num-traits",

@@ -269,8 +269,8 @@ impl Validator for HobValidator<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use common::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
     use mu_pi::hob::{EfiPhysicalAddress, EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
+    use mu_pi::serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
 
     fn create_v1_hob(
         start: EfiPhysicalAddress,
