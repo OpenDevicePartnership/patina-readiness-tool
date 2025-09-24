@@ -1,3 +1,11 @@
+//! Simple logger implementation for the DXE readiness validator.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use log::{Level, LevelFilter, Metadata, Record};
 
 struct SimpleLogger;

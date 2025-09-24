@@ -6,7 +6,7 @@ members = ["dxe_readiness_capture", "common", "dxe_readiness_validator"]
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-license = "BSD-2-Clause-Patent"
+license = "Apache-2.0"
 rust-version = "1.85"
 description = "Dxe Readiness Capture/Validation Tool"
 

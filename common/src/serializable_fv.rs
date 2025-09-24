@@ -1,3 +1,11 @@
+//! Serialization and deserialization logic for Firmware Volume (FV) structures.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use alloc::format;
 use alloc::string::String;
 use alloc::string::ToString;

@@ -1,3 +1,11 @@
+//! Enumerations and helpers describing different types of validation checks and violations.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use common::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe};
 use mu_pi::serializable::{
     serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
@@ -136,7 +144,7 @@ impl ValidationKind<'_> {
                 FvValidationKind::InvalidSectionAlignment { .. } => "   All PE images must have section alignment that is a multiple of page size. \n   \
                                                                         This is not a PI spec requirement, but is a Patina requirement.\n    \
                                                                         Platforms should drop unaligned images or re-build images to ensure section alignment is page-aligned.    \n
-                                                                        Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md" 
+                                                                        Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md"
             },
         }
     }
@@ -324,7 +332,7 @@ impl PrettyPrintTable for ValidationKind<'_> {
                         required_alignment,
                     );
                     let resolution =
-                        "PE images must have section alignment that is a positive multiple of UEFI_PAGE_SIZE (4k). \n ARM64 DXE_RUNTIME_DRIVERs must have section alignment that is a positive multiple of 64k." 
+                        "PE images must have section alignment that is a positive multiple of UEFI_PAGE_SIZE (4k). \n ARM64 DXE_RUNTIME_DRIVERs must have section alignment that is a positive multiple of 64k."
                             .to_string();
                     vec![row_num, file_column, resolution]
                 }

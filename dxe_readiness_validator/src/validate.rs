@@ -1,3 +1,11 @@
+//! Main entry point and orchestration for running all DXE readiness validations.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 mod fv;
 mod hob;
 use crate::commandline::CommandLine;

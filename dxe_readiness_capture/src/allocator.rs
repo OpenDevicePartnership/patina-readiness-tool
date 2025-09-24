@@ -1,3 +1,11 @@
+//! Heap allocator initialization for DXE readiness capture environment.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use linked_list_allocator::LockedHeap;
 
 #[cfg_attr(not(feature = "uefishell"), global_allocator)]

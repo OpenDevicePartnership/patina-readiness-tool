@@ -1,3 +1,11 @@
+//! Functions for capturing and serializing Firmware Volumes from the system memory map.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use alloc::vec::Vec;
 use common::serializable_fv::FirmwareVolumeSerDe;
 use mu_pi::{fw_fs::FirmwareVolume, hob::Hob};

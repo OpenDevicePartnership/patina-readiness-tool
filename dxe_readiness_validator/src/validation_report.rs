@@ -1,3 +1,11 @@
+//! Structures and methods for collecting and reporting validation results.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use crate::validation_kind::PrettyPrintTable;
 use colored::*;
 use comfy_table::{presets::UTF8_FULL, ContentArrangement, Table};

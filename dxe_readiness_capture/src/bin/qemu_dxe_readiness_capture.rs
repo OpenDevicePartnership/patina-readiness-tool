@@ -1,10 +1,10 @@
-//! Dxe Readiness Capture Tool - X64/Intel LNL
+//! Dxe Readiness Capture Tool - X64/Intel QEMU
 //!
 //! ## License
 //!
-//! Copyright (C) Microsoft Corporation. All rights reserved.
+//! Copyright (c) Microsoft Corporation.
 //!
-//! SPDX-License-Identifier: BSD-2-Clause-Patent
+//! SPDX-License-Identifier: Apache-2.0
 //!
 
 // no_std and no_main are applicable only when building as an EFI application.

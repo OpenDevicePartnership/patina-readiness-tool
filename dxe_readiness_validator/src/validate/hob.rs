@@ -1,3 +1,11 @@
+//! Validation logic for HOB (Hand-Off Block) structures.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
 use mu_pi::serializable::serializable_hob::{HobSerDe, ResourceDescriptorSerDe};
 use mu_pi::serializable::Interval;

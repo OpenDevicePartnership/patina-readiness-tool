@@ -3,8 +3,8 @@
 # markdownlint configuration file
 #
 ##
-# Copyright (c) Microsoft Corporation
-# SPDX-License-Identifier: BSD-2-Clause-Patent
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: Apache-2.0
 ##
 {
     "default": true,

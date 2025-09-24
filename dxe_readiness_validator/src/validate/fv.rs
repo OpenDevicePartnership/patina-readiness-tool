@@ -1,3 +1,11 @@
+//! Validation logic for Firmware Volume (FV) structures.
+//!
+//! ## License
+//!
+//! Copyright (c) Microsoft Corporation.
+//!
+//! SPDX-License-Identifier: Apache-2.0
+//!
 use super::ValidationResult;
 use crate::{
     validation_kind::{FvValidationKind, ValidationKind},
