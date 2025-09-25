@@ -6,7 +6,7 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-use crate::hex_format;
+use alloc::format;
 use alloc::string::String;
 use alloc::string::ToString;
 use alloc::vec::Vec;
@@ -21,10 +21,10 @@ use mu_pi::fw_fs::FfsSectionHeader::STANDARD_COMPRESSION;
 use mu_pi::fw_fs::FfsSectionType;
 use mu_pi::fw_fs::FirmwareVolume;
 use mu_pi::fw_fs::SectionMetaData;
+use mu_pi::serializable::format_guid;
+use mu_pi::serializable::hex_format;
 use r_efi::efi;
 use serde::{Deserialize, Serialize};
-
-use crate::format_guid;
 
 // This is the serialized version of the FV list.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]

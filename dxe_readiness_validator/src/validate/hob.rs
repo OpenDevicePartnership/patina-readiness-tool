@@ -6,9 +6,9 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-use common::serializable_hob::HobSerDe;
-use common::serializable_hob::ResourceDescriptorSerDe;
 use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
+use mu_pi::serializable::serializable_hob::{HobSerDe, ResourceDescriptorSerDe};
+use mu_pi::serializable::Interval;
 use patina_sdk::base::UEFI_PAGE_SIZE;
 use r_efi::efi;
 
@@ -16,7 +16,6 @@ use crate::validation_kind::HobValidationKind;
 use crate::validation_kind::ValidationKind;
 use crate::validator::Validator;
 use crate::ValidationAppError;
-use common::Interval;
 
 use super::ValidationReport;
 use super::ValidationResult;
@@ -278,8 +277,8 @@ impl Validator for HobValidator<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use common::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
     use mu_pi::hob::{EfiPhysicalAddress, EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
+    use mu_pi::serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
 
     fn create_v1_hob(
         start: EfiPhysicalAddress,

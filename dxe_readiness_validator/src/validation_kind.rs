@@ -6,8 +6,8 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-use common::{
-    serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe},
+use common::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe};
+use mu_pi::serializable::{
     serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
     Interval,
 };

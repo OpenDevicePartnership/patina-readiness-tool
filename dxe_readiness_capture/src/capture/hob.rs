@@ -7,7 +7,7 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 use alloc::vec::Vec;
-use common::serializable_hob::HobSerDe;
+use mu_pi::serializable::serializable_hob::HobSerDe;
 
 use crate::capture::CaptureApp;
 use crate::CaptureResult;

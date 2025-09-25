@@ -13,8 +13,9 @@ use crate::{
     validator::Validator,
     ValidationAppError,
 };
-use common::{format_guid, serializable_fv::FirmwareVolumeSerDe};
+use common::serializable_fv::FirmwareVolumeSerDe;
 use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
+use mu_pi::serializable::format_guid;
 use patina_sdk::base::UEFI_PAGE_SIZE;
 use r_efi::efi::Guid;
 

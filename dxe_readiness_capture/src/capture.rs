@@ -16,9 +16,9 @@ mod fv;
 mod hob;
 
 use common::serializable_fv::FirmwareVolumeSerDe;
-use common::serializable_hob::HobSerDe;
 use common::DxeReadinessCaptureSerDe;
 use core::{ffi::c_void, mem, str};
+use mu_pi::serializable::serializable_hob::HobSerDe;
 
 use crate::allocator;
 use crate::CaptureResult;
