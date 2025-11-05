@@ -15,5 +15,5 @@ use crate::validate::ValidationResult;
 /// validation logic and return the outcome as a [`ValidationResult`] object.
 pub trait Validator {
     /// Executes the validation logic and returns a [`ValidationResult`] object.
-    fn validate(&self) -> ValidationResult;
+    fn validate(&self) -> ValidationResult<'_>;
 }

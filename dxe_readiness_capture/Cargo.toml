@@ -5,18 +5,16 @@ edition = "2021"
 
 [dependencies]
 cfg-if = { workspace = true }
-common = { path = "../common" }
+common = { path = "../common", default-features = false }
 linked_list_allocator = "0.10.5"
 log = { workspace = true }
-mu_pi = { workspace = true }
-patina_sdk = { workspace = true }
-patina_section_extractor = { workspace = true }
+patina = { workspace = true }
 patina_stacktrace = { workspace = true }
 r-efi = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 spin = { workspace = true }
-uefi = { version = "0.35.0", features = ["alloc", "logger", "global_allocator"] }
+uefi = { version = "0.36.0", features = ["alloc", "logger", "global_allocator"] }
 
 [features]
 default = []

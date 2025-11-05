@@ -5,13 +5,13 @@ edition = "2021"
 
 [dependencies]
 goblin = { workspace = true, features = ["pe32", "pe64", "te", "alloc"]}
-mu_pi = { workspace = true }
+patina = { workspace = true, features = ["serde", "alloc"] }
 r-efi = { workspace = true }
-patina_section_extractor = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 
 [features]
-default = []
+default = ["std"]
+std = ["patina/default", "serde/std", "serde_json/std"]
 x64 = []
 aarch64 = []

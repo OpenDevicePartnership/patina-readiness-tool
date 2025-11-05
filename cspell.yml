@@ -30,6 +30,7 @@ words:
   - edkii
   - keccak
   - libdxe
+  - mdbook
   - withf
   - zbuild
   - zunstable
