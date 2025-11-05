@@ -8,7 +8,7 @@
 //!
 #![cfg_attr(not(test), no_std)]
 
-use mu_pi::serializable::serializable_hob::HobSerDe;
+use patina::pi::serializable::serializable_hob::HobSerDe;
 
 extern crate alloc;
 

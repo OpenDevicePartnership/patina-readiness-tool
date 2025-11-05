@@ -8,7 +8,7 @@
 //!
 use alloc::vec::Vec;
 use common::serializable_fv::FirmwareVolumeSerDe;
-use mu_pi::{fw_fs::FirmwareVolume, hob::Hob};
+use patina::pi::{fw_fs::FirmwareVolume, hob::Hob};
 
 use crate::{capture::CaptureApp, CaptureResult};
 

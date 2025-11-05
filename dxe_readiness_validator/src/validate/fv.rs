@@ -15,8 +15,7 @@ use crate::{
 };
 use common::serializable_fv::FirmwareVolumeSerDe;
 use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
-use mu_pi::serializable::format_guid;
-use patina_sdk::base::UEFI_PAGE_SIZE;
+use patina::{base::UEFI_PAGE_SIZE, pi::serializable::format_guid};
 use r_efi::efi::Guid;
 
 /// Performs validation on a list of firmware volumes to check for violations of
@@ -32,7 +31,7 @@ impl<'a> FvValidator<'a> {
 
     /// Checks firmware volumes for files that use traditional SMM types and
     /// reports violations if found.
-    pub(super) fn validate_fv_for_traditional_smm(&self) -> ValidationResult {
+    pub(super) fn validate_fv_for_traditional_smm(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
 
         self.fv_list.iter().for_each(|fv| {
@@ -48,7 +47,7 @@ impl<'a> FvValidator<'a> {
 
     /// Checks firmware volumes for presence of combined driver files and
     /// reports violations if any are found.
-    pub(super) fn validate_fv_for_combined_drivers(&self) -> ValidationResult {
+    pub(super) fn validate_fv_for_combined_drivers(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
 
         self.fv_list.iter().for_each(|fv| {
@@ -64,7 +63,7 @@ impl<'a> FvValidator<'a> {
 
     /// Checks firmware volumes for presence of prohibited Apriori files by
     /// their GUIDs and reports violations if found.
-    pub(super) fn validate_fv_for_apriori_file(&self) -> ValidationResult {
+    pub(super) fn validate_fv_for_apriori_file(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
 
         let pei_apriori_file_name_guid = format_guid(Guid::from_fields(
@@ -99,7 +98,7 @@ impl<'a> FvValidator<'a> {
     /// Validates sections within firmware volumes for LZMA compression.
     /// For PE images, validates that the section alignment is correct.
     /// Reports violations if any are found.
-    pub(super) fn validate_fv_file_sections(&self) -> ValidationResult {
+    pub(super) fn validate_fv_file_sections(&self) -> ValidationResult<'_> {
         const FV_ARM64_RUNTIME_DRIVER_ALIGNMENT: usize = 0x10000;
         let mut validation_report = ValidationReport::new();
 
@@ -124,7 +123,8 @@ impl<'a> FvValidator<'a> {
                             // ARM64 DXE_RUNTIME_DRIVER needs 64k alignment.
                             if pe_header_info.machine == COFF_MACHINE_ARM64
                                 && pe_header_info.subsystem == IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
-                                && (pe_header_info.section_alignment as usize) % FV_ARM64_RUNTIME_DRIVER_ALIGNMENT != 0
+                                && !(pe_header_info.section_alignment as usize)
+                                    .is_multiple_of(FV_ARM64_RUNTIME_DRIVER_ALIGNMENT)
                             {
                                 validation_report.add_violation(ValidationKind::Fv(
                                     FvValidationKind::InvalidSectionAlignment {
@@ -137,7 +137,7 @@ impl<'a> FvValidator<'a> {
                             }
                             // Other sections can be just page-aligned (4k).
                             else if pe_header_info.section_alignment == 0
-                                || (pe_header_info.section_alignment as usize) % UEFI_PAGE_SIZE != 0
+                                || !(pe_header_info.section_alignment as usize).is_multiple_of(UEFI_PAGE_SIZE)
                             {
                                 validation_report.add_violation(ValidationKind::Fv(
                                     FvValidationKind::InvalidSectionAlignment {
@@ -159,7 +159,7 @@ impl<'a> FvValidator<'a> {
 }
 
 impl Validator for FvValidator<'_> {
-    fn validate(&self) -> ValidationResult {
+    fn validate(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         if self.fv_list.is_empty() {
             return Err(ValidationAppError::EmptyFvList);
@@ -176,13 +176,11 @@ impl Validator for FvValidator<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use common::serializable_fv::FirmwareFileSerDe;
-    use common::serializable_fv::FirmwareSectionSerDe;
-    use common::serializable_fv::FirmwareVolumeSerDe;
-    use common::serializable_fv::PeHeaderInfo;
-    use goblin::pe::header::COFF_MACHINE_X86_64;
-    use goblin::pe::subsystem::IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER;
-    use goblin::pe::subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER;
+    use common::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe, PeHeaderInfo};
+    use goblin::pe::{
+        header::COFF_MACHINE_X86_64,
+        subsystem::{IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER, IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER},
+    };
 
     #[test]
     fn test_validate_fv_for_traditional_smm() {

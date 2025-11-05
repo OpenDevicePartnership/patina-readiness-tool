@@ -6,23 +6,22 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-use alloc::format;
-use alloc::string::String;
-use alloc::string::ToString;
-use alloc::vec::Vec;
-use mu_pi::fw_fs::guid::BROTLI_SECTION;
-use mu_pi::fw_fs::guid::CRC32_SECTION;
-use mu_pi::fw_fs::guid::LZMA_F86_SECTION;
-use mu_pi::fw_fs::guid::LZMA_PARALLEL_SECTION;
-use mu_pi::fw_fs::guid::LZMA_SECTION;
-use mu_pi::fw_fs::guid::TIANO_DECOMPRESS_SECTION;
-use mu_pi::fw_fs::FfsSectionHeader::NOT_COMPRESSED;
-use mu_pi::fw_fs::FfsSectionHeader::STANDARD_COMPRESSION;
-use mu_pi::fw_fs::FfsSectionType;
-use mu_pi::fw_fs::FirmwareVolume;
-use mu_pi::fw_fs::SectionMetaData;
-use mu_pi::serializable::format_guid;
-use mu_pi::serializable::hex_format;
+use alloc::{
+    format,
+    string::{String, ToString},
+    vec::Vec,
+};
+use patina::pi::{
+    fw_fs::{
+        guid::{
+            BROTLI_SECTION, CRC32_SECTION, LZMA_F86_SECTION, LZMA_PARALLEL_SECTION, LZMA_SECTION,
+            TIANO_DECOMPRESS_SECTION,
+        },
+        FfsSectionHeader::{NOT_COMPRESSED, STANDARD_COMPRESSION},
+        FfsSectionType, FirmwareVolume, SectionMetaData,
+    },
+    serializable::{format_guid, hex_format},
+};
 use r_efi::efi;
 use serde::{Deserialize, Serialize};
 

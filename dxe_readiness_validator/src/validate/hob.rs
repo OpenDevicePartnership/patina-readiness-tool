@@ -6,19 +6,25 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-use mu_pi::hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
-use mu_pi::serializable::serializable_hob::{HobSerDe, ResourceDescriptorSerDe};
-use mu_pi::serializable::Interval;
-use patina_sdk::base::UEFI_PAGE_SIZE;
+use patina::{
+    base::UEFI_PAGE_SIZE,
+    pi::{
+        hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED},
+        serializable::{
+            serializable_hob::{HobSerDe, ResourceDescriptorSerDe},
+            Interval,
+        },
+    },
+};
 use r_efi::efi;
 
-use crate::validation_kind::HobValidationKind;
-use crate::validation_kind::ValidationKind;
-use crate::validator::Validator;
-use crate::ValidationAppError;
+use crate::{
+    validation_kind::{HobValidationKind, ValidationKind},
+    validator::Validator,
+    ValidationAppError,
+};
 
-use super::ValidationReport;
-use super::ValidationResult;
+use super::{ValidationReport, ValidationResult};
 
 /// Performs validation on a list of hobs to check for violations of Patina
 /// requirements.
@@ -54,7 +60,7 @@ impl<'a> HobValidator<'a> {
     /// Checks for overlapping address ranges in memory and I/O resource
     /// descriptor HOBs. Reports each overlapping pair as a validation
     /// violation.
-    fn validate_memory_overlap(&self) -> ValidationResult {
+    fn validate_memory_overlap(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         let mut overlaps = Vec::new();
         let mut v1_memory_hobs: Vec<&ResourceDescriptorSerDe> = Vec::new();
@@ -109,7 +115,7 @@ impl<'a> HobValidator<'a> {
     ///    overlaps with any V2s, those V2s must have the same attributes as it,
     ///    so it's safe to merge for the superset check
     /// - If v1 and v2 overlap, make sure info is consistent
-    fn validate_overlapping_v1v2_attributes(&self) -> ValidationResult {
+    fn validate_overlapping_v1v2_attributes(&self) -> ValidationResult<'_> {
         let mut inconsistent_v1_v2 = Vec::new();
         let mut validation_report = ValidationReport::new();
         for hob1 in self.hob_list {
@@ -135,7 +141,7 @@ impl<'a> HobValidator<'a> {
 
     /// Checks that all V1 resource descriptors are covered by V2 descriptors,
     /// reporting any V1 ranges not migrated to V2.
-    fn validate_v1v2_superset(&self) -> ValidationResult {
+    fn validate_v1v2_superset(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         let mut v1_resources: Vec<&ResourceDescriptorSerDe> = Vec::new();
         let mut v2_resources: Vec<&ResourceDescriptorSerDe> = Vec::new();
@@ -180,7 +186,7 @@ impl<'a> HobValidator<'a> {
     /// Validates that no memory allocations describe page zero address range
     /// (below UEFI_PAGE_SIZE). Reports a violation for each allocation
     /// overlapping this restricted range.
-    fn validate_page0_memory_allocation(&self) -> ValidationResult {
+    fn validate_page0_memory_allocation(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         const PAGE_ZERO_END: u64 = UEFI_PAGE_SIZE as u64 - 1;
         for hob in self.hob_list {
@@ -198,7 +204,7 @@ impl<'a> HobValidator<'a> {
 
     /// Checks for presence of the MEMORY_UCE attribute in V2 resource
     /// descriptors and reports violations if found.
-    fn validate_memory_uce_attribute(&self) -> ValidationResult {
+    fn validate_memory_uce_attribute(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         for hob in self.hob_list {
             if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
@@ -216,7 +222,7 @@ impl<'a> HobValidator<'a> {
     /// Validates that each V2 resource descriptor has exactly one valid
     /// cacheability attribute set, reporting violations if none or multiple
     /// cache bits are present.
-    fn validate_memory_cacheability_attribute(&self) -> ValidationResult {
+    fn validate_memory_cacheability_attribute(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         for hob in self.hob_list {
             if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
@@ -239,7 +245,7 @@ impl<'a> HobValidator<'a> {
 
     /// Validates that each V2 resource descriptor with an IO resource type has
     /// no attributes set.
-    fn validate_memory_cacheability_attribute_io_resource_hob(&self) -> ValidationResult {
+    fn validate_memory_cacheability_attribute_io_resource_hob(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         for hob in self.hob_list {
             if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
@@ -257,7 +263,7 @@ impl<'a> HobValidator<'a> {
 }
 
 impl Validator for HobValidator<'_> {
-    fn validate(&self) -> ValidationResult {
+    fn validate(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         if self.hob_list.is_empty() {
             return Err(ValidationAppError::EmptyHobList);
@@ -277,8 +283,10 @@ impl Validator for HobValidator<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mu_pi::hob::{EfiPhysicalAddress, EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED};
-    use mu_pi::serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
+    use patina::pi::{
+        hob::{EfiPhysicalAddress, EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED},
+        serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
+    };
 
     fn create_v1_hob(
         start: EfiPhysicalAddress,

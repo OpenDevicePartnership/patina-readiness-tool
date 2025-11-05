@@ -7,10 +7,9 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 use alloc::vec::Vec;
-use mu_pi::serializable::serializable_hob::HobSerDe;
+use patina::pi::serializable::serializable_hob::HobSerDe;
 
-use crate::capture::CaptureApp;
-use crate::CaptureResult;
+use crate::{capture::CaptureApp, CaptureResult};
 
 impl CaptureApp<'_> {
     pub(crate) fn capture_hob(&self) -> CaptureResult<Vec<HobSerDe>> {

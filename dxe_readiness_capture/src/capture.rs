@@ -15,17 +15,16 @@
 mod fv;
 mod hob;
 
-use common::serializable_fv::FirmwareVolumeSerDe;
-use common::DxeReadinessCaptureSerDe;
+use common::{serializable_fv::FirmwareVolumeSerDe, DxeReadinessCaptureSerDe};
 use core::{ffi::c_void, mem, str};
-use mu_pi::serializable::serializable_hob::HobSerDe;
+use patina::pi::serializable::serializable_hob::HobSerDe;
 
-use crate::allocator;
-use crate::CaptureResult;
-use alloc::string::{String, ToString};
-use alloc::vec::Vec;
-use mu_pi::hob::header::Hob;
-use mu_pi::hob::{header, HobList, PhaseHandoffInformationTable, HANDOFF};
+use crate::{allocator, CaptureResult};
+use alloc::{
+    string::{String, ToString},
+    vec::Vec,
+};
+use patina::pi::hob::{header, header::Hob, HobList, PhaseHandoffInformationTable, HANDOFF};
 
 pub struct CaptureApp<'a> {
     pub(crate) hob_list: HobList<'a>,

@@ -4,30 +4,28 @@ resolver = "2"
 members = ["dxe_readiness_capture", "common", "dxe_readiness_validator"]
 
 [workspace.package]
-version = "0.1.0"
-edition = "2021"
+version = "0.2.0"
+edition = "2024"
 license = "Apache-2.0"
 rust-version = "1.85"
 description = "Dxe Readiness Capture/Validation Tool"
 
 [workspace.dependencies]
-cfg-if = "1.0.0"
-goblin = { version = "0.10.0", default-features = false }
-patina_sdk = { version = "4", registry = "patina-fw" }
-patina_section_extractor = { version = "4", registry = "patina-fw" }
-patina_stacktrace = { version = "4", registry = "patina-fw" }
+cfg-if = "1.0.4"
+goblin = { version = "0.10.3", default-features = false }
+patina = { version = "14" }
+patina_stacktrace = { version = "14" }
 log = { version = "^0.4", default-features = false, features = [
   "release_max_level_warn",
 ] }
-spin = "^0.9"
-mu_pi = { version = "6.0.2", features = ["serde"] }
+spin = "^0.10"
 serde = { version = "1", default-features = false, features = [
   "alloc",
   "derive",
 ] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
-r-efi = { version = "5.0.0", default-features = false }
-uuid = { version = "1.10.0", default-features = false }
+r-efi = { version = "5.3.0", default-features = false }
+uuid = { version = "1.18", default-features = false }
 clap = { version = "4", features = ["derive"] }
 
 [profile.dev]
