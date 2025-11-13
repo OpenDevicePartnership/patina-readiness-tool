@@ -8,10 +8,10 @@
 //!
 use super::ValidationResult;
 use crate::{
+    ValidationAppError,
     validation_kind::{FvValidationKind, ValidationKind},
     validation_report::ValidationReport,
     validator::Validator,
-    ValidationAppError,
 };
 use common::serializable_fv::FirmwareVolumeSerDe;
 use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
@@ -118,36 +118,36 @@ impl<'a> FvValidator<'a> {
                         }));
                     }
 
-                    if section.section_type == "Pe32" {
-                        if let Some(pe_header_info) = &section.pe_info {
-                            // ARM64 DXE_RUNTIME_DRIVER needs 64k alignment.
-                            if pe_header_info.machine == COFF_MACHINE_ARM64
-                                && pe_header_info.subsystem == IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
-                                && !(pe_header_info.section_alignment as usize)
-                                    .is_multiple_of(FV_ARM64_RUNTIME_DRIVER_ALIGNMENT)
-                            {
-                                validation_report.add_violation(ValidationKind::Fv(
-                                    FvValidationKind::InvalidSectionAlignment {
-                                        fv,
-                                        file,
-                                        section,
-                                        required_alignment: FV_ARM64_RUNTIME_DRIVER_ALIGNMENT,
-                                    },
-                                ));
-                            }
-                            // Other sections can be just page-aligned (4k).
-                            else if pe_header_info.section_alignment == 0
-                                || !(pe_header_info.section_alignment as usize).is_multiple_of(UEFI_PAGE_SIZE)
-                            {
-                                validation_report.add_violation(ValidationKind::Fv(
-                                    FvValidationKind::InvalidSectionAlignment {
-                                        fv,
-                                        file,
-                                        section,
-                                        required_alignment: UEFI_PAGE_SIZE,
-                                    },
-                                ));
-                            }
+                    if section.section_type == "Pe32"
+                        && let Some(pe_header_info) = &section.pe_info
+                    {
+                        // ARM64 DXE_RUNTIME_DRIVER needs 64k alignment.
+                        if pe_header_info.machine == COFF_MACHINE_ARM64
+                            && pe_header_info.subsystem == IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
+                            && !(pe_header_info.section_alignment as usize)
+                                .is_multiple_of(FV_ARM64_RUNTIME_DRIVER_ALIGNMENT)
+                        {
+                            validation_report.add_violation(ValidationKind::Fv(
+                                FvValidationKind::InvalidSectionAlignment {
+                                    fv,
+                                    file,
+                                    section,
+                                    required_alignment: FV_ARM64_RUNTIME_DRIVER_ALIGNMENT,
+                                },
+                            ));
+                        }
+                        // Other sections can be just page-aligned (4k).
+                        else if pe_header_info.section_alignment == 0
+                            || !(pe_header_info.section_alignment as usize).is_multiple_of(UEFI_PAGE_SIZE)
+                        {
+                            validation_report.add_violation(ValidationKind::Fv(
+                                FvValidationKind::InvalidSectionAlignment {
+                                    fv,
+                                    file,
+                                    section,
+                                    required_alignment: UEFI_PAGE_SIZE,
+                                },
+                            ));
                         }
                     }
                 }

@@ -8,7 +8,7 @@
 //!
 use crate::validation_kind::PrettyPrintTable;
 use colored::*;
-use comfy_table::{presets::UTF8_FULL, ContentArrangement, Table};
+use comfy_table::{ContentArrangement, Table, presets::UTF8_FULL};
 use std::collections::BTreeMap;
 
 use crate::validation_kind::ValidationKind;

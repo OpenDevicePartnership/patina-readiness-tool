@@ -9,7 +9,7 @@
 use alloc::vec::Vec;
 use patina::pi::serializable::serializable_hob::HobSerDe;
 
-use crate::{capture::CaptureApp, CaptureResult};
+use crate::{CaptureResult, capture::CaptureApp};
 
 impl CaptureApp<'_> {
     pub(crate) fn capture_hob(&self) -> CaptureResult<Vec<HobSerDe>> {

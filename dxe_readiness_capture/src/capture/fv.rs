@@ -10,7 +10,7 @@ use alloc::vec::Vec;
 use common::serializable_fv::FirmwareVolumeSerDe;
 use patina::pi::{fw_fs::FirmwareVolume, hob::Hob};
 
-use crate::{capture::CaptureApp, CaptureResult};
+use crate::{CaptureResult, capture::CaptureApp};
 
 impl CaptureApp<'_> {
     pub(crate) fn capture_fv(&self) -> CaptureResult<Vec<FirmwareVolumeSerDe>> {
@@ -18,7 +18,7 @@ impl CaptureApp<'_> {
             .hob_list
             .iter()
             .filter_map(|hob| {
-                if let Hob::FirmwareVolume(&fv) = hob {
+                if let &Hob::FirmwareVolume(&fv) = hob {
                     let mut fv_serde = FirmwareVolumeSerDe::from(
                         unsafe { FirmwareVolume::new_from_address(fv.base_address) }.unwrap(),
                     );

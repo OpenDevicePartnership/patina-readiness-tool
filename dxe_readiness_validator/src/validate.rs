@@ -8,7 +8,7 @@
 //!
 mod fv;
 mod hob;
-use crate::{commandline::CommandLine, validation_report::ValidationReport, validator::Validator, ValidationAppError};
+use crate::{ValidationAppError, commandline::CommandLine, validation_report::ValidationReport, validator::Validator};
 use clap::{CommandFactory, Parser};
 use common::DxeReadinessCaptureSerDe;
 use fv::FvValidator;
