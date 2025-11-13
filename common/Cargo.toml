@@ -1,7 +1,9 @@
 [package]
 name = "common"
-version = "0.1.0"
 edition = "2021"
+version.workspace = true
+repository.workspace = true
+license.workspace = true
 
 [dependencies]
 goblin = { workspace = true, features = ["pe32", "pe64", "te", "alloc"]}
