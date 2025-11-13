@@ -1,6 +1,6 @@
 [package]
 name = "dxe_readiness_validator"
-edition = "2021"
+edition.workspace = true
 version.workspace = true
 repository.workspace = true
 license.workspace = true

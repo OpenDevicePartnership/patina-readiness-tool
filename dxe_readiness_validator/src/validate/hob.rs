@@ -11,17 +11,17 @@ use patina::{
     pi::{
         hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED},
         serializable::{
-            serializable_hob::{HobSerDe, ResourceDescriptorSerDe},
             Interval,
+            serializable_hob::{HobSerDe, ResourceDescriptorSerDe},
         },
     },
 };
 use r_efi::efi;
 
 use crate::{
+    ValidationAppError,
     validation_kind::{HobValidationKind, ValidationKind},
     validator::Validator,
-    ValidationAppError,
 };
 
 use super::{ValidationReport, ValidationResult};
@@ -190,12 +190,12 @@ impl<'a> HobValidator<'a> {
         let mut validation_report = ValidationReport::new();
         const PAGE_ZERO_END: u64 = UEFI_PAGE_SIZE as u64 - 1;
         for hob in self.hob_list {
-            if let HobSerDe::MemoryAllocation { alloc_descriptor } = hob {
-                if alloc_descriptor.memory_base_address <= PAGE_ZERO_END {
-                    validation_report.add_violation(ValidationKind::Hob(HobValidationKind::PageZeroMemoryDescribed {
-                        alloc_desc: alloc_descriptor,
-                    }));
-                }
+            if let HobSerDe::MemoryAllocation { alloc_descriptor } = hob
+                && alloc_descriptor.memory_base_address <= PAGE_ZERO_END
+            {
+                validation_report.add_violation(ValidationKind::Hob(HobValidationKind::PageZeroMemoryDescribed {
+                    alloc_desc: alloc_descriptor,
+                }));
             }
         }
 
@@ -207,13 +207,13 @@ impl<'a> HobValidator<'a> {
     fn validate_memory_uce_attribute(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         for hob in self.hob_list {
-            if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
-                if attributes & efi::MEMORY_UCE != 0 {
-                    validation_report.add_violation(ValidationKind::Hob(HobValidationKind::V2ContainsUceAttribute {
-                        hob1: v1,
-                        attributes: *attributes,
-                    }));
-                }
+            if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob
+                && attributes & efi::MEMORY_UCE != 0
+            {
+                validation_report.add_violation(ValidationKind::Hob(HobValidationKind::V2ContainsUceAttribute {
+                    hob1: v1,
+                    attributes: *attributes,
+                }));
             }
         }
         Ok(validation_report)
@@ -248,14 +248,13 @@ impl<'a> HobValidator<'a> {
     fn validate_memory_cacheability_attribute_io_resource_hob(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         for hob in self.hob_list {
-            if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob {
-                if (v1.resource_type == EFI_RESOURCE_IO || v1.resource_type == EFI_RESOURCE_IO_RESERVED)
-                    && *attributes != 0
-                {
-                    validation_report.add_violation(ValidationKind::Hob(
-                        HobValidationKind::V2InvalidIoCacheabilityAttributes { hob1: v1, attributes: *attributes },
-                    ));
-                }
+            if let HobSerDe::ResourceDescriptorV2 { v1, attributes } = hob
+                && (v1.resource_type == EFI_RESOURCE_IO || v1.resource_type == EFI_RESOURCE_IO_RESERVED)
+                && *attributes != 0
+            {
+                validation_report.add_violation(ValidationKind::Hob(
+                    HobValidationKind::V2InvalidIoCacheabilityAttributes { hob1: v1, attributes: *attributes },
+                ));
             }
         }
         Ok(validation_report)
@@ -284,7 +283,7 @@ impl Validator for HobValidator<'_> {
 mod tests {
     use super::*;
     use patina::pi::{
-        hob::{EfiPhysicalAddress, EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED},
+        hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED, EfiPhysicalAddress},
         serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
     };
 

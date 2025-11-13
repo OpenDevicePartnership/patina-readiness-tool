@@ -8,8 +8,8 @@
 //!
 use common::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe};
 use patina::pi::serializable::{
-    serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
     Interval,
+    serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
 };
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -218,79 +218,86 @@ impl PrettyPrintTable for ValidationKind<'_> {
 
     fn table_row(&self, row_num: String) -> Vec<String> {
         match self {
-            ValidationKind::Hob(hob) => {
-                match hob {
-                    HobValidationKind::InconsistentMemoryAttributes { hob1, hob2 } => {
-                        let v1_hob_column =
-                            serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
-                        let v2_hob_column =
-                            serde_json::to_string_pretty(hob2).unwrap_or("hob 2 serialization failed!".to_string());
-                        let resolution = if hob1.owner != hob2.owner {
-                            format!("hob 1 owner({}) do not match with hob 2 owner({})", hob1.owner, hob2.owner)
-                        } else if hob1.resource_attribute != hob2.resource_attribute {
-                            format!(
-                                "hob 1 resource_attribute({}) do not match with hob 2 resource_attribute({})",
-                                hob1.resource_attribute, hob2.resource_attribute
-                            )
-                        } else if hob1.resource_type != hob2.resource_type {
-                            format!(
-                                "hob 1 resource_type({}) do not match with hob 2 resource_type({})",
-                                hob1.resource_type, hob2.resource_type
-                            )
-                        } else {
-                            "invalid hob 1 and hob 2".to_string()
-                        };
-                        vec![row_num, v1_hob_column, v2_hob_column, resolution]
-                    }
-                    HobValidationKind::OverlappingMemoryRanges { hob1, hob2 } => {
-                        let hob1_column =
-                            serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
-                        let hob2_column =
-                            serde_json::to_string_pretty(hob2).unwrap_or("hob 2 serialization failed!".to_string());
-                        let resolution =
-                            format!("Hob 1 range should not overlap with Hob 2 range\nHob 1 range({}, {}) | Hob 2 range({}, {})",
-                            hob1.start(), hob1.start(), hob2.start(), hob2.end());
-                        vec![row_num, hob1_column, hob2_column, resolution]
-                    }
-                    HobValidationKind::PageZeroMemoryDescribed { alloc_desc } => {
-                        let mem_alloc_desc_column = serde_json::to_string_pretty(alloc_desc)
-                            .unwrap_or("Memory Allocation Descriptor\nserialization failed!".to_string());
-                        let resolution =
-                            format!("memory_base_address, memory_length\nshould not describe Page 0\nMemory allocation range({}, {})",
-                            alloc_desc.start(), alloc_desc.end());
-                        vec![row_num, mem_alloc_desc_column, resolution]
-                    }
-                    HobValidationKind::V1MemoryRangeNotContainedInV2 { hob1 } => {
-                        let v1_hob_column =
-                            serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
-                        let resolution =
-                            "V1 Resource Descriptor Hob should have\ncorresponding V2 Resource Descriptor Hob"
-                                .to_string();
-                        vec![row_num, v1_hob_column, resolution]
-                    }
-                    HobValidationKind::V2ContainsUceAttribute { hob1, attributes } => {
-                        let hob1_column =
-                            serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
-                        let resolution =
-                            format!("Attributes(0x{:X}) should not contain\nMEMORY_UCE(0x10) attribute", attributes);
-                        vec![row_num, hob1_column, resolution]
-                    }
-                    HobValidationKind::V2MissingValidCacheabilityAttribute { hob1, attributes } => {
-                        let hob1_column =
-                            serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
-                        let resolution =
-                        format!("V2 Hob should contain exactly\none valid cacheability attributes(0x{:X})\n - MEMORY_UC(0x1)\n - MEMORY_WC(0x2)\n - MEMORY_WT(0x4)\n - MEMORY_WB(0x8)\n - MEMORY_UCE(0x10)\n - MEMORY_WP(0x1000)", attributes);
-                        vec![row_num, hob1_column, resolution]
-                    }
-                    HobValidationKind::V2InvalidIoCacheabilityAttributes { hob1, attributes } => {
-                        let hob1_column =
-                            serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
-                        let resolution =
-                            format!("V2 Hob should not contain cacheability or memory protection attributes(0x{:X}) for IO ranges", attributes);
-                        vec![row_num, hob1_column, resolution]
-                    }
+            ValidationKind::Hob(hob) => match hob {
+                HobValidationKind::InconsistentMemoryAttributes { hob1, hob2 } => {
+                    let v1_hob_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
+                    let v2_hob_column =
+                        serde_json::to_string_pretty(hob2).unwrap_or("hob 2 serialization failed!".to_string());
+                    let resolution = if hob1.owner != hob2.owner {
+                        format!("hob 1 owner({}) do not match with hob 2 owner({})", hob1.owner, hob2.owner)
+                    } else if hob1.resource_attribute != hob2.resource_attribute {
+                        format!(
+                            "hob 1 resource_attribute({}) do not match with hob 2 resource_attribute({})",
+                            hob1.resource_attribute, hob2.resource_attribute
+                        )
+                    } else if hob1.resource_type != hob2.resource_type {
+                        format!(
+                            "hob 1 resource_type({}) do not match with hob 2 resource_type({})",
+                            hob1.resource_type, hob2.resource_type
+                        )
+                    } else {
+                        "invalid hob 1 and hob 2".to_string()
+                    };
+                    vec![row_num, v1_hob_column, v2_hob_column, resolution]
                 }
-            }
+                HobValidationKind::OverlappingMemoryRanges { hob1, hob2 } => {
+                    let hob1_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
+                    let hob2_column =
+                        serde_json::to_string_pretty(hob2).unwrap_or("hob 2 serialization failed!".to_string());
+                    let resolution = format!(
+                        "Hob 1 range should not overlap with Hob 2 range\nHob 1 range({}, {}) | Hob 2 range({}, {})",
+                        hob1.start(),
+                        hob1.start(),
+                        hob2.start(),
+                        hob2.end()
+                    );
+                    vec![row_num, hob1_column, hob2_column, resolution]
+                }
+                HobValidationKind::PageZeroMemoryDescribed { alloc_desc } => {
+                    let mem_alloc_desc_column = serde_json::to_string_pretty(alloc_desc)
+                        .unwrap_or("Memory Allocation Descriptor\nserialization failed!".to_string());
+                    let resolution = format!(
+                        "memory_base_address, memory_length\nshould not describe Page 0\nMemory allocation range({}, {})",
+                        alloc_desc.start(),
+                        alloc_desc.end()
+                    );
+                    vec![row_num, mem_alloc_desc_column, resolution]
+                }
+                HobValidationKind::V1MemoryRangeNotContainedInV2 { hob1 } => {
+                    let v1_hob_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
+                    let resolution =
+                        "V1 Resource Descriptor Hob should have\ncorresponding V2 Resource Descriptor Hob".to_string();
+                    vec![row_num, v1_hob_column, resolution]
+                }
+                HobValidationKind::V2ContainsUceAttribute { hob1, attributes } => {
+                    let hob1_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
+                    let resolution =
+                        format!("Attributes(0x{:X}) should not contain\nMEMORY_UCE(0x10) attribute", attributes);
+                    vec![row_num, hob1_column, resolution]
+                }
+                HobValidationKind::V2MissingValidCacheabilityAttribute { hob1, attributes } => {
+                    let hob1_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
+                    let resolution = format!(
+                        "V2 Hob should contain exactly\none valid cacheability attributes(0x{:X})\n - MEMORY_UC(0x1)\n - MEMORY_WC(0x2)\n - MEMORY_WT(0x4)\n - MEMORY_WB(0x8)\n - MEMORY_UCE(0x10)\n - MEMORY_WP(0x1000)",
+                        attributes
+                    );
+                    vec![row_num, hob1_column, resolution]
+                }
+                HobValidationKind::V2InvalidIoCacheabilityAttributes { hob1, attributes } => {
+                    let hob1_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
+                    let resolution = format!(
+                        "V2 Hob should not contain cacheability or memory protection attributes(0x{:X}) for IO ranges",
+                        attributes
+                    );
+                    vec![row_num, hob1_column, resolution]
+                }
+            },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { fv, file } => {
                     let file_column = format!("FV: {}\nFile: {}\nFile Type: {}", fv.fv_name, file.name, file.file_type);
