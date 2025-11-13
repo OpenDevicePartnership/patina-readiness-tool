@@ -1,7 +1,9 @@
 [package]
 name = "dxe_readiness_capture"
-version = "0.1.0"
 edition = "2021"
+version.workspace = true
+repository.workspace = true
+license.workspace = true
 
 [dependencies]
 cfg-if = { workspace = true }
