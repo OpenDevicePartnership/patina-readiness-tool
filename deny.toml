@@ -59,6 +59,8 @@ ignore = [
     #{ id = "RUSTSEC-0000-0000", reason = "you can specify a reason the advisory is ignored" },
     #"a-crate-that-is-yanked@0.1.1", # you can also ignore yanked crate versions if you wish
     #{ crate = "a-crate-that-is-yanked@0.1.1", reason = "you can specify why you are ignoring the yanked crate" },
+
+    # None right now
 ]
 # If this is true, then cargo deny will use the git executable to fetch advisory database.
 # If this is false, then it uses a built-in git library.
@@ -89,9 +91,9 @@ exceptions = [
     # Each entry is the crate and version constraint, and its specific allow
     # list
     #{ allow = ["Zlib"], crate = "adler32" },
-    { allow = ["Unicode-3.0"], crate = "unicode-ident" },   # todo: follow up on crate license
-    { allow = ["MPL-2.0"], crate = "colored" },   # todo: follow up on crate license
-    { allow = ["MPL-2.0"], crate = "ucs2" },   # todo: follow up on crate license
+    { allow = ["Unicode-3.0"], crate = "unicode-ident" },
+    { allow = ["MPL-2.0"], crate = "colored" },
+    { allow = ["MPL-2.0"], crate = "ucs2" }
 ]
 
 [licenses.private]
@@ -139,7 +141,7 @@ deny = [
     # Wrapper crates can optionally be specified to allow the crate when it
     # is a direct dependency of the otherwise banned crate
     #{ crate = "ansi_term@0.11.0", wrappers = ["this-crate-directly-depends-on-ansi_term"] },
-    { crate = "tiny-keccak", reason = "Not updated in 5 years. Use alternative."},
+    { crate = "tiny-keccak", reason = "Not updated in 5 years. Use alternative." }
 ]
 
 # List of features to allow/deny
@@ -170,8 +172,8 @@ skip = [
     #"ansi_term@0.11.0",
     #{ crate = "ansi_term@0.11.0", reason = "you can specify a reason why it can't be updated/removed" },
 
-    { crate = "bitflags", reason = "Need https://github.com/gz/rust-x86/pull/150 to be merged into rust-x86."},
-    { crate = "windows-sys", reason = "https://crates.io/crates/colored latest (v3.0.0) uses 0.59. https://crates.io/crates/anstyle-query latest (v1.1.5) uses 0.61."},
+    { crate = "bitflags", reason = "Need https://github.com/gz/rust-x86/pull/150 to be merged into rust-x86." },
+    { crate = "windows-sys", reason = "https://crates.io/crates/colored latest (v3.0.0) uses 0.59. https://crates.io/crates/anstyle-query latest (v1.1.5) uses 0.61." }
 ]
 # Similarly to `skip` allows you to skip certain crates during duplicate
 # detection. Unlike skip, it also includes the entire tree of transitive
