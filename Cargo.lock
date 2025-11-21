@@ -170,17 +170,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "common"
-version = "0.2.0"
-dependencies = [
- "goblin",
- "patina",
- "r-efi",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "crossterm"
 version = "0.29.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -217,7 +206,6 @@ name = "dxe_readiness_capture"
 version = "0.2.0"
 dependencies = [
  "cfg-if",
- "common",
  "linked_list_allocator",
  "log",
  "patina",
@@ -225,7 +213,7 @@ dependencies = [
  "r-efi",
  "serde",
  "serde_json",
- "spin",
+ "spin 0.10.0",
  "uefi",
 ]
 
@@ -236,7 +224,7 @@ dependencies = [
  "clap",
  "colored",
  "comfy-table",
- "common",
+ "dxe_readiness_capture",
  "goblin",
  "log",
  "patina",
@@ -461,13 +449,12 @@ dependencies = [
 
 [[package]]
 name = "patina"
-version = "14.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21f0e70aac0830f24e3b0cd4dc697fcff53aa625336ee07ad419e9c36cb9d335"
+version = "16.0.0"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
  "fixedbitset",
+ "goblin",
  "indoc",
  "linkme",
  "log",
@@ -478,6 +465,7 @@ dependencies = [
  "scroll",
  "serde",
  "serde_json",
+ "spin 0.9.8",
  "uart_16550",
  "uuid",
  "x86_64",
@@ -487,9 +475,7 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "14.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa7527737605af7494e14ca114e8be71cb5483e3a0dae4551a8edf6aa01b40f2"
+version = "16.0.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -499,9 +485,7 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "14.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "839efa87dd31b55cf5cb5419d2f06be457462cf29b19986ea7b75055ddb92fb8"
+version = "16.0.0"
 dependencies = [
  "cfg-if",
  "log",
@@ -680,6 +664,15 @@ name = "smallvec"
 version = "1.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
+
+[[package]]
+name = "spin"
+version = "0.9.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
+dependencies = [
+ "lock_api",
+]
 
 [[package]]
 name = "spin"

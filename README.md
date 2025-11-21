@@ -24,9 +24,9 @@ The `cargo make build` command, along with the QEMU-based UEFI
 `qemu_dxe_readiness_capture.efi`, also builds the following hardware
 platform-specific binaries:
 
-| Platform                               | Binary                                                             |
-| -------------------------------------- | ------------------------------------------------------------------ |
-| **Intel Lunar Lake & Panther Lake**    | `target\x86_64-unknown-uefi\debug\intel_dxe_readiness_capture.efi` |
+| Platform                            | Binary                                                             |
+| ----------------------------------- | ------------------------------------------------------------------ |
+| **Intel Lunar Lake & Panther Lake** | `target\x86_64-unknown-uefi\debug\intel_dxe_readiness_capture.efi` |
 
 ## **Running Tests**
 
@@ -79,26 +79,13 @@ To build for your specific architecture, see the `Makefile.toml` for specific bu
 
 ### Project Outline
 
-The DXE Readiness tool is split into three main crates:
+The DXE Readiness tool is split into two main crates:
 
-- `common`: Common functionality between the capture and validation phases.
-  These include shared structs for serialization and utility functions.
 - `dxe_readiness_capture`: Code to serialize pre-DXE structs for validation.
   This crate runs in a `no_std` environment with a custom logger and allocator.
 - `dxe_readiness_validator`: Code to deserialize previously serialized pre-DXE
   structs and to validate that they meet platform requirements. This crate runs
   in standard Rust.
-
-#### `common`
-
-This crate is mainly for shared serialization structs between the capture and
-validation phases. There are two main structs, `SerializableHob` (representing
-entries in the HOB list) and `SerializableFV` (representing FV sections). These
-structs mirror their PI spec representations, which can be found in
-[`mu_rust_pi`](https://github.com/microsoft/mu_rust_pi).
-
-Any changes to these serializable structs should be validated for compatibility
-for both capture and validation.
 
 #### `dxe_readiness_capture`
 
