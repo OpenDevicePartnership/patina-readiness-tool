@@ -449,7 +449,7 @@ dependencies = [
 
 [[package]]
 name = "patina"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -475,7 +475,7 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -485,7 +485,7 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "16.0.0"
+version = "16.0.1"
 dependencies = [
  "cfg-if",
  "log",

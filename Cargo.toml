@@ -14,8 +14,8 @@ repository = "https://github.com/OpenDevicePartnership/patina-readiness-tool"
 [workspace.dependencies]
 cfg-if = "1.0.4"
 goblin = { version = "0.10.3", default-features = false }
-patina = { path="C:/Users/sherryfan/patina/sdk/patina", features= [ "serde" ] }
-patina_stacktrace = { path="C:/Users/sherryfan/patina/core/patina_stacktrace" }
+patina = { version = "14", features = ["serde"] }
+patina_stacktrace = { version = "14" }
 log = { version = "^0.4", default-features = false, features = [
   "release_max_level_warn",
 ] }
