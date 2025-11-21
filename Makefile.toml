@@ -90,15 +90,10 @@ description = "Build and run tests for DXE Readiness Validation binary."
 command = "cargo"
 args = ["test", "-p", "dxe_readiness_validator", "${@}"]
 
-[tasks.test-common]
-description = "Build and run tests for Common lib."
-command = "cargo"
-args = ["test", "-p", "common", "${@}"]
-
 [tasks.test]
 description = "Build and run tests for all binaries."
 clear = true
-dependencies = ["test-capture-binary", "test-validation-binary", "test-common"]
+dependencies = ["test-capture-binary", "test-validation-binary"]
 
 # Run validator binary for all supported targets.
 [tasks.run-validator]

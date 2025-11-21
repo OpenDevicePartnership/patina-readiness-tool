@@ -6,9 +6,9 @@
 //!
 //! SPDX-License-Identifier: Apache-2.0
 //!
-use common::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe};
 use patina::pi::serializable::{
     Interval,
+    serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe},
     serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
 };
 

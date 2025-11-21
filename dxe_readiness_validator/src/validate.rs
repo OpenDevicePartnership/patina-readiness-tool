@@ -10,7 +10,7 @@ mod fv;
 mod hob;
 use crate::{ValidationAppError, commandline::CommandLine, validation_report::ValidationReport, validator::Validator};
 use clap::{CommandFactory, Parser};
-use common::DxeReadinessCaptureSerDe;
+use dxe_readiness_capture::DxeReadinessCaptureSerDe;
 use fv::FvValidator;
 use hob::HobValidator;
 use std::fs;

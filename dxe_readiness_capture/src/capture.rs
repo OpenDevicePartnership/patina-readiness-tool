@@ -15,12 +15,12 @@
 mod fv;
 mod hob;
 
-use common::{DxeReadinessCaptureSerDe, serializable_fv::FirmwareVolumeSerDe};
 use core::{ffi::c_void, mem, str};
-use patina::pi::serializable::serializable_hob::HobSerDe;
+use patina::pi::serializable::{serializable_fv::FirmwareVolumeSerDe, serializable_hob::HobSerDe};
 
-use crate::{CaptureResult, allocator};
+use crate::{CaptureResult, DxeReadinessCaptureSerDe, allocator};
 use alloc::{
+    format,
     string::{String, ToString},
     vec::Vec,
 };
