@@ -182,6 +182,7 @@ mod tests {
         header::COFF_MACHINE_X86_64,
         subsystem::{IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER, IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER},
     };
+    use patina::pi::serializable::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, PeHeaderInfo};
 
     #[test]
     fn test_validate_fv_for_traditional_smm() {
