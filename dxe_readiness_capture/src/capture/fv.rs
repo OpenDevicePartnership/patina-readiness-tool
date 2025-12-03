@@ -7,8 +7,7 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 use alloc::vec::Vec;
-use common::serializable_fv::FirmwareVolumeSerDe;
-use patina::pi::{fw_fs::FirmwareVolume, hob::Hob};
+use patina::pi::{fw_fs::FirmwareVolume, hob::Hob, serializable::serializable_fv::FirmwareVolumeSerDe};
 
 use crate::{CaptureResult, capture::CaptureApp};
 

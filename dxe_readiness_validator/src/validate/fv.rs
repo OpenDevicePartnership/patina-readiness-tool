@@ -13,9 +13,11 @@ use crate::{
     validation_report::ValidationReport,
     validator::Validator,
 };
-use common::serializable_fv::FirmwareVolumeSerDe;
 use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
-use patina::{base::UEFI_PAGE_SIZE, pi::serializable::format_guid};
+use patina::{
+    base::UEFI_PAGE_SIZE,
+    pi::serializable::{format_guid, serializable_fv::FirmwareVolumeSerDe},
+};
 use r_efi::efi::Guid;
 
 /// Performs validation on a list of firmware volumes to check for violations of
@@ -176,11 +178,11 @@ impl Validator for FvValidator<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use common::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe, PeHeaderInfo};
     use goblin::pe::{
         header::COFF_MACHINE_X86_64,
         subsystem::{IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER, IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER},
     };
+    use patina::pi::serializable::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, PeHeaderInfo};
 
     #[test]
     fn test_validate_fv_for_traditional_smm() {

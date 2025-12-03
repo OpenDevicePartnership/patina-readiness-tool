@@ -17,14 +17,13 @@ cfg_if::cfg_if! {
     // Below code is meant to be compiled as an EFI application. So it should be
     // discarded when the crate is compiling for tests.
     if #[cfg(target_os = "uefi")] {
-        #[macro_use]
-        extern crate alloc;
         mod allocator;
         mod capture;
         use core::{ffi::c_void, panic::PanicInfo};
         use patina_stacktrace::StackTrace;
         use capture::CaptureApp;
         use alloc::string::String;
+
         pub type CaptureResult<T> = Result<T, String>;
 
         #[panic_handler]
@@ -51,4 +50,18 @@ cfg_if::cfg_if! {
             }
         }
     }
+}
+
+extern crate alloc;
+
+use alloc::vec::Vec;
+use patina::pi::serializable::{serializable_fv::FirmwareVolumeSerDe, serializable_hob::HobSerDe};
+use serde::{Deserialize, Serialize};
+
+/// This structure represents the actual capture data that will be serialized
+/// to JSON.
+#[derive(Serialize, Deserialize, Debug)]
+pub struct DxeReadinessCaptureSerDe {
+    pub hob_list: Vec<HobSerDe>,
+    pub fv_list: Vec<FirmwareVolumeSerDe>,
 }
