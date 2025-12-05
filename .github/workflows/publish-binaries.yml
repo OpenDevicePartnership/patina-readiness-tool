@@ -43,8 +43,6 @@ jobs:
           # Copy the binaries to the artifacts directory
           cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/intel/intel_dxe_readiness_capture.efi
           cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.pdb artifacts/intel/intel_dxe_readiness_capture.pdb
-          cp target/x86_64-unknown-uefi/debug/intel_lnl_dxe_readiness_capture.efi artifacts/intel/intel_lnl_dxe_readiness_capture.efi
-          cp target/x86_64-unknown-uefi/debug/intel_lnl_dxe_readiness_capture.pdb artifacts/intel/intel_lnl_dxe_readiness_capture.pdb
           cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/qemu/qemu_dxe_readiness_capture.efi
           cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/qemu/qemu_dxe_readiness_capture.pdb
           cp target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/shell_app/uefishell_dxe_readiness_capture.efi
