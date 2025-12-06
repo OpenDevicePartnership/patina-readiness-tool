@@ -15,8 +15,7 @@ architectures and targets.
 | -------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | **UEFI Dxe Phase**   | target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi      | target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi      |
 | **UEFI Shell Phase** | target\x86_64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi | target\aarch64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi |
-| **Windows**          | target\debug\dxe_readiness_validater.exe                             | target\debug\dxe_readiness_validater.exe                              |
-| **Linux**            | target\debug\dxe_readiness_validater                                 | target\debug\dxe_readiness_validater                                  |
+| **Windows**          | target\x86_64-pc-windows-msvc\debug\dxe_readiness_validater.exe      | target\aarch64-pc-windows-msvc\debug\dxe_readiness_validater.exe      |
 
 ### **Supported Hardware Platforms**
 

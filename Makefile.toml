@@ -11,6 +11,8 @@ default_to_workspace = false
 # This is needed due to uefi-sdk's use of unstable features.
 RUSTC_BOOTSTRAP = 1
 
+AARCH64_STD_TARGET = "--target aarch64-pc-windows-msvc"
+X86_64_STD_TARGET = "--target x86_64-pc-windows-msvc"
 AARCH64_UEFI_TARGET = "--target aarch64-unknown-uefi"
 X86_64_UEFI_TARGET = "--target x86_64-unknown-uefi"
 
@@ -61,10 +63,19 @@ command = "cargo"
 args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
 
 # Builds Validation binary for the host platform.
+[tasks.build-validation-binary-x64]
+description = "Builds the x64 DXE Readiness Validation binary."
+command = "cargo"
+args = [ "build", "-p", "dxe_readiness_validator", "@@split(X86_64_STD_TARGET, )", "${@}", ]
+
+[tasks.build-validation-binary-aarch64]
+description = "Builds the aarch64 DXE Readiness Validation binary."
+command = "cargo"
+args = [ "build", "-p", "dxe_readiness_validator", "@@split(AARCH64_STD_TARGET, )", "${@}", ]
+
 [tasks.build-validation-binary]
 description = "Builds the DXE Readiness Validation binary."
-command = "cargo"
-args = [ "build", "-p", "dxe_readiness_validator", "${@}", ]
+dependencies = [ "build-validation-binary-x64", "build-validation-binary-aarch64" ]
 
 [tasks.build]
 description = "Build all binaries."
