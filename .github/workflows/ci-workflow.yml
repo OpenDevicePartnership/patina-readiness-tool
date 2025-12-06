@@ -40,4 +40,6 @@ jobs:
         target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb
         target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe
         target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb
+        target/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator
+        target/aarch64-unknown-linux-gnu/debug/dxe_readiness_validator
     secrets: inherit
