@@ -54,7 +54,7 @@ jobs:
           cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/uefishell_dxe_readiness_capture.pdb
 
           cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
-          cp target/x86_64-pc-windows-msvc/debug/readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
           cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
           cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
 
