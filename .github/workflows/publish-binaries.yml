@@ -53,10 +53,10 @@ jobs:
           cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/uefishell_dxe_readiness_capture.efi
           cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/uefishell_dxe_readiness_capture.pdb
 
-          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
-          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
-          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
-          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator_x86-64.exe
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator_x86-64.pdb
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator_aarch64.exe
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator_aarch64.pdb
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
@@ -72,3 +72,4 @@ jobs:
         run: |
           Compress-Archive -Path artifacts/* -DestinationPath patina_readiness_tool.zip
           gh release upload ${{ github.event.release.tag_name }} patina_readiness_tool.zip
+
