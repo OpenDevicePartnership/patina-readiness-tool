@@ -1,0 +1,74 @@
+# @file publish-binaries.yml
+#
+# A workflow for publishing platform binaries for the readiness tool.
+#
+##
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: Apache-2.0
+##
+name: Publish
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Publish Binaries
+
+    runs-on: windows-latest
+
+    permissions:
+      contents: write
+      actions: read
+
+    steps:
+      - name: ✅ Checkout Repository ✅
+        uses: actions/checkout@v5
+
+      - name: 🛠️ Download Rust Tools 🛠️
+        uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@v0.0.4
+
+      - name: Build Platform Binaries
+        run: cargo make build
+
+      - name: Collect Binaries
+        run: |
+          # Create a directory for the release artifacts
+          mkdir -p "artifacts/capture/x64_64"
+          mkdir -p "artifacts/capture/aarch64"
+          mkdir -p "artifacts/validator"
+
+          # Copy the binaries to the artifacts directory
+          cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/capture/x64_64/intel_dxe_readiness_capture.efi
+          cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.pdb artifacts/capture/x64_64/intel_dxe_readiness_capture.pdb
+          cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/x64_64/qemu_dxe_readiness_capture.efi
+          cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/x64_64/qemu_dxe_readiness_capture.pdb
+          cp target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/x64_64/uefishell_dxe_readiness_capture.efi
+          cp target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/x64_64/uefishell_dxe_readiness_capture.pdb
+
+          cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/qemu_dxe_readiness_capture.efi
+          cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/qemu_dxe_readiness_capture.pdb
+          cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/uefishell_dxe_readiness_capture.efi
+          cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/uefishell_dxe_readiness_capture.pdb
+
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
+
+      - name: Upload Binaries
+        if: ${{ github.event_name != 'release' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: readiness-tool
+          path: artifacts/
+
+      - name: Publish Release Asset
+        if: ${{ github.event_name == 'release' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          Compress-Archive -Path artifacts/* -DestinationPath patina_readiness_tool.zip
+          gh release upload ${{ github.event.release.tag_name }} patina_readiness_tool.zip
