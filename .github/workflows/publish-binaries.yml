@@ -48,8 +48,6 @@ jobs:
           cp target\x86_64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi artifacts/capture/x64_64/uefishell_dxe_readiness_capture.efi
           cp target\x86_64-unknown-uefi\debug\uefishell_dxe_readiness_capture.pdb artifacts/capture/x64_64/uefishell_dxe_readiness_capture.pdb
 
-          cp target\aarch64-unknown-uefi\debug\intel_dxe_readiness_capture.efi artifacts/capture/aarch64/intel_dxe_readiness_capture.efi
-          cp target\aarch64-unknown-uefi\debug\intel_dxe_readiness_capture.pdb artifacts/capture/aarch64/intel_dxe_readiness_capture.pdb
           cp target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/qemu_dxe_readiness_capture.efi
           cp target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/qemu_dxe_readiness_capture.pdb
           cp target\aarch64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/uefishell_dxe_readiness_capture.efi
