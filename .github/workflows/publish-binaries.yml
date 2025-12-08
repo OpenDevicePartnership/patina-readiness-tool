@@ -41,22 +41,22 @@ jobs:
           mkdir -p "artifacts/validator"
 
           # Copy the binaries to the artifacts directory
-          cp target\x86_64-unknown-uefi\debug\intel_dxe_readiness_capture.efi artifacts/capture/x64_64/intel_dxe_readiness_capture.efi
-          cp target\x86_64-unknown-uefi\debug\intel_dxe_readiness_capture.pdb artifacts/capture/x64_64/intel_dxe_readiness_capture.pdb
-          cp target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi artifacts/capture/x64_64/qemu_dxe_readiness_capture.efi
-          cp target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.pdb artifacts/capture/x64_64/qemu_dxe_readiness_capture.pdb
-          cp target\x86_64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi artifacts/capture/x64_64/uefishell_dxe_readiness_capture.efi
-          cp target\x86_64-unknown-uefi\debug\uefishell_dxe_readiness_capture.pdb artifacts/capture/x64_64/uefishell_dxe_readiness_capture.pdb
+          cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/capture/x64_64/intel_dxe_readiness_capture.efi
+          cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.pdb artifacts/capture/x64_64/intel_dxe_readiness_capture.pdb
+          cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/x64_64/qemu_dxe_readiness_capture.efi
+          cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/x64_64/qemu_dxe_readiness_capture.pdb
+          cp target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/x64_64/uefishell_dxe_readiness_capture.efi
+          cp target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/x64_64/uefishell_dxe_readiness_capture.pdb
 
-          cp target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/qemu_dxe_readiness_capture.efi
-          cp target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/qemu_dxe_readiness_capture.pdb
-          cp target\aarch64-unknown-uefi\debug\uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/uefishell_dxe_readiness_capture.efi
-          cp target\aarch64-unknown-uefi\debug\uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/uefishell_dxe_readiness_capture.pdb
+          cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/qemu_dxe_readiness_capture.efi
+          cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/qemu_dxe_readiness_capture.pdb
+          cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/uefishell_dxe_readiness_capture.efi
+          cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/uefishell_dxe_readiness_capture.pdb
 
-          cp target\x86_64-pc-windows-msvc\debug\readiness_validator.exe artifacts/validator/readiness_validator.exe
-          cp target\x86_64-pc-windows-msvc\debug\readiness_validator.pdb artifacts/validator/readiness_validator.pdb
-          cp target\aarch64-pc-windows-msvc\debug\readiness_validator.exe artifacts/validator/readiness_validator_aarch64.exe
-          cp target\aarch64-pc-windows-msvc\debug\readiness_validator.pdb artifacts/validator/readiness_validator_aarch64.pdb
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
+          cp target/x86_64-pc-windows-msvc/debug/readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator.exe
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator.pdb
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
