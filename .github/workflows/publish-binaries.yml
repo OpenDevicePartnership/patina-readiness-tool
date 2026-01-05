@@ -30,15 +30,19 @@ jobs:
       - name: 🛠️ Download Rust Tools 🛠️
         uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@v0.0.4
 
-      - name: Build Platform Binaries
-        run: cargo make build
+      - name: Build Windows Binaries
+        run: cargo make build-validation-binary-windows
+
+      - name: Build Linux Binaries  
+        run: wsl bash -c "cargo make build-validation-binary-linux-x64"
 
       - name: Collect Binaries
         run: |
           # Create a directory for the release artifacts
           mkdir -p "artifacts/capture/x64_64"
           mkdir -p "artifacts/capture/aarch64"
-          mkdir -p "artifacts/validator"
+          mkdir -p "artifacts/validator/windows"
+          mkdir -p "artifacts/validator/linux"
 
           # Copy the binaries to the artifacts directory
           cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/capture/x64_64/intel_dxe_readiness_capture.efi
@@ -53,10 +57,13 @@ jobs:
           cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/uefishell_dxe_readiness_capture.efi
           cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/uefishell_dxe_readiness_capture.pdb
 
-          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator_x86-64.exe
-          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator_x86-64.pdb
-          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator_aarch64.exe
-          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator_aarch64.pdb
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_x86-64.exe
+          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_x86-64.pdb
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_aarch64.exe
+          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_aarch64.pdb
+
+          cp target/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator artifacts/validator/linux/dxe_readiness_validator_x86-64
+          cp target/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator.d artifacts/validator/linux/dxe_readiness_validator_x86-64.d
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
@@ -72,4 +79,3 @@ jobs:
         run: |
           Compress-Archive -Path artifacts/* -DestinationPath patina_readiness_tool.zip
           gh release upload ${{ github.event.release.tag_name }} patina_readiness_tool.zip
-
