@@ -74,6 +74,9 @@ jobs:
       actions: read
 
     steps:
+      - name: ✅ Checkout Repository ✅
+        uses: actions/checkout@v5
+
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v5
         with:
