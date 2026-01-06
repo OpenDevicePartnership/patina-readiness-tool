@@ -95,27 +95,27 @@ jobs:
           mkdir -p artifacts/validator/linux
 
           # Copy Windows UEFI binaries
-          cp windows-artifacts/target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/capture/x64_64/
-          cp windows-artifacts/target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.pdb artifacts/capture/x64_64/
-          cp windows-artifacts/target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/x64_64/
-          cp windows-artifacts/target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/x64_64/
-          cp windows-artifacts/target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/x64_64/
-          cp windows-artifacts/target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/x64_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/capture/x64_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.pdb artifacts/capture/x64_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/x64_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/x64_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/x64_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/x64_64/
 
-          cp windows-artifacts/target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/
-          cp windows-artifacts/target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/
-          cp windows-artifacts/target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/
-          cp windows-artifacts/target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/
 
           # Copy Windows validator binaries
-          cp windows-artifacts/target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_x86-64.exe
-          cp windows-artifacts/target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_x86-64.pdb
-          cp windows-artifacts/target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_aarch64.exe
-          cp windows-artifacts/target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_aarch64.pdb
+          cp windows-artifacts/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_x86-64.exe
+          cp windows-artifacts/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_x86-64.pdb
+          cp windows-artifacts/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_aarch64.exe
+          cp windows-artifacts/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_aarch64.pdb
 
           # Copy Linux validator binaries
-          cp linux-artifacts/target/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator artifacts/validator/linux/dxe_readiness_validator_x86-64
-          cp linux-artifacts/target/aarch64-unknown-linux-gnu/debug/dxe_readiness_validator artifacts/validator/linux/dxe_readiness_validator_aarch64
+          cp linux-artifacts/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator artifacts/validator/linux/dxe_readiness_validator_x86-64
+          cp linux-artifacts/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator.d artifacts/validator/linux/dxe_readiness_validator_x86-64.d
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
