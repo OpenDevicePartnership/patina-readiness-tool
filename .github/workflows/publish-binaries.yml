@@ -114,8 +114,8 @@ jobs:
           cp windows-artifacts/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_aarch64.pdb
 
           # Copy Linux validator binaries
-          cp linux-artifacts/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator artifacts/validator/linux/dxe_readiness_validator_x86-64
-          cp linux-artifacts/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator.d artifacts/validator/linux/dxe_readiness_validator_x86-64.d
+          cp linux-artifacts/dxe_readiness_validator artifacts/validator/linux/dxe_readiness_validator_x86-64
+          cp linux-artifacts/dxe_readiness_validator.d artifacts/validator/linux/dxe_readiness_validator_x86-64.d
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
