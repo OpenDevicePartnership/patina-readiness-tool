@@ -22,6 +22,11 @@ cfg_if::cfg_if! {
         #[entry]
         fn main() -> Status {
             uefi::helpers::init().unwrap();
+
+            // Set the logger max level to Info. Anything above this will
+            // trigger goblin's debug spew, dumping PE files from memory!
+            log::set_max_level(log::LevelFilter::Info);
+
             // Locate the configuration entry identified by the GUID
             // gEfiHobListGuid
             let hob_list_guid = guid!("7739F24C-93D7-11D4-9A3A-0090273FC14D");
