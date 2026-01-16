@@ -449,9 +449,9 @@ dependencies = [
 
 [[package]]
 name = "patina"
-version = "18.0.0"
+version = "19.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61be2482feca8d30abfc33e6ebebc5fac6bd8df3c24d64ca2a9f4caabf607535"
+checksum = "59bc30a998e04e6a544fee935d09bedb8d3662d9b8338827cca75e7f830504fb"
 dependencies = [
  "cfg-if",
  "fallible-streaming-iterator",
@@ -477,9 +477,9 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "18.0.0"
+version = "19.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "108beab67d2b3cad433f699ed135d790cb6ba4e0f01052a9b06885b133434af1"
+checksum = "d01089b05b645fb8cd924ab32732627593934429c4904bcaae5cd11311df4c29"
 dependencies = [
  "proc-macro2",
  "quote",
