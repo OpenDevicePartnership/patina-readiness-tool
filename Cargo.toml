@@ -15,7 +15,7 @@ repository = "https://github.com/OpenDevicePartnership/patina-readiness-tool"
 cfg-if = "1.0.4"
 goblin = { version = "0.10.3", default-features = false }
 patina = { version = "19", features = ["serde"] }
-patina_stacktrace = { version = "18" }
+patina_stacktrace = { version = "19" }
 log = { version = "^0.4", default-features = false, features = [
   "release_max_level_warn",
 ] }
