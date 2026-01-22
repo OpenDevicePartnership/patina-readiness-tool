@@ -14,9 +14,61 @@ on:
     types: [published]
 
 jobs:
-  build:
-    name: Publish Binaries
+  build-windows:
+    name: Build Windows Binaries
+    runs-on: windows-latest
 
+    steps:
+      - name: ✅ Checkout Repository ✅
+        uses: actions/checkout@v5
+
+      - name: 🛠️ Download Rust Tools 🛠️
+        uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@main
+
+        # `cargo make build` filters the appropriate platform so there is no need to specify Windows.
+      - name: Build All Windows Binaries
+        run: cargo make build
+
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: windows-binaries
+          path: |
+            target/x86_64-unknown-uefi/debug/*.efi
+            target/x86_64-unknown-uefi/debug/*.pdb
+            target/aarch64-unknown-uefi/debug/*.efi
+            target/aarch64-unknown-uefi/debug/*.pdb
+            target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe
+            target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb
+            target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe
+            target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb
+
+  build-linux:
+    name: Build Linux Binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Checkout Repository ✅
+        uses: actions/checkout@v5
+
+      - name: 🛠️ Download Rust Tools 🛠️
+        uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@main
+
+      # `cargo make build` filters the appropriate platform so there is no need to specify Linux.
+      - name: Build Linux Binaries
+        run: cargo make build
+
+      - name: Upload Linux Artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: linux-binaries
+          path: |
+            target/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator
+            target/x86_64-unknown-linux-gnu/debug/dxe_readiness_validator.d
+
+  publish:
+    name: Publish Binaries
+    needs: [build-windows, build-linux]
     runs-on: windows-latest
 
     permissions:
@@ -27,36 +79,48 @@ jobs:
       - name: ✅ Checkout Repository ✅
         uses: actions/checkout@v6
 
-      - name: 🛠️ Download Rust Tools 🛠️
-        uses: OpenDevicePartnership/patina-devops/.github/actions/rust-tool-cache@v0.0.4
+      - name: Download Windows Artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: windows-binaries
+          path: windows-artifacts
 
-      - name: Build Platform Binaries
-        run: cargo make build
+      - name: Download Linux Artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: linux-binaries
+          path: linux-artifacts
 
       - name: Collect Binaries
         run: |
           # Create a directory for the release artifacts
-          mkdir -p "artifacts/capture/x64_64"
-          mkdir -p "artifacts/capture/aarch64"
-          mkdir -p "artifacts/validator"
+          mkdir -p artifacts/capture/x86_64
+          mkdir -p artifacts/capture/aarch64
+          mkdir -p artifacts/validator/windows
+          mkdir -p artifacts/validator/linux
 
-          # Copy the binaries to the artifacts directory
-          cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/capture/x64_64/intel_dxe_readiness_capture.efi
-          cp target/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.pdb artifacts/capture/x64_64/intel_dxe_readiness_capture.pdb
-          cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/x64_64/qemu_dxe_readiness_capture.efi
-          cp target/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/x64_64/qemu_dxe_readiness_capture.pdb
-          cp target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/x64_64/uefishell_dxe_readiness_capture.efi
-          cp target/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/x64_64/uefishell_dxe_readiness_capture.pdb
+          # Copy Windows UEFI binaries
+          cp windows-artifacts/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.efi artifacts/capture/x86_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/intel_dxe_readiness_capture.pdb artifacts/capture/x86_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/x86_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/x86_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/x86_64/
+          cp windows-artifacts/x86_64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/x86_64/
 
-          cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/qemu_dxe_readiness_capture.efi
-          cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/qemu_dxe_readiness_capture.pdb
-          cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/uefishell_dxe_readiness_capture.efi
-          cp target/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/uefishell_dxe_readiness_capture.pdb
+          cp windows-artifacts/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/
 
-          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator_x86-64.exe
-          cp target/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator_x86-64.pdb
-          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/dxe_readiness_validator_aarch64.exe
-          cp target/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/dxe_readiness_validator_aarch64.pdb
+          # Copy Windows validator binaries
+          cp windows-artifacts/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_x86_64.exe
+          cp windows-artifacts/x86_64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_x86_64.pdb
+          cp windows-artifacts/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.exe artifacts/validator/windows/dxe_readiness_validator_aarch64.exe
+          cp windows-artifacts/aarch64-pc-windows-msvc/debug/dxe_readiness_validator.pdb artifacts/validator/windows/dxe_readiness_validator_aarch64.pdb
+
+          # Copy Linux validator binaries
+          cp linux-artifacts/dxe_readiness_validator artifacts/validator/linux/dxe_readiness_validator_x86_64
+          cp linux-artifacts/dxe_readiness_validator.d artifacts/validator/linux/dxe_readiness_validator_x86_64.d
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
@@ -72,4 +136,3 @@ jobs:
         run: |
           Compress-Archive -Path artifacts/* -DestinationPath patina_readiness_tool.zip
           gh release upload ${{ github.event.release.tag_name }} patina_readiness_tool.zip
-
