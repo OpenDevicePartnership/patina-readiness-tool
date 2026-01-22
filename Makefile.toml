@@ -8,8 +8,6 @@
 default_to_workspace = false
 
 [env]
-# This is needed due to uefi-sdk's use of unstable features.
-RUSTC_BOOTSTRAP = 1
 
 AARCH64_STD_WINDOWS_TARGET = "--target aarch64-pc-windows-msvc"
 X86_64_STD_WINDOWS_TARGET = "--target x86_64-pc-windows-msvc"
@@ -26,11 +24,13 @@ CAPTURE_UEFI_SHELL_FLAGS = "${DXE_READINESS_PKG} --features uefishell --bin uefi
 # DXE Readiness Capture UEFI binaries to run from UEFI Shell.
 [tasks.build-x64-uefishell]
 description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell."
+env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_application -C link-arg=/PDBALTPATH:uefishell_dxe_readiness_capture.pdb" }
 command = "cargo"
 args = [ "build", "@@split(CAPTURE_UEFI_SHELL_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "${@}", ]
 
 [tasks.build-aarch64-uefishell]
 description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell."
+env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_application -C link-arg=/PDBALTPATH:uefishell_dxe_readiness_capture.pdb" }
 command = "cargo"
 args = [ "build", "@@split(CAPTURE_UEFI_SHELL_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "${@}", ]
 
@@ -40,66 +40,51 @@ args = [ "build", "@@split(CAPTURE_UEFI_SHELL_FLAGS, )", "@@split(AARCH64_UEFI_T
 [tasks.build-intel-common]
 description = "Builds the Intel DXE Readiness Capture UEFI binary."
 private = true
+env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:intel_dxe_readiness_capture.pdb" }
 command = "cargo"
 args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "--bin", "intel_dxe_readiness_capture", "${@}"]
-
-# Intel Lunar Lake capture binary.
-[tasks.build-intel-lnl]
-description = "Builds the Intel DXE Readiness Capture UEFI binary for Lunar Lake."
-dependencies = ["build-intel-common"]
-
-# Intel Panther Lake capture binary.
-[tasks.build-intel-ptl]
-description = "Builds the Intel DXE Readiness Capture UEFI binary for Panther Lake."
-dependencies = ["build-intel-common"]
 
 # Builds EFI binaries for virtual platform (QEMU).
 [tasks.build-x64-uefi]
 description = "Builds the x64 DXE Readiness Capture UEFI binary."
+env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:qemu_dxe_readiness_capture.pdb" }
 command = "cargo"
 args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
 
 [tasks.build-aarch64-uefi]
 description = "Builds the aarch64 DXE Readiness Capture UEFI binary."
+env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:qemu_dxe_readiness_capture.pdb" }
 command = "cargo"
 args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
 
 # Builds Validation binary for the host platform.
 [tasks.build-validation-binary-windows-x64]
 description = "Builds the Windows x64 DXE Readiness Validation binary."
+env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["windows"]}
 command = "cargo"
 args = [ "build", "-p", "dxe_readiness_validator", "@@split(X86_64_STD_WINDOWS_TARGET, )", "${@}", ]
 
 [tasks.build-validation-binary-windows-aarch64]
 description = "Builds the Windows aarch64 DXE Readiness Validation binary."
+env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["windows"]}
 command = "cargo"
 args = [ "build", "-p", "dxe_readiness_validator", "@@split(AARCH64_STD_WINDOWS_TARGET, )", "${@}", ]
 
-[tasks.build-validation-binary-windows]
-description = "Builds the Windows DXE Readiness Validation binary."
-dependencies = [ "build-validation-binary-windows-x64", "build-validation-binary-windows-aarch64" ]
-
 [tasks.build-validation-binary-linux-x64]
 description = "Builds the Linux x64 DXE Readiness Validation binary."
+env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["linux"], env = { CARGO_MAKE_RUST_TARGET_ARCH = "x86_64" }}
 command = "cargo"
 args = [ "build", "-p", "dxe_readiness_validator", "@@split(X86_64_STD_LINUX_TARGET, )", "${@}", ]
 
 [tasks.build-validation-binary-linux-aarch64]
 description = "Builds the Linux aarch64 DXE Readiness Validation binary."
+env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["linux"], env = { CARGO_MAKE_RUST_TARGET_ARCH = "aarch64" }}
 command = "cargo"
 args = [ "build", "-p", "dxe_readiness_validator", "@@split(AARCH64_STD_LINUX_TARGET, )", "${@}", ]
-
-[tasks.build-validation-binary-linux]
-description = "Builds the Linux DXE Readiness Validation binary."
-dependencies = [ "build-validation-binary-linux-x64", "build-validation-binary-linux-aarch64" ]
-
-[tasks.build-validation-binary]
-description = "Builds the DXE Readiness Validation binary."
-dependencies = [ "build-validation-binary-windows", "build-validation-binary-linux" ]
 
 [tasks.build]
 description = "Build all binaries."
@@ -107,11 +92,13 @@ clear = true
 dependencies = [
     "build-x64-uefishell",
     "build-aarch64-uefishell",
-    "build-intel-lnl",
-    "build-intel-ptl",
+    "build-intel-common", # Build Intel LNL and PTL binaries
     "build-x64-uefi",
     "build-aarch64-uefi",
-    "build-validation-binary",
+    "build-validation-binary-windows-x64",
+    "build-validation-binary-windows-aarch64",
+    "build-validation-binary-linux-x64",
+    "build-validation-binary-linux-aarch64",
 ]
 
 # Tests will be built and run based on the host platform.

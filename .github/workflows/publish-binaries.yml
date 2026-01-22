@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: ✅ Checkout Repository ✅
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v5
@@ -122,7 +122,7 @@ jobs:
 
       - name: Upload Binaries
         if: ${{ github.event_name != 'release' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: readiness-tool
           path: artifacts/
