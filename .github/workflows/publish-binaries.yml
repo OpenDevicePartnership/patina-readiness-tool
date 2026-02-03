@@ -30,7 +30,7 @@ jobs:
         run: cargo make build
 
       - name: Upload Windows Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: windows-binaries
           path: |
@@ -59,7 +59,7 @@ jobs:
         run: cargo make build
 
       - name: Upload Linux Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: linux-binaries
           path: |
