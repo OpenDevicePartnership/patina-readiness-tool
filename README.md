@@ -98,6 +98,9 @@ Any new structs defined here must implement `Serialize` and `Deserialize` to be
 present during the validation phase. An example output can be viewed in
 [q35_capture.json](dxe_readiness_validator/src/tests/data/q35_capture.json).
 
+To onboard a new hardware platform, see the [Platform Onboarding
+Guide](docs/capture/platform_onboarding_guide.md).
+
 #### `dxe_readiness_validator`
 
 This crate validates the HOBs and FVs and provides a user CLI to run
