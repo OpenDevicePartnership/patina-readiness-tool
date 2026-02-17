@@ -101,22 +101,6 @@ dependencies = [
     "build-validation-binary-linux-aarch64",
 ]
 
-# Tests will be built and run based on the host platform.
-[tasks.test-capture-binary]
-description = "Build and run tests for DXE Readiness Capture UEFI binary."
-command = "cargo"
-args = ["test", "-p", "dxe_readiness_capture", "${@}"]
-
-[tasks.test-validation-binary]
-description = "Build and run tests for DXE Readiness Validation binary."
-command = "cargo"
-args = ["test", "-p", "dxe_readiness_validator", "${@}"]
-
-[tasks.test]
-description = "Build and run tests for all binaries."
-clear = true
-dependencies = ["test-capture-binary", "test-validation-binary"]
-
 # Run validator binary for all supported targets.
 [tasks.run-validator]
 description = "Run the DXE Readiness Validation binary."
@@ -128,17 +112,39 @@ description = "Run validator binary."
 clear = true
 dependencies = ["run-validator"]
 
-[tasks.coverage]
-description = "Build and run all tests and calculate coverage."
+[tasks.llvm-cov-clean]
+description = "Clean coverage data"
+private = true
+install_crate = false
+command = "cargo"
+args = ["llvm-cov", "clean", "--workspace"]
+
+[tasks.coverage-test]
+description = "Run tests and collect coverage data without generating reports."
+install_crate = false
 clear = true
 command = "cargo"
-args = [
-    "tarpaulin",
-    "--output-dir",
-    "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target",
-    "--out",
-    "Html",
-]
+args = ["llvm-cov", "--profile", "test", "--ignore-filename-regex", ".*test.*", "--no-report", "--doctests", "-p", "dxe_readiness_capture", "-p", "dxe_readiness_validator"]
+dependencies = ["llvm-cov-clean"]
+
+[tasks.coverage-lcov]
+description = "Generate an LCOV coverage report from collected data."
+install_crate = false
+clear = true
+command = "cargo"
+args = ["llvm-cov", "report", "--lcov", "--output-path", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target/lcov.info"]
+
+[tasks.coverage-html]
+description = "Generate an HTML coverage report from collected data."
+install_crate = false
+clear = true
+command = "cargo"
+args = ["llvm-cov", "report", "--html", "--output-dir", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target/coverage"]
+
+[tasks.coverage]
+description = "Build and run all tests and calculate coverage (runs test once and generates LCOV and HTML reports)."
+dependencies = ["coverage-test", "coverage-lcov", "coverage-html"]
+clear = true
 
 [tasks.clippy]
 description = "Run cargo clippy."
@@ -150,7 +156,7 @@ args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
 env = { RUSTDOCFLAGS = "-D warnings" }
 description = "Builds all rust documentation in the workspace. Example `cargo make doc`"
 command = "cargo"
-args = ["doc", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "--open"]
+args = ["doc", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "--open", "--no-deps"]
 
 [tasks.fmt]
 description = "Run cargo format."
@@ -171,4 +177,4 @@ args = ["deny", "check"]
 
 [tasks.all]
 description = "Run all tasks for PR readiness."
-dependencies = ["deny", "clippy", "cspell", "build", "test", "coverage", "fmt", "doc"]
+dependencies = ["deny", "clippy", "cspell", "build", "coverage", "fmt", "doc"]
