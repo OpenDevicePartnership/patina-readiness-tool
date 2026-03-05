@@ -31,6 +31,9 @@ words:
   - keccak
   - libdxe
   - mdbook
+  - uefishell
+  - vswhere
   - withf
   - zbuild
+  - zsanitizer
   - zunstable
