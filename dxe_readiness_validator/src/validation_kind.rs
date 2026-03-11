@@ -108,43 +108,43 @@ impl ValidationKind<'_> {
         match self {
             ValidationKind::Hob(hob) => match hob {
                 HobValidationKind::InconsistentMemoryAttributes { .. } => "   Platforms must producing V1 and V2 HOBs for describing the same range(s) should have consistent memory attributes.\n   \
-                                                                              Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                              Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 HobValidationKind::OverlappingMemoryRanges { .. } => "   Platforms must produce non-overlapping HOBs by splitting up overlapping HOBs\n   \
                                                                          into multiple HOBs and eliminating duplicates.\n   \
-                                                                         Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                         Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 HobValidationKind::PageZeroMemoryDescribed { .. } => "   Platforms must not allocate page 0.\n   \
-                                                                         Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                         Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 HobValidationKind::V1MemoryRangeNotContainedInV2 { .. } => "   All V1 HOB ranges should be described/covered by corresponding V2 HOBs.",
                 HobValidationKind::V2ContainsUceAttribute { .. } => "   V2 HOB contains prohibited EFI_MEMORY_UCE attribute.",
                 HobValidationKind::V2MissingValidCacheabilityAttribute { .. } => "   Platforms must produce Resource Descriptor HOB v2s with a single valid\n   \
                                                                                      cacheability attribute set. These can be the existing Resource Descriptor HOB\n   \
                                                                                      fields with the cacheability attribute set as the only additional field in the\n   \
                                                                                      v2 HOB.\n   \
-                                                                                     Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                                     Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => "   Platforms must produce Resource Descriptor HOB v2s with no cacheability or memory protection\n   \
                                                                                    attributes set for IO resource types.",
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "   Firmware volume contains prohibited combined drivers. \nBelow file types are prohibited\n- COMBINED_MM_DXE(0x0C)\n- COMBINED_PEIM_DRIVER(0x08).\n   \
-                                                                       Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                       Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 FvValidationKind::LzmaCompressedSections { .. } => "   Temporarily, LZMA compressed sections that will be decompressed in DXE should use Brotli or TianoCompress.\n   \
                                                                        Tracking: https://github.com/OpenDevicePartnership/patina/issues/517\n   \
-                                                                       Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                       Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 FvValidationKind::ProhibitedAprioriFile { .. } => "   A Priori sections must be removed and proper driver dispatch must be ensured\n   \
                                                                       using depex statements. Drivers may produce empty protocols solely to ensure\n   \
                                                                       that other drivers can use that protocol as a depex statement, if required.\n   \
                                                                       Platforms may also list drivers in FFSes in the order they should be dispatched,\n   \
                                                                       though it is recommended to rely on depex statements.\n   \
-                                                                      Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md\n   \
+                                                                      Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html\n   \
                                                                       Ref: https://github.com/OpenDevicePartnership/patina-qemu/pull/40",
                 FvValidationKind::UsesTraditionalSmm { .. } => "   Platforms must transition to Standalone MM (or not use MM at all, as applicable)\n   \
                                                                    using the provided guidance. All combined modules must be dropped in favor of\n   \
                                                                    single phase modules.\n   \
-                                                                   Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md",
+                                                                   Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 FvValidationKind::InvalidSectionAlignment { .. } => "   All PE images must have section alignment that is a multiple of page size. \n   \
                                                                         This is not a PI spec requirement, but is a Patina requirement.\n    \
                                                                         Platforms should drop unaligned images or re-build images to ensure section alignment is page-aligned.    \n
-                                                                        Ref: https://github.com/OpenDevicePartnership/patina/blob/main/docs/src/integrate/patina_requirements.md"
+                                                                        Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html"
             },
         }
     }
