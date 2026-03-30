@@ -146,6 +146,12 @@ description = "Build and run all tests and calculate coverage (runs test once an
 dependencies = ["coverage-test", "coverage-lcov", "coverage-html"]
 clear = true
 
+[tasks.test]
+description = "Runs tests with native cargo test behavior. Example `cargo make test` or `cargo make test -p dxe_readiness_validator -- --nocapture`"
+clear = true
+command = "cargo"
+args = ["test", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
+
 [tasks.test-asan]
 description = "Run tests with AddressSanitizer enabled. Example `cargo make test-asan`. Use `cargo make test-asan --print-dll-path` to print the ASan runtime DLL directory."
 clear = true
