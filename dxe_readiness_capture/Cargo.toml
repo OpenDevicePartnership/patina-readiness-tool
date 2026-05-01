@@ -7,7 +7,7 @@ license.workspace = true
 
 [dependencies]
 cfg-if = { workspace = true }
-linked_list_allocator = "0.10.5"
+linked_list_allocator = "0.10.6"
 log = { workspace = true }
 patina = { workspace = true }
 patina_stacktrace = { workspace = true }
