@@ -68,7 +68,7 @@ impl<'a> FvValidator<'a> {
     pub(super) fn validate_fv_for_apriori_file(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
 
-        let pei_apriori_file_name_guid = format_guid(Guid::from_fields(
+        let pei_apriori_file_name_guid = format_guid(&Guid::from_fields(
             0x1B45CC0A,
             0x156A,
             0x428A,
@@ -76,7 +76,7 @@ impl<'a> FvValidator<'a> {
             0x62,
             &[0x49, 0x86, 0x4D, 0xA0, 0xE6, 0xE6],
         ));
-        let apriori_file_name_guid = format_guid(Guid::from_fields(
+        let apriori_file_name_guid = format_guid(&Guid::from_fields(
             0xFC510EE7,
             0xFFDC,
             0x11D4,
@@ -293,7 +293,7 @@ mod tests {
 
     #[test]
     fn test_validate_fv_for_apriori_file() {
-        let pei_apriori_file_name_guid = format_guid(Guid::from_fields(
+        let pei_apriori_file_name_guid = format_guid(&Guid::from_fields(
             0x1B45CC0A,
             0x156A,
             0x428A,
@@ -301,7 +301,7 @@ mod tests {
             0x62,
             &[0x49, 0x86, 0x4D, 0xA0, 0xE6, 0xE6],
         ));
-        let apriori_file_name_guid = format_guid(Guid::from_fields(
+        let apriori_file_name_guid = format_guid(&Guid::from_fields(
             0xFC510EE7,
             0xFFDC,
             0x11D4,
