@@ -122,9 +122,10 @@ impl<'a> HobValidator<'a> {
             for hob2 in self.hob_list {
                 let HobSerDe::ResourceDescriptor(v1) = hob1 else { continue };
                 let HobSerDe::ResourceDescriptorV2 { v1: v2, .. } = hob2 else { continue };
-                if v1.overlaps(v2) && v1.resource_type != v2.resource_type
-                    || v1.resource_attribute != v2.resource_attribute
-                    || v1.owner != v2.owner
+                if v1.overlaps(v2)
+                    && (v1.resource_type != v2.resource_type
+                        || v1.resource_attribute != v2.resource_attribute
+                        || v1.owner != v2.owner)
                 {
                     inconsistent_v1_v2.push((v1, v2));
                 }
@@ -393,6 +394,20 @@ mod tests {
         // Consistent v1 and v2
         let v1_hob = create_v1_hob(100, 100, 3, 0, "owner1");
         let v2_hob = create_v2_hob(150, 100, 3, 0, "owner1", 123);
+        let hob_list = vec![v1_hob, v2_hob];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_overlapping_v1v2_attributes();
+        assert!(result.is_ok());
+        let validation_report = result.unwrap();
+        assert_eq!(validation_report.violation_count(), 0);
+    }
+
+    #[test]
+    fn test_check_non_overlapping_v1v2_different_attributes_no_violation() {
+        // Non-overlapping v1 and v2 with different resource attributes and owners should not produce a violation
+        let v1_hob = create_v1_hob(100, 50, 3, 1, "owner1");
+        let v2_hob = create_v2_hob(200, 50, 4, 2, "owner2", 123);
         let hob_list = vec![v1_hob, v2_hob];
 
         let validator = HobValidator::new(&hob_list);
