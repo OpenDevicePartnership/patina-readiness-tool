@@ -18,6 +18,7 @@ spin = { workspace = true }
 uefi = { version = "0.37.0", features = ["alloc", "logger", "global_allocator"] }
 
 [features]
+ci_features = []
 default = []
 x64 = []
 aarch64 = []

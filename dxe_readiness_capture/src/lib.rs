@@ -34,7 +34,7 @@ cfg_if::cfg_if! {
                 log::error!("StackTrace: {}", err);
             }
 
-            loop {}
+            loop { core::hint::spin_loop(); }
         }
 
         // Called by platform-specific binaries after initializing the logger.
