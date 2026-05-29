@@ -16,7 +16,7 @@ X86_64_STD_LINUX_TARGET = "--target x86_64-unknown-linux-gnu"
 AARCH64_UEFI_TARGET = "--target aarch64-unknown-uefi"
 X86_64_UEFI_TARGET = "--target x86_64-unknown-uefi"
 
-NO_STD_FLAGS = "-Zbuild-std=core,compiler_builtins,alloc -Zbuild-std-features=compiler-builtins-mem -Zunstable-options"
+NO_STD_FLAGS = "--timings"
 DXE_READINESS_PKG = "-p dxe_readiness_capture"
 CAPTURE_BIN_FLAGS = "${NO_STD_FLAGS} ${DXE_READINESS_PKG}"
 CAPTURE_UEFI_SHELL_FLAGS = "${DXE_READINESS_PKG} --features uefishell --bin uefishell_dxe_readiness_capture"
@@ -205,10 +205,72 @@ exec --fail-on-error cargo test --target ${target} --workspace
 '''
 
 [tasks.clippy]
-description = "Run cargo clippy."
+description = "Run cargo clippy for the host target and both UEFI cross-compilation targets."
 clear = true
+run_task = [{ name = ["clippy-x64", "clippy-aarch64", "clippy-std"], parallel = true }]
+
+[tasks.clippy-x64]
+description = "Run cargo clippy for x86_64-unknown-uefi."
+private = true
+run_task = [{ name = ["clippy-x64-core", "clippy-x64-uefishell"] }]
+
+[tasks.clippy-x64-core]
+description = "Run cargo clippy for x86_64-unknown-uefi core binaries."
+private = true
 command = "cargo"
-args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
+args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "x86_64-unknown-uefi", "--lib", "--bin", "intel_dxe_readiness_capture", "--bin", "qemu_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+
+[tasks.clippy-x64-uefishell]
+description = "Run cargo clippy for x86_64-unknown-uefi uefishell binary."
+private = true
+command = "cargo"
+args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "x86_64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+
+[tasks.clippy-aarch64]
+description = "Run cargo clippy for aarch64-unknown-uefi."
+private = true
+run_task = [{ name = ["clippy-aarch64-core", "clippy-aarch64-uefishell"] }]
+
+[tasks.clippy-aarch64-core]
+description = "Run cargo clippy for aarch64-unknown-uefi core binaries."
+private = true
+command = "cargo"
+args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--lib", "--bin", "qemu_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+
+[tasks.clippy-aarch64-uefishell]
+description = "Run cargo clippy for aarch64-unknown-uefi uefishell binary."
+private = true
+command = "cargo"
+args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+
+[tasks.clippy-std]
+description = "Run cargo clippy for the host target (library and tests only)."
+private = true
+command = "cargo"
+args = ["clippy", "--tests", "--", "-D", "warnings"]
+
+[tasks.check_code_x64]
+description = "Checks rust code for x64 build errors with results."
+private = true
+command = "cargo"
+args = ["check", "--target", "x86_64-unknown-uefi", "--features", "ci_features", "@@split(CARGO_MAKE_TASK_ARGS, )", "@@split(NO_STD_FLAGS, )",]
+
+[tasks.check_code_aarch64]
+description = "Checks rust code for aarch64 build errors with results."
+private = true
+command = "cargo"
+args = ["check", "--target", "aarch64-unknown-uefi", "--features", "ci_features", "@@split(CARGO_MAKE_TASK_ARGS, )", "@@split(NO_STD_FLAGS, )",]
+
+[tasks.check_tests]
+description = "Checks rust test code for build errors with results."
+private = true
+command = "cargo"
+args = ["test", "--no-run", "--all-targets", "--all-features", "@@split(CARGO_MAKE_TASK_ARGS, )",]
+
+[tasks.check]
+description = "Checks rust code for errors. Example `cargo make check`"
+clear = true
+run_task = [{ name = ["check_code_x64", "check_code_aarch64", "check_tests"], parallel = true }]
 
 [tasks.doc]
 env = { RUSTDOCFLAGS = "-D warnings" }
@@ -235,7 +297,7 @@ command = "cargo"
 args = ["test", "--doc"]
 
 [tasks.cspell]
-description = "Run cspell for spell checking."                                                                                                                                     # npm install -g cspell@latest
+description = "Run cspell for spell checking." # npm install -g cspell@latest
 script = "cspell --quiet  --no-progress --no-summary  --dot --gitignore -e \"{.git/**,.github/**,.vscode/**,.azurepipelines/**,dxe_readiness_validator/src/tests/data/*.json}\" ."
 
 [tasks.deny]
