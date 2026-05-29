@@ -37,7 +37,7 @@ cfg_if::cfg_if! {
             init_logger();
             core_start(physical_hob_list);
             log::info!("Dead Loop");
-            loop {}
+            loop { core::hint::spin_loop(); }
         }
     } else if #[cfg(all(target_os = "uefi", target_arch = "x86_64"))] {
         use patina::log::SerialLogger;
@@ -62,7 +62,7 @@ cfg_if::cfg_if! {
             init_logger();
             core_start(physical_hob_list);
             log::info!("Dead Loop");
-            loop {}
+            loop { core::hint::spin_loop(); }
         }
     } else {
         fn main() {}
