@@ -109,6 +109,8 @@ jobs:
 
           cp windows-artifacts/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi artifacts/capture/aarch64/
           cp windows-artifacts/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/arm_virt_dxe_readiness_capture.efi artifacts/capture/aarch64/
+          cp windows-artifacts/aarch64-unknown-uefi/debug/arm_virt_dxe_readiness_capture.pdb artifacts/capture/aarch64/
           cp windows-artifacts/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.efi artifacts/capture/aarch64/
           cp windows-artifacts/aarch64-unknown-uefi/debug/uefishell_dxe_readiness_capture.pdb artifacts/capture/aarch64/
 

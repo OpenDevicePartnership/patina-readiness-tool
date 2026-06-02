@@ -21,11 +21,16 @@ cfg_if::cfg_if! {
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;
 
+        #[cfg(not(feature = "arm_virt"))]
+        const PL011_UART_BASE: usize = 0x6000_0000; // QEMU SBSA
+        #[cfg(feature = "arm_virt")]
+        const PL011_UART_BASE: usize = 0x0900_0000; // QEMU virt
+
         static LOGGER: SerialLogger<UartPl011> = SerialLogger::new(
             Format::Standard,
             &[],
             log::LevelFilter::Trace,
-            UartPl011::new(0x6000_0000),
+            UartPl011::new(PL011_UART_BASE),
         );
 
         fn init_logger() {

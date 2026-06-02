@@ -57,6 +57,28 @@ env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/s
 command = "cargo"
 args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
 
+[tasks.build-aarch64-arm-virt-uefi-cargo]
+description = "Builds the aarch64 QEMU arm-virt variant of the DXE Readiness Capture UEFI binary (cargo step)."
+private = true
+env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:arm_virt_dxe_readiness_capture.pdb" }
+command = "cargo"
+args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "--features", "arm_virt", "${@}"]
+
+# The arm-virt variant reuses the `qemu_dxe_readiness_capture` source but
+# selects a different UART base via the `arm_virt` feature. Because cargo
+# always names the artifact after the bin target, this task renames the
+# resulting `qemu_dxe_readiness_capture.{efi,pdb}` to
+# `arm_virt_dxe_readiness_capture.{efi,pdb}` so both aarch64 variants can
+# coexist in `target/aarch64-unknown-uefi/debug/`.
+[tasks.build-aarch64-arm-virt-uefi]
+description = "Builds the aarch64 QEMU arm-virt DXE Readiness Capture UEFI binary and renames its outputs."
+dependencies = ["build-aarch64-arm-virt-uefi-cargo"]
+script_runner = "@duckscript"
+script = '''
+cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.efi target/aarch64-unknown-uefi/debug/arm_virt_dxe_readiness_capture.efi
+cp target/aarch64-unknown-uefi/debug/qemu_dxe_readiness_capture.pdb target/aarch64-unknown-uefi/debug/arm_virt_dxe_readiness_capture.pdb
+'''
+
 # Builds Validation binary for the host platform.
 [tasks.build-validation-binary-windows-x64]
 description = "Builds the Windows x64 DXE Readiness Validation binary."
@@ -94,6 +116,10 @@ dependencies = [
     "build-aarch64-uefishell",
     "build-intel-common", # Build Intel LNL and PTL binaries
     "build-x64-uefi",
+    # Build the arm-virt aarch64 variant first so that its renamed outputs are
+    # preserved when `build-aarch64-uefi` rebuilds the same `qemu_dxe_readiness_capture`
+    # binary without the `arm_virt` feature.
+    "build-aarch64-arm-virt-uefi",
     "build-aarch64-uefi",
     "build-validation-binary-windows-x64",
     "build-validation-binary-windows-aarch64",
@@ -229,13 +255,19 @@ args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "x86_64-unknown-ue
 [tasks.clippy-aarch64]
 description = "Run cargo clippy for aarch64-unknown-uefi."
 private = true
-run_task = [{ name = ["clippy-aarch64-core", "clippy-aarch64-uefishell"] }]
+run_task = [{ name = ["clippy-aarch64-core", "clippy-aarch64-arm-virt", "clippy-aarch64-uefishell"] }]
 
 [tasks.clippy-aarch64-core]
 description = "Run cargo clippy for aarch64-unknown-uefi core binaries."
 private = true
 command = "cargo"
 args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--lib", "--bin", "qemu_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+
+[tasks.clippy-aarch64-arm-virt]
+description = "Run cargo clippy for aarch64-unknown-uefi arm-virt variant."
+private = true
+command = "cargo"
+args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--features", "arm_virt", "--bin", "qemu_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
 
 [tasks.clippy-aarch64-uefishell]
 description = "Run cargo clippy for aarch64-unknown-uefi uefishell binary."
