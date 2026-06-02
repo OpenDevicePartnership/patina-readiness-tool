@@ -526,9 +526,9 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "21.0.2"
+version = "21.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "869ea1591c339c7675d0d06b140504537f290e12378647df09fee871e4f1ca46"
+checksum = "570c7e1ac1738640e4d0c599793c7890cb60327a0ecd64846a01895d619f808a"
 dependencies = [
  "cfg-if",
  "log",
