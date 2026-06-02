@@ -22,8 +22,5 @@ ci_features = []
 default = []
 x64 = []
 aarch64 = []
-# Targets the QEMU `-machine virt` aarch64 platform whose PL011 UART is mapped
-# at 0x0900_0000 (per QemuArmVirtPkg). When disabled, the aarch64 build targets
-# the SBSA reference platform whose PL011 UART is mapped at 0x6000_0000.
 arm_virt = []
 uefishell = []

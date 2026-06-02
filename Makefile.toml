@@ -64,12 +64,6 @@ env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/s
 command = "cargo"
 args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "--features", "arm_virt", "${@}"]
 
-# The arm-virt variant reuses the `qemu_dxe_readiness_capture` source but
-# selects a different UART base via the `arm_virt` feature. Because cargo
-# always names the artifact after the bin target, this task renames the
-# resulting `qemu_dxe_readiness_capture.{efi,pdb}` to
-# `arm_virt_dxe_readiness_capture.{efi,pdb}` so both aarch64 variants can
-# coexist in `target/aarch64-unknown-uefi/debug/`.
 [tasks.build-aarch64-arm-virt-uefi]
 description = "Builds the aarch64 QEMU arm-virt DXE Readiness Capture UEFI binary and renames its outputs."
 dependencies = ["build-aarch64-arm-virt-uefi-cargo"]
@@ -116,11 +110,8 @@ dependencies = [
     "build-aarch64-uefishell",
     "build-intel-common", # Build Intel LNL and PTL binaries
     "build-x64-uefi",
-    # Build the arm-virt aarch64 variant first so that its renamed outputs are
-    # preserved when `build-aarch64-uefi` rebuilds the same `qemu_dxe_readiness_capture`
-    # binary without the `arm_virt` feature.
-    "build-aarch64-arm-virt-uefi",
     "build-aarch64-uefi",
+    "build-aarch64-arm-virt-uefi",
     "build-validation-binary-windows-x64",
     "build-validation-binary-windows-aarch64",
     "build-validation-binary-linux-x64",
