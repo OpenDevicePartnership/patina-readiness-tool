@@ -1,4 +1,8 @@
-//! Dxe Readiness Capture Tool - X64/Intel QEMU
+//! Dxe Readiness Capture Tool - AArch64 QEMU `virt` machine (QemuArmVirtPkg)
+//!
+//! Targets the QEMU `-machine virt` aarch64 platform, whose PL011 UART is
+//! memory-mapped at `0x0900_0000` (matches `PcdSerialRegisterBase` in
+//! `QemuArmVirtPkg.dsc`).
 //!
 //! ## License
 //!
@@ -25,32 +29,7 @@ cfg_if::cfg_if! {
             Format::Standard,
             &[],
             log::LevelFilter::Trace,
-            UartPl011::new(0x6000_0000),
-        );
-
-        fn init_logger() {
-            let _ = log::set_logger(&LOGGER).map(|()| log::set_max_level(LevelFilter::Info));
-        }
-
-        #[unsafe(export_name = "efi_main")]
-        pub extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
-            init_logger();
-            core_start(physical_hob_list);
-            log::info!("Dead Loop");
-            loop { core::hint::spin_loop(); }
-        }
-    } else if #[cfg(all(target_os = "uefi", target_arch = "x86_64"))] {
-        use patina::log::SerialLogger;
-        use patina::{log::Format, serial::uart::Uart16550};
-        use log::LevelFilter;
-        use core::ffi::c_void;
-        use dxe_readiness_capture::core_start;
-
-        static LOGGER: SerialLogger<Uart16550> = SerialLogger::new(
-            Format::Standard,
-            &[],
-            log::LevelFilter::Trace,
-            Uart16550::Io { base: 0x402 },
+            UartPl011::new(0x0900_0000),
         );
 
         fn init_logger() {
