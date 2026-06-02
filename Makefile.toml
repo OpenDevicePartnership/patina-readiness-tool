@@ -57,6 +57,12 @@ env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/s
 command = "cargo"
 args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
 
+[tasks.build-aarch64-arm-virt-uefi]
+description = "Builds the aarch64 QEMU arm-virt DXE Readiness Capture UEFI binary."
+env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:arm_virt_dxe_readiness_capture.pdb" }
+command = "cargo"
+args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "arm_virt_dxe_readiness_capture", "${@}"]
+
 # Builds Validation binary for the host platform.
 [tasks.build-validation-binary-windows-x64]
 description = "Builds the Windows x64 DXE Readiness Validation binary."
@@ -95,6 +101,7 @@ dependencies = [
     "build-intel-common", # Build Intel LNL and PTL binaries
     "build-x64-uefi",
     "build-aarch64-uefi",
+    "build-aarch64-arm-virt-uefi",
     "build-validation-binary-windows-x64",
     "build-validation-binary-windows-aarch64",
     "build-validation-binary-linux-x64",
@@ -235,7 +242,7 @@ run_task = [{ name = ["clippy-aarch64-core", "clippy-aarch64-uefishell"] }]
 description = "Run cargo clippy for aarch64-unknown-uefi core binaries."
 private = true
 command = "cargo"
-args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--lib", "--bin", "qemu_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--lib", "--bin", "qemu_dxe_readiness_capture", "--bin", "arm_virt_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
 
 [tasks.clippy-aarch64-uefishell]
 description = "Run cargo clippy for aarch64-unknown-uefi uefishell binary."
