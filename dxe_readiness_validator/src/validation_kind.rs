@@ -224,9 +224,7 @@ impl PrettyPrintTable for ValidationKind<'_> {
                         serde_json::to_string_pretty(hob1).unwrap_or("hob 1 serialization failed!".to_string());
                     let v2_hob_column =
                         serde_json::to_string_pretty(hob2).unwrap_or("hob 2 serialization failed!".to_string());
-                    let resolution = if hob1.owner != hob2.owner {
-                        format!("hob 1 owner({}) do not match with hob 2 owner({})", hob1.owner, hob2.owner)
-                    } else if hob1.resource_attribute != hob2.resource_attribute {
+                    let resolution = if hob1.resource_attribute != hob2.resource_attribute {
                         format!(
                             "hob 1 resource_attribute({}) do not match with hob 2 resource_attribute({})",
                             hob1.resource_attribute, hob2.resource_attribute
