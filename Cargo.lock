@@ -226,7 +226,7 @@ dependencies = [
 
 [[package]]
 name = "dxe_readiness_capture"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "cfg-if",
  "linked_list_allocator",
@@ -242,7 +242,7 @@ dependencies = [
 
 [[package]]
 name = "dxe_readiness_validator"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "clap",
  "colored",
