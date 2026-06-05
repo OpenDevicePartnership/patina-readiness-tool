@@ -34,6 +34,12 @@ pub enum HobValidationKind<'a> {
 
     // V2 resource descriptor for io must have no cacheability or memory protection attributes set
     V2InvalidIoCacheabilityAttributes { hob1: &'a ResourceDescriptorSerDe, attributes: u64 },
+
+    // More than one Resource Descriptor HOB owned by gEfiMemoryTypeInformationGuid is present
+    MemoryTypeInfoMultipleResourceHobs { hob1: &'a ResourceDescriptorSerDe },
+
+    // Memory Type Info Resource Descriptor HOB ResourceLength is smaller than the sum of bin sizes
+    MemoryTypeInfoResourceLengthTooSmall { hob1: &'a ResourceDescriptorSerDe, required_bytes: u64, actual_bytes: u64 },
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -93,6 +99,12 @@ impl ValidationKind<'_> {
                 HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => {
                     "HOB: V2 Invalid IO Cacheability Attributes"
                 }
+                HobValidationKind::MemoryTypeInfoMultipleResourceHobs { .. } => {
+                    "HOB: Multiple Memory Type Info Resource Descriptor HOBs"
+                }
+                HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { .. } => {
+                    "HOB: Memory Type Info Resource Descriptor HOB Length Too Small"
+                }
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "FV: Combined Drivers Present",
@@ -123,6 +135,11 @@ impl ValidationKind<'_> {
                                                                                      Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => "   Platforms must produce Resource Descriptor HOB v2s with no cacheability or memory protection\n   \
                                                                                    attributes set for IO resource types.",
+                HobValidationKind::MemoryTypeInfoMultipleResourceHobs { .. } => "   Only one Resource Descriptor HOB owned by the Memory Type Information GUID is allowed. ",
+                HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { .. } => "   The Memory Type Info Resource Descriptor HOB's ResourceLength must be large enough\n   \
+                                                                                    to hold the sum of bin sizes reported in the Memory Type Information GUID HOB.\n   \
+                                                                                    Note: the check uses the raw page-count sum. Platforms may need additional space\n   \
+                                                                                    for per-bin alignment padding.",
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "   Firmware volume contains prohibited combined drivers. \nBelow file types are prohibited\n- COMBINED_MM_DXE(0x0C)\n- COMBINED_PEIM_DRIVER(0x08).\n   \
@@ -163,6 +180,12 @@ impl ValidationKind<'_> {
                 HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => {
                     "V2InvalidIoCacheabilityAttributes".to_string()
                 }
+                HobValidationKind::MemoryTypeInfoMultipleResourceHobs { .. } => {
+                    "MemoryTypeInfoMultipleResourceHobs".to_string()
+                }
+                HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { .. } => {
+                    "MemoryTypeInfoResourceLengthTooSmall".to_string()
+                }
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "CombinedDriversPresent".to_string(),
@@ -200,6 +223,12 @@ impl PrettyPrintTable for ValidationKind<'_> {
                 }
                 HobValidationKind::V2InvalidIoCacheabilityAttributes { .. } => {
                     vec!["#", "V2 Hob", "Violation/Resolution"]
+                }
+                HobValidationKind::MemoryTypeInfoMultipleResourceHobs { .. } => {
+                    vec!["#", "Resource Descriptor Hob", "Violation/Resolution"]
+                }
+                HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { .. } => {
+                    vec!["#", "Resource Descriptor Hob", "Violation/Resolution"]
                 }
             },
             ValidationKind::Fv(fv) => match fv {
@@ -294,6 +323,23 @@ impl PrettyPrintTable for ValidationKind<'_> {
                         attributes
                     );
                     vec![row_num, hob1_column, resolution]
+                }
+                HobValidationKind::MemoryTypeInfoMultipleResourceHobs { hob1 } => {
+                    let hob_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob serialization failed!".to_string());
+                    let resolution =
+                        "Only one Resource Descriptor HOB owned by\ngEfiMemoryTypeInformationGuid is allowed"
+                            .to_string();
+                    vec![row_num, hob_column, resolution]
+                }
+                HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { hob1, required_bytes, actual_bytes } => {
+                    let hob_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("hob serialization failed!".to_string());
+                    let resolution = format!(
+                        "ResourceLength(0x{:X}) is smaller than the\nraw sum of bin sizes(0x{:X}) reported in\nthe Memory Type Information GUID HOB",
+                        actual_bytes, required_bytes
+                    );
+                    vec![row_num, hob_column, resolution]
                 }
             },
             ValidationKind::Fv(fv) => match fv {
