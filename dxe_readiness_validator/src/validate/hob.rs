@@ -7,9 +7,10 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 use patina::{
+    OwnedGuid,
     base::UEFI_PAGE_SIZE,
     pi::{
-        hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED},
+        hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED, MEMORY_TYPE_INFO_HOB_GUID},
         serializable::{
             Interval,
             serializable_hob::{HobSerDe, ResourceDescriptorSerDe},
@@ -39,6 +40,12 @@ impl<'a> HobValidator<'a> {
 
     fn is_io(resource_type: u32) -> bool {
         resource_type == EFI_RESOURCE_IO || resource_type == EFI_RESOURCE_IO_RESERVED
+    }
+
+    /// Returns true when a resource descriptor HOB is owned by the Memory Type Information GUID
+    /// and therefore describes the PEI memory bin ranges.
+    fn is_memory_type_info(resource: &ResourceDescriptorSerDe) -> bool {
+        OwnedGuid::try_from_string(&resource.owner).is_ok_and(|owner| owner == MEMORY_TYPE_INFO_HOB_GUID)
     }
 
     fn check_hob_overlap<'b, T>(resource_list: &[&'b T]) -> Vec<(&'b T, &'b T)>
@@ -100,8 +107,13 @@ impl<'a> HobValidator<'a> {
     }
 
     /// Checks for inconsistencies between overlapping V1 and V2 resource
-    /// descriptor HOBs. Reports violations when attributes like resource type,
-    /// attribute, or owner differ.
+    /// descriptor HOBs. Reports violations when `resource_type` or
+    /// `resource_attribute` differ between V1 and V2 descriptors that cover
+    /// overlapping ranges.
+    ///
+    /// Resource descriptors whose `owner` is `MEMORY_TYPE_INFO_HOB_GUID` are
+    /// skipped because the PEI memory bin HOB is expected to overlap with the
+    /// resource descriptors describing the system memory backing those bins.
     ///
     /// For v1/v2, The requirement is that v2 hobs are a superset of v1 Below is
     /// the strategy use:
@@ -122,10 +134,11 @@ impl<'a> HobValidator<'a> {
             for hob2 in self.hob_list {
                 let HobSerDe::ResourceDescriptor(v1) = hob1 else { continue };
                 let HobSerDe::ResourceDescriptorV2 { v1: v2, .. } = hob2 else { continue };
+                if Self::is_memory_type_info(v1) || Self::is_memory_type_info(v2) {
+                    continue;
+                }
                 if v1.overlaps(v2)
-                    && (v1.resource_type != v2.resource_type
-                        || v1.resource_attribute != v2.resource_attribute
-                        || v1.owner != v2.owner)
+                    && (v1.resource_type != v2.resource_type || v1.resource_attribute != v2.resource_attribute)
                 {
                     inconsistent_v1_v2.push((v1, v2));
                 }
@@ -142,6 +155,9 @@ impl<'a> HobValidator<'a> {
 
     /// Checks that all V1 resource descriptors are covered by V2 descriptors,
     /// reporting any V1 ranges not migrated to V2.
+    ///
+    /// Resource descriptors whose `owner` is `MEMORY_TYPE_INFO_HOB_GUID` are
+    /// skipped as the HOB describes PEI memory bins overlaying system memory.
     fn validate_v1v2_superset(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         let mut v1_resources: Vec<&ResourceDescriptorSerDe> = Vec::new();
@@ -151,6 +167,9 @@ impl<'a> HobValidator<'a> {
 
         for hob in self.hob_list {
             if let HobSerDe::ResourceDescriptor(v1) = hob {
+                if Self::is_memory_type_info(v1) {
+                    continue;
+                }
                 v1_resources.push(v1);
             } else if let HobSerDe::ResourceDescriptorV2 { v1: v2, .. } = hob {
                 v2_resources.push(v2);
@@ -559,5 +578,108 @@ mod tests {
         assert!(result.is_ok());
         let validation_report = result.unwrap();
         assert_ne!(validation_report.violation_count(), 0);
+    }
+
+    /// String form of `MEMORY_TYPE_INFO_HOB_GUID` used for tests.
+    fn mem_info_owner() -> String {
+        MEMORY_TYPE_INFO_HOB_GUID.as_guid().to_string()
+    }
+
+    /// String form of `OwnedGuid::ZERO` used for tests.
+    fn zero_owner() -> String {
+        OwnedGuid::ZERO.to_string()
+    }
+
+    /// Test that a V1 resource descriptor HOB owned by `MEMORY_TYPE_INFO_HOB_GUID`
+    /// that overlaps a V2 system memory range with different `resource_attribute`
+    /// does not get flagged.
+    #[test]
+    fn test_memory_type_info_v1_overlap_with_v2_is_not_flagged() {
+        let v1 = create_v1_hob(0x7e233000, 0xdbb000, 0, 0x7, &mem_info_owner());
+        let v2 = create_v2_hob(0x100000, 0x7ef00000, 0, 0x3c07, &zero_owner(), 0);
+        let hob_list = vec![v1, v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_overlapping_v1v2_attributes();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// Test that the `MEMORY_TYPE_INFO_HOB_GUID` skip is case-insensitive. A
+    /// captured owner string in uppercase (or mixed case) should match the same
+    /// well-known GUID and be skipped.
+    ///
+    /// Note: This test deliberately uses a hard-coded uppercase string (rather than
+    /// the SDK constant).
+    #[test]
+    fn test_memory_type_info_skip_is_case_insensitive() {
+        const MEM_INFO_OWNER_UPPER: &str = "4C19049F-4137-4DD3-9C10-8B97A83FFDFA";
+        let v1 = create_v1_hob(0x7e233000, 0xdbb000, 0, 0x7, MEM_INFO_OWNER_UPPER);
+        let v2 = create_v2_hob(0x100000, 0x7ef00000, 0, 0x3c07, &zero_owner(), 0);
+        let hob_list = vec![v1, v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_overlapping_v1v2_attributes();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// Test that the skip relies on `OwnedGuid::try_from_string`, which tolerates
+    /// the no-dashes hex form. The same captured GUID without dashes should still
+    /// be recognized as `MEMORY_TYPE_INFO_HOB_GUID`.
+    #[test]
+    fn test_memory_type_info_skip_accepts_no_dashes() {
+        const MEM_INFO_OWNER_NO_DASHES: &str = "4c19049f41374dd39c108b97a83ffdfa";
+        let v1 = create_v1_hob(0x7e233000, 0xdbb000, 0, 0x7, MEM_INFO_OWNER_NO_DASHES);
+        let v2 = create_v2_hob(0x100000, 0x7ef00000, 0, 0x3c07, &zero_owner(), 0);
+        let hob_list = vec![v1, v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_overlapping_v1v2_attributes();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// Test that a malformed owner string does not silently match `MEMORY_TYPE_INFO_HOB_GUID`.
+    #[test]
+    fn test_malformed_owner_does_not_match_memory_type_info() {
+        let v1 = create_v1_hob(0x100000, 0x10000, 0, 0x7, "not-a-guid");
+        let v2 = create_v2_hob(0x100000, 0x10000, 0, 0x3c07, &zero_owner(), 0);
+        let hob_list = vec![v1, v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_overlapping_v1v2_attributes();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 1);
+    }
+
+    /// An owner-only mismatch between overlapping V1 and V2 descriptors (with
+    /// identical `resource_type` and `resource_attribute`) is not a memory
+    /// attribute inconsistency and should not produce a violation.
+    #[test]
+    fn test_owner_only_mismatch_is_not_flagged() {
+        let v1 = create_v1_hob(0x100000, 0x10000, 0, 0x3c07, "owner-a");
+        let v2 = create_v2_hob(0x100000, 0x10000, 0, 0x3c07, "owner-b", 0);
+        let hob_list = vec![v1, v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_overlapping_v1v2_attributes();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// Test that the V1/V2 attribute consistency check detects mismatches for
+    /// different attributes with a non-`MEMORY_TYPE_INFO_HOB_GUID` owner.
+    #[test]
+    fn test_non_memory_type_info_attribute_mismatch_is_still_flagged() {
+        // Same range, same owner, mismatched resource_attribute.
+        let v1 = create_v1_hob(0x100000, 0x10000, 0, 0x7, "owner-x");
+        let v2 = create_v2_hob(0x100000, 0x10000, 0, 0x3c07, "owner-x", 0);
+        let hob_list = vec![v1, v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_overlapping_v1v2_attributes();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 1);
     }
 }
