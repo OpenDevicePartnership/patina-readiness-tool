@@ -13,7 +13,7 @@ use patina::{
         hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED, MEMORY_TYPE_INFO_HOB_GUID},
         serializable::{
             Interval,
-            serializable_hob::{HobSerDe, ResourceDescriptorSerDe},
+            serializable_hob::{HobSerDe, MemoryTypeInfoEntrySerDe, ResourceDescriptorSerDe},
         },
     },
 };
@@ -279,6 +279,74 @@ impl<'a> HobValidator<'a> {
         }
         Ok(validation_report)
     }
+
+    /// Returns all Resource Descriptor HOBs whose owner is `MEMORY_TYPE_INFO_HOB_GUID`.
+    fn memory_type_info_resource_hobs(&self) -> Vec<&ResourceDescriptorSerDe> {
+        self.hob_list
+            .iter()
+            .filter_map(|hob| match hob {
+                HobSerDe::ResourceDescriptor(resource) | HobSerDe::ResourceDescriptorV2 { v1: resource, .. }
+                    if Self::is_memory_type_info(resource) =>
+                {
+                    Some(resource)
+                }
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Returns the parsed bin entries from the Memory Type Information GUID HOB, if present.
+    fn memory_type_info_entries(&self) -> Option<&[MemoryTypeInfoEntrySerDe]> {
+        self.hob_list.iter().find_map(|hob| match hob {
+            HobSerDe::MemoryTypeInformation { entries } => Some(entries.as_slice()),
+            _ => None,
+        })
+    }
+
+    /// Validates that at most one Resource Descriptor HOB owned by `MEMORY_TYPE_INFO_HOB_GUID`
+    /// exists. The DXE core rejects all such HOBs when multiple are present to avoid an
+    /// ambiguous bin-region selection. One violation is reported per discovered HOB.
+    fn validate_memory_type_info_single_resource_hob(&self) -> ValidationResult<'_> {
+        let mut validation_report = ValidationReport::new();
+        let hobs = self.memory_type_info_resource_hobs();
+        if hobs.len() > 1 {
+            for hob1 in hobs {
+                validation_report
+                    .add_violation(ValidationKind::Hob(HobValidationKind::MemoryTypeInfoMultipleResourceHobs { hob1 }));
+            }
+        }
+        Ok(validation_report)
+    }
+
+    /// Validates that the `ResourceLength` of the Memory Type Info Resource Descriptor HOB is
+    /// large enough to hold all bins reported in the Memory Type Information GUID HOB.
+    ///
+    /// The check only runs when exactly one Memory Type Info Resource Descriptor HOB is present
+    /// and a Memory Type Information GUID HOB has been captured.
+    fn validate_memory_type_info_resource_length(&self) -> ValidationResult<'_> {
+        let mut validation_report = ValidationReport::new();
+        let hobs = self.memory_type_info_resource_hobs();
+        let [resource] = hobs[..] else {
+            return Ok(validation_report);
+        };
+        let Some(entries) = self.memory_type_info_entries() else {
+            return Ok(validation_report);
+        };
+
+        let required_bytes: u64 =
+            entries.iter().map(|entry| entry.number_of_pages as u64 * UEFI_PAGE_SIZE as u64).sum();
+
+        if resource.resource_length < required_bytes {
+            validation_report.add_violation(ValidationKind::Hob(
+                HobValidationKind::MemoryTypeInfoResourceLengthTooSmall {
+                    hob1: resource,
+                    required_bytes,
+                    actual_bytes: resource.resource_length,
+                },
+            ));
+        }
+        Ok(validation_report)
+    }
 }
 
 impl Validator for HobValidator<'_> {
@@ -295,6 +363,8 @@ impl Validator for HobValidator<'_> {
         validation_report.append_report(self.validate_memory_uce_attribute()?);
         validation_report.append_report(self.validate_memory_cacheability_attribute()?);
         validation_report.append_report(self.validate_memory_cacheability_attribute_io_resource_hob()?);
+        validation_report.append_report(self.validate_memory_type_info_single_resource_hob()?);
+        validation_report.append_report(self.validate_memory_type_info_resource_length()?);
         Ok(validation_report)
     }
 }
@@ -681,5 +751,173 @@ mod tests {
         let result = validator.validate_overlapping_v1v2_attributes();
         assert!(result.is_ok());
         assert_eq!(result.unwrap().violation_count(), 1);
+    }
+
+    fn mem_type_info_hob(entries: Vec<MemoryTypeInfoEntrySerDe>) -> HobSerDe {
+        HobSerDe::MemoryTypeInformation { entries }
+    }
+
+    /// Exactly one Resource Descriptor HOB owned by `MEMORY_TYPE_INFO_HOB_GUID`
+    /// is the expected configuration and must not be flagged.
+    #[test]
+    fn test_single_memory_type_info_resource_hob_is_ok() {
+        let v1 = create_v1_hob(0x7e233000, 0xdbb000, 0, 0x7, &mem_info_owner());
+        let hob_list = vec![v1];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_single_resource_hob();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// A Memory Type Info HOB reported as a V2 Resource Descriptor HOB should be accepted
+    /// the same as a V1 Resource Descriptor HOB.
+    #[test]
+    fn test_single_memory_type_info_v2_resource_hob_is_ok() {
+        let v2 = create_v2_hob(0x7e233000, 0xdbb000, 0, 0x7, &mem_info_owner(), 0);
+        let hob_list = vec![v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_single_resource_hob();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// Zero Resource Descriptor HOBs owned by `MEMORY_TYPE_INFO_HOB_GUID` is
+    /// out of scope for this check.
+    #[test]
+    fn test_zero_memory_type_info_resource_hobs_is_ok() {
+        let v2 = create_v2_hob(0x100000, 0x1000, 0, 0x3c07, &zero_owner(), 0);
+        let hob_list = vec![v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_single_resource_hob();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// Multiple Resource Descriptor HOBs owned by `MEMORY_TYPE_INFO_HOB_GUID`
+    /// must each be reported as a violation.
+    #[test]
+    fn test_multiple_memory_type_info_resource_hobs_are_flagged() {
+        let v1a = create_v1_hob(0x7e233000, 0xdbb000, 0, 0x7, &mem_info_owner());
+        let v1b = create_v1_hob(0x90000000, 0x10000, 0, 0x7, &mem_info_owner());
+        let v1c = create_v1_hob(0xa0000000, 0x10000, 0, 0x7, &mem_info_owner());
+        let hob_list = vec![v1a, v1b, v1c];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_single_resource_hob();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 3);
+    }
+
+    /// Multiple Memory Type Info Resource Descriptor HOBs are flagged regardless
+    /// of whether they are reported as V1 or V2 Resource Descriptor HOBs. A mix of the two
+    /// will report one violation per HOB.
+    #[test]
+    fn test_multiple_memory_type_info_mixed_v1_v2_resource_hobs_are_flagged() {
+        let v1 = create_v1_hob(0x7e233000, 0xdbb000, 0, 0x7, &mem_info_owner());
+        let v2 = create_v2_hob(0x90000000, 0x10000, 0, 0x7, &mem_info_owner(), 0);
+        let hob_list = vec![v1, v2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_single_resource_hob();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 2);
+    }
+
+    /// `ResourceLength` greater than the raw bin total must not be flagged.
+    #[test]
+    fn test_memory_type_info_resource_length_sufficient_is_ok() {
+        let v1 = create_v1_hob(0x7e000000, 0x100000, 0, 0x7, &mem_info_owner());
+        let mti = mem_type_info_hob(vec![
+            MemoryTypeInfoEntrySerDe { memory_type: 6, number_of_pages: 2 },
+            MemoryTypeInfoEntrySerDe { memory_type: 5, number_of_pages: 2 },
+        ]);
+        let hob_list = vec![v1, mti];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_resource_length();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// `ResourceLength` exactly equal to the raw bin total must not be flagged.
+    #[test]
+    fn test_memory_type_info_resource_length_exact_is_ok() {
+        let required = 4 * UEFI_PAGE_SIZE as u64;
+        let v1 = create_v1_hob(0x7e000000, required, 0, 0x7, &mem_info_owner());
+        let mti = mem_type_info_hob(vec![
+            MemoryTypeInfoEntrySerDe { memory_type: 6, number_of_pages: 2 },
+            MemoryTypeInfoEntrySerDe { memory_type: 5, number_of_pages: 2 },
+        ]);
+        let hob_list = vec![v1, mti];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_resource_length();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// `ResourceLength` smaller than the raw bin total must be flagged.
+    #[test]
+    fn test_memory_type_info_resource_length_too_small_is_flagged() {
+        let v1 = create_v1_hob(0x7e000000, 0x1000, 0, 0x7, &mem_info_owner());
+        let mti = mem_type_info_hob(vec![
+            MemoryTypeInfoEntrySerDe { memory_type: 6, number_of_pages: 5 },
+            MemoryTypeInfoEntrySerDe { memory_type: 5, number_of_pages: 5 },
+        ]);
+        let hob_list = vec![v1, mti];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_resource_length();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 1);
+    }
+
+    /// The `ResourceLength` check applies to a Memory Type Info HOB reported as a
+    /// V2 Resource Descriptor HOB as well.
+    #[test]
+    fn test_memory_type_info_v2_resource_length_too_small_is_flagged() {
+        let v2 = create_v2_hob(0x7e000000, 0x1000, 0, 0x7, &mem_info_owner(), 0);
+        let mti = mem_type_info_hob(vec![
+            MemoryTypeInfoEntrySerDe { memory_type: 6, number_of_pages: 5 },
+            MemoryTypeInfoEntrySerDe { memory_type: 5, number_of_pages: 5 },
+        ]);
+        let hob_list = vec![v2, mti];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_resource_length();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 1);
+    }
+
+    /// When no Memory Type Information GUID HOB is captured, the length check
+    /// is  skipped (since the required size cannot be determined).
+    #[test]
+    fn test_memory_type_info_resource_length_without_guid_hob_is_skipped() {
+        let v1 = create_v1_hob(0x7e000000, 0x1000, 0, 0x7, &mem_info_owner());
+        let hob_list = vec![v1];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_resource_length();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    /// When more than one Memory Type Info Resource Descriptor HOB is present,
+    /// the length check defers to the single instance check so a second violation
+    /// is not reported.
+    #[test]
+    fn test_memory_type_info_resource_length_with_multiple_hobs_is_skipped() {
+        let v1a = create_v1_hob(0x7e000000, 0x1000, 0, 0x7, &mem_info_owner());
+        let v1b = create_v1_hob(0x90000000, 0x1000, 0, 0x7, &mem_info_owner());
+        let mti = mem_type_info_hob(vec![MemoryTypeInfoEntrySerDe { memory_type: 6, number_of_pages: 100 }]);
+        let hob_list = vec![v1a, v1b, mti];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_type_info_resource_length();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
     }
 }
