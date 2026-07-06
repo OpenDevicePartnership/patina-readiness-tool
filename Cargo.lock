@@ -233,7 +233,7 @@ dependencies = [
  "log",
  "patina",
  "patina_stacktrace",
- "r-efi",
+ "r-efi 7.0.0",
  "serde",
  "serde_json",
  "spin 0.12.0",
@@ -251,7 +251,7 @@ dependencies = [
  "goblin",
  "log",
  "patina",
- "r-efi",
+ "r-efi 7.0.0",
  "serde",
  "serde_json",
  "uuid",
@@ -418,7 +418,7 @@ version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "392e8c601a9cc36a519c61063a3250e55a3b049a85ee314e49b8a1ad09ff70c3"
 dependencies = [
- "r-efi",
+ "r-efi 6.0.0",
  "uuid",
 ]
 
@@ -499,7 +499,7 @@ dependencies = [
  "mu_rust_helpers",
  "num-traits",
  "patina_macro",
- "r-efi",
+ "r-efi 6.0.0",
  "safe-mmio",
  "scroll",
  "serde",
@@ -588,6 +588,12 @@ name = "r-efi"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
+
+[[package]]
+name = "r-efi"
+version = "7.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b1b35d612599fa2eed43b064164175ebe98c88de47c8cc6cc6c50d6502aa6abe"
 
 [[package]]
 name = "radium"
