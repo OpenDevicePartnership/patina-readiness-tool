@@ -33,6 +33,7 @@ words:
   - mdbook
   - nocapture
   - uefishell
+  - ungated
   - vswhere
   - withf
   - zbuild
