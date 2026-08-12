@@ -327,26 +327,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "linkme"
-version = "0.3.37"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3045e122bd98aef8ec3ad58ce84f0791f64e70163d1a02710af4aa11a4d54cc5"
-dependencies = [
- "linkme-impl",
-]
-
-[[package]]
-name = "linkme-impl"
-version = "0.3.37"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77060ebe535362c3da75682cd17b0431017b6e7c5661e714fc69a7ad017d1301"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 3.0.3",
-]
-
-[[package]]
 name = "linux-raw-sys"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -431,9 +411,9 @@ dependencies = [
 
 [[package]]
 name = "patina"
-version = "22.2.2"
+version = "23.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e33f5a85bed814fcd68499f5a4bdb2b63a600d28b2a1f8a6abcf0ffaa497b243"
+checksum = "c6286249aedf455f55c8b7d22c6c19cabfd7e5fa7e492f959e45615487de7091"
 dependencies = [
  "bitvec",
  "cfg-if",
@@ -442,7 +422,6 @@ dependencies = [
  "fixedbitset",
  "goblin",
  "indoc",
- "linkme",
  "log",
  "num-traits",
  "patina_macro",
@@ -460,21 +439,21 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "22.2.2"
+version = "23.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5511ea31d52f0e60bb568a670bb5822d949bc10cdf6144f87d028ef70262ed5a"
+checksum = "1fe33992bbe3d65d48a724886af950fe65a67eae50a2995637536d8e44b166fb"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.119",
+ "syn 3.0.3",
  "uuid",
 ]
 
 [[package]]
 name = "patina_stacktrace"
-version = "22.2.2"
+version = "23.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb54dbb86633aeef457aa07bc58484a2246c537095f24df1e89a45cbf414a2b3"
+checksum = "8fed5811f5ec17e36423c9094566716beae85e67950194cff7240a6ba7d83577"
 dependencies = [
  "cfg-if",
  "log",

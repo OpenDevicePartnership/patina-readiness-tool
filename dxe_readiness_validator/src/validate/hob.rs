@@ -7,8 +7,7 @@
 //! SPDX-License-Identifier: Apache-2.0
 //!
 use patina::{
-    OwnedGuid,
-    base::UEFI_PAGE_SIZE,
+    OwnedGuid, UEFI_PAGE_SIZE,
     pi::{
         hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED, MEMORY_TYPE_INFO_HOB_GUID},
         serializable::{

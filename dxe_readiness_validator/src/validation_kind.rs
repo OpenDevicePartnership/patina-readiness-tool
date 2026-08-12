@@ -274,9 +274,9 @@ impl PrettyPrintTable for ValidationKind<'_> {
                     let hob2_column =
                         serde_json::to_string_pretty(hob2).unwrap_or("hob 2 serialization failed!".to_string());
                     let resolution = format!(
-                        "Hob 1 range should not overlap with Hob 2 range\nHob 1 range({}, {}) | Hob 2 range({}, {})",
+                        "Hob 1 range should not overlap with Hob 2 range\nHob 1 range({:#x}, {:#x}) | Hob 2 range({:#x}, {:#x})",
                         hob1.start(),
-                        hob1.start(),
+                        hob1.end(),
                         hob2.start(),
                         hob2.end()
                     );
@@ -286,7 +286,7 @@ impl PrettyPrintTable for ValidationKind<'_> {
                     let mem_alloc_desc_column = serde_json::to_string_pretty(alloc_desc)
                         .unwrap_or("Memory Allocation Descriptor\nserialization failed!".to_string());
                     let resolution = format!(
-                        "memory_base_address, memory_length\nshould not describe Page 0\nMemory allocation range({}, {})",
+                        "memory_base_address, memory_length\nshould not describe Page 0\nMemory allocation range({:#x}, {:#x})",
                         alloc_desc.start(),
                         alloc_desc.end()
                     );
@@ -389,5 +389,133 @@ impl PrettyPrintTable for ValidationKind<'_> {
                 }
             },
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use patina::pi::serializable::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, PeHeaderInfo};
+    use patina::pi::serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
+
+    fn resource(start: u64, length: u64, resource_type: u32, resource_attribute: u32) -> ResourceDescriptorSerDe {
+        ResourceDescriptorSerDe {
+            owner: "owner".to_string(),
+            resource_type,
+            resource_attribute,
+            physical_start: start,
+            resource_length: length,
+        }
+    }
+
+    fn mem_alloc(start: u64, length: u64) -> MemAllocDescriptorSerDe {
+        MemAllocDescriptorSerDe {
+            name: "name".to_string(),
+            memory_base_address: start,
+            memory_length: length,
+            memory_type: 1,
+        }
+    }
+
+    fn section() -> FirmwareSectionSerDe {
+        FirmwareSectionSerDe {
+            section_type: "Pe32".to_string(),
+            length: 256,
+            compression_type: "LZMA ".to_string(),
+            pe_info: Some(PeHeaderInfo { section_alignment: 0x1000, machine: 0, subsystem: 0 }),
+        }
+    }
+
+    fn file() -> FirmwareFileSerDe {
+        FirmwareFileSerDe {
+            name: "File".to_string(),
+            file_type: "Driver".to_string(),
+            length: 512,
+            attributes: 0,
+            sections: vec![],
+        }
+    }
+
+    fn fv() -> FirmwareVolumeSerDe {
+        FirmwareVolumeSerDe {
+            fv_name: "Fv".to_string(),
+            fv_length: 1024,
+            fv_base_address: 0x1000,
+            fv_attributes: 0,
+            files: vec![],
+        }
+    }
+
+    #[test]
+    fn test_all_validation_kinds_render_non_empty() {
+        let r1 = resource(0x1000, 0x1000, 0, 0);
+        let r_attr = resource(0x1000, 0x1000, 0, 1);
+        let r_type = resource(0x1000, 0x1000, 5, 0);
+        let ma = mem_alloc(0x2000, 0x1000);
+        let fv = fv();
+        let file = file();
+        let section = section();
+
+        let kinds = vec![
+            // Attribute-mismatch branch of the resolution string.
+            ValidationKind::Hob(HobValidationKind::InconsistentMemoryAttributes { hob1: &r1, hob2: &r_attr }),
+            // Resource-type-mismatch branch of the resolution string.
+            ValidationKind::Hob(HobValidationKind::InconsistentMemoryAttributes { hob1: &r1, hob2: &r_type }),
+            ValidationKind::Hob(HobValidationKind::OverlappingMemoryRanges { hob1: &r1, hob2: &r_attr }),
+            ValidationKind::Hob(HobValidationKind::PageZeroMemoryDescribed { alloc_desc: &ma }),
+            ValidationKind::Hob(HobValidationKind::V1MemoryRangeNotContainedInV2 { hob1: &r1 }),
+            ValidationKind::Hob(HobValidationKind::V2ContainsUceAttribute { hob1: &r1, attributes: 0x10 }),
+            ValidationKind::Hob(HobValidationKind::V2MissingValidCacheabilityAttribute { hob1: &r1, attributes: 0 }),
+            ValidationKind::Hob(HobValidationKind::V2InvalidIoCacheabilityAttributes { hob1: &r1, attributes: 0x1 }),
+            ValidationKind::Hob(HobValidationKind::MemoryTypeInfoMultipleResourceHobs { hob1: &r1 }),
+            ValidationKind::Hob(HobValidationKind::MemoryTypeInfoResourceLengthTooSmall {
+                hob1: &r1,
+                required_bytes: 0x2000,
+                actual_bytes: 0x1000,
+            }),
+            ValidationKind::Fv(FvValidationKind::CombinedDriversPresent { fv: &fv, file: &file }),
+            ValidationKind::Fv(FvValidationKind::LzmaCompressedSections { fv: &fv, file: &file, section: &section }),
+            ValidationKind::Fv(FvValidationKind::ProhibitedAprioriFile { fv: &fv, file: &file }),
+            ValidationKind::Fv(FvValidationKind::UsesTraditionalSmm { fv: &fv, file: &file }),
+            ValidationKind::Fv(FvValidationKind::InvalidSectionAlignment {
+                fv: &fv,
+                file: &file,
+                section: &section,
+                required_alignment: 0x1000,
+            }),
+        ];
+
+        for kind in &kinds {
+            assert!(!kind.header().is_empty(), "header empty for {:?}", kind);
+            assert!(!kind.name().is_empty(), "name empty for {:?}", kind);
+            assert!(!kind.guidance().is_empty(), "guidance empty for {:?}", kind);
+            assert!(!kind.table_header().is_empty(), "table_header empty for {:?}", kind);
+
+            let row = kind.table_row("1".to_string());
+            assert_eq!(row[0], "1");
+            assert!(row.len() >= 3, "row too short for {:?}", kind);
+        }
+    }
+
+    #[test]
+    fn test_overlapping_memory_ranges_resolution_uses_hex() {
+        let hob1 = resource(0x1000, 0x2000, 0, 0);
+        let hob2 = resource(0x2000, 0x2000, 0, 0);
+        let kind = ValidationKind::Hob(HobValidationKind::OverlappingMemoryRanges { hob1: &hob1, hob2: &hob2 });
+
+        let row = kind.table_row("1".to_string());
+        let resolution = row.last().unwrap();
+        assert!(resolution.contains("Hob 1 range(0x1000, 0x3000)"), "got: {resolution}");
+        assert!(resolution.contains("Hob 2 range(0x2000, 0x4000)"), "got: {resolution}");
+    }
+
+    #[test]
+    fn test_page_zero_memory_resolution_uses_hex() {
+        let alloc = mem_alloc(0x0, 0x1000);
+        let kind = ValidationKind::Hob(HobValidationKind::PageZeroMemoryDescribed { alloc_desc: &alloc });
+
+        let row = kind.table_row("1".to_string());
+        let resolution = row.last().unwrap();
+        assert!(resolution.contains("Memory allocation range(0x0, 0x1000)"), "got: {resolution}");
     }
 }

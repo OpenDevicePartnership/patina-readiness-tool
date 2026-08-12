@@ -24,7 +24,7 @@ use alloc::{
     string::{String, ToString},
     vec::Vec,
 };
-use patina::pi::hob::{HANDOFF, HobList, PhaseHandoffInformationTable, header, header::Hob};
+use patina::pi::hob::{HANDOFF, HobHeader, HobList, PhaseHandoffInformationTable};
 
 pub struct CaptureApp<'a> {
     pub(crate) hob_list: HobList<'a>,
@@ -53,11 +53,11 @@ impl CaptureApp<'_> {
             panic!("HOB list pointer is null!");
         }
 
-        let hob_header: *const Hob = physical_hob_list as *const Hob;
+        let hob_header: *const HobHeader = physical_hob_list as *const HobHeader;
         const NOT_NULL: &str = "Ptr should not be NULL";
 
         // The PHIT HOB should always be first
-        let current_header = unsafe { hob_header.cast::<Hob>().as_ref().expect(NOT_NULL) };
+        let current_header = unsafe { hob_header.cast::<HobHeader>().as_ref().expect(NOT_NULL) };
         if current_header.r#type == HANDOFF {
             Self::assert_hob_size::<PhaseHandoffInformationTable>(current_header);
             let phit_hob = unsafe { hob_header.cast::<PhaseHandoffInformationTable>().as_ref().expect(NOT_NULL) };
@@ -67,7 +67,7 @@ impl CaptureApp<'_> {
         None
     }
 
-    fn assert_hob_size<T>(hob: &Hob) {
+    fn assert_hob_size<T>(hob: &HobHeader) {
         let hob_len = hob.length as usize;
         let hob_size = mem::size_of::<T>();
         assert_eq!(hob_len, hob_size, "Trying to cast hob of length {hob_len} into a pointer of size {hob_size}");

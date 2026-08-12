@@ -15,8 +15,8 @@
 
 cfg_if::cfg_if! {
     if #[cfg(all(target_os = "uefi", target_arch = "aarch64"))] {
-        use patina::log::SerialLogger;
-        use patina::{log::Format, serial::uart::UartPl011};
+        use patina::debug::log::SerialLogger;
+        use patina::{debug::log::Format, peripheral::serial::uart::UartPl011};
         use log::LevelFilter;
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;
@@ -25,7 +25,7 @@ cfg_if::cfg_if! {
             Format::Standard,
             &[],
             log::LevelFilter::Trace,
-            UartPl011::new(0x6000_0000),
+            unsafe { UartPl011::new(0x6000_0000) },
         );
 
         fn init_logger() {
@@ -40,8 +40,8 @@ cfg_if::cfg_if! {
             loop { core::hint::spin_loop(); }
         }
     } else if #[cfg(all(target_os = "uefi", target_arch = "x86_64"))] {
-        use patina::log::SerialLogger;
-        use patina::{log::Format, serial::uart::Uart16550};
+        use patina::debug::log::SerialLogger;
+        use patina::{debug::log::Format, peripheral::serial::uart::Uart16550};
         use log::LevelFilter;
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;
@@ -50,7 +50,7 @@ cfg_if::cfg_if! {
             Format::Standard,
             &[],
             log::LevelFilter::Trace,
-            Uart16550::Io { base: 0x402 },
+            unsafe { Uart16550::new_io(0x402) },
         );
 
         fn init_logger() {
