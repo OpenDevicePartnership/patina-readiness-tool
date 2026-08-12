@@ -366,6 +366,30 @@ impl Validator for HobValidator<'_> {
         validation_report.append_report(self.validate_memory_type_info_resource_length()?);
         Ok(validation_report)
     }
+
+    fn summary(&self) -> String {
+        let mut counts: std::collections::BTreeMap<&str, usize> = std::collections::BTreeMap::new();
+        for hob in self.hob_list {
+            let kind = match hob {
+                HobSerDe::Handoff { .. } => "Handoff",
+                HobSerDe::MemoryAllocation { .. } => "MemoryAllocation",
+                HobSerDe::ResourceDescriptor(_) => "ResourceDescriptor (V1)",
+                HobSerDe::ResourceDescriptorV2 { .. } => "ResourceDescriptorV2 (V2)",
+                HobSerDe::GuidExtension { .. } => "GuidExtension",
+                HobSerDe::MemoryTypeInformation { .. } => "MemoryTypeInformation",
+                HobSerDe::FirmwareVolume { .. } => "FirmwareVolume",
+                HobSerDe::Cpu { .. } => "Cpu",
+                HobSerDe::UnknownHob => "UnknownHob",
+            };
+            *counts.entry(kind).or_default() += 1;
+        }
+
+        let mut summary = format!("HOB Summary:\n  Total HOBs: {}", self.hob_list.len());
+        for (kind, count) in counts {
+            summary.push_str(&format!("\n    {kind}: {count}"));
+        }
+        summary
+    }
 }
 
 #[cfg(test)]
@@ -918,5 +942,35 @@ mod tests {
         let result = validator.validate_memory_type_info_resource_length();
         assert!(result.is_ok());
         assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    #[test]
+    fn test_hob_summary_counts_each_type() {
+        let hob_list = vec![
+            create_v1_hob(0x1000, 0x1000, 3, 0, "owner1"),
+            create_v1_hob(0x3000, 0x1000, 3, 0, "owner1"),
+            create_v2_hob(0x5000, 0x1000, 3, 0, "owner1", 123),
+            create_memory_hob("mem".to_string(), 0x10000, 0x1000, 1),
+            mem_type_info_hob(vec![MemoryTypeInfoEntrySerDe { memory_type: 6, number_of_pages: 1 }]),
+        ];
+
+        let validator = HobValidator::new(&hob_list);
+        let summary = validator.summary();
+        assert!(summary.contains("Total HOBs: 5"), "got: {summary}");
+        assert!(summary.contains("ResourceDescriptor (V1): 2"), "got: {summary}");
+        assert!(summary.contains("ResourceDescriptorV2 (V2): 1"), "got: {summary}");
+        assert!(summary.contains("MemoryAllocation: 1"), "got: {summary}");
+        assert!(summary.contains("MemoryTypeInformation: 1"), "got: {summary}");
+    }
+
+    #[test]
+    fn test_hob_summary_omits_absent_types() {
+        let hob_list = vec![create_v1_hob(0x1000, 0x1000, 3, 0, "owner1")];
+
+        let validator = HobValidator::new(&hob_list);
+        let summary = validator.summary();
+        assert!(summary.contains("Total HOBs: 1"), "got: {summary}");
+        assert!(summary.contains("ResourceDescriptor (V1): 1"), "got: {summary}");
+        assert!(!summary.contains("MemoryAllocation"), "got: {summary}");
     }
 }

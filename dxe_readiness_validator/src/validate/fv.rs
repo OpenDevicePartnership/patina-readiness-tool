@@ -173,6 +173,15 @@ impl Validator for FvValidator<'_> {
         validation_report.append_report(self.validate_fv_for_apriori_file()?);
         Ok(validation_report)
     }
+
+    fn summary(&self) -> String {
+        let total = self.fv_list.len();
+        let mut summary = format!("FV Summary:\n  Total FVs: {total}");
+        for fv in self.fv_list {
+            summary.push_str(&format!("\n    {}", fv.fv_name));
+        }
+        summary
+    }
 }
 
 #[cfg(test)]
@@ -539,5 +548,39 @@ mod tests {
         let result = validator.validate();
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), ValidationAppError::EmptyFvList);
+    }
+
+    #[test]
+    fn test_fv_summary_lists_count_and_names() {
+        let fv_list = vec![
+            FirmwareVolumeSerDe {
+                fv_name: "FvMain".to_string(),
+                fv_length: 1024,
+                fv_base_address: 0x1000,
+                fv_attributes: 0,
+                files: vec![],
+            },
+            FirmwareVolumeSerDe {
+                fv_name: "FvBoot".to_string(),
+                fv_length: 2048,
+                fv_base_address: 0x2000,
+                fv_attributes: 0,
+                files: vec![],
+            },
+        ];
+
+        let validator = FvValidator::new(&fv_list);
+        let summary = validator.summary();
+        assert!(summary.contains("Total FVs: 2"), "got: {summary}");
+        assert!(summary.contains("FvMain"), "got: {summary}");
+        assert!(summary.contains("FvBoot"), "got: {summary}");
+    }
+
+    #[test]
+    fn test_fv_summary_empty_list() {
+        let fv_list = vec![];
+        let validator = FvValidator::new(&fv_list);
+        let summary = validator.summary();
+        assert!(summary.contains("Total FVs: 0"), "got: {summary}");
     }
 }
