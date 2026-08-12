@@ -19,8 +19,8 @@
 
 cfg_if::cfg_if! {
     if #[cfg(all(target_os = "uefi", target_arch = "aarch64"))] {
-        use patina::log::SerialLogger;
-        use patina::{log::Format, serial::uart::UartPl011};
+        use patina::debug::log::SerialLogger;
+        use patina::{debug::log::Format, peripheral::serial::uart::UartPl011};
         use log::LevelFilter;
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;
@@ -29,7 +29,7 @@ cfg_if::cfg_if! {
             Format::Standard,
             &[],
             log::LevelFilter::Trace,
-            UartPl011::new(0x0900_0000),
+            unsafe { UartPl011::new(0x0900_0000) },
         );
 
         fn init_logger() {

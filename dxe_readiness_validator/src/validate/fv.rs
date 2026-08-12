@@ -15,7 +15,7 @@ use crate::{
 };
 use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER};
 use patina::{
-    base::UEFI_PAGE_SIZE,
+    UEFI_PAGE_SIZE,
     pi::serializable::{format_guid, serializable_fv::FirmwareVolumeSerDe},
 };
 use r_efi::efi::Guid;

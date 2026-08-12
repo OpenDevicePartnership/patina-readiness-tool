@@ -17,7 +17,7 @@ cfg_if::cfg_if! {
     if #[cfg(all(target_os = "uefi", target_arch = "x86_64"))] {
         use log::LevelFilter;
         use core::sync::atomic::{AtomicPtr, Ordering};
-        use patina::{log::{Format, SerialLogger}, serial::uart::Uart16550};
+        use patina::{debug::log::{Format, SerialLogger}, peripheral::serial::uart::Uart16550};
         use core::ffi::c_void;
         use dxe_readiness_capture::core_start;
 
@@ -60,9 +60,11 @@ cfg_if::cfg_if! {
 
             // Read the base register. If the UART device is not configured, fall back to IO UART.
             // Otherwise, use MMIO UART.
-            match unsafe { *base_register.load(Ordering::Relaxed) } {
-                UART_UNINITIALIZED => Uart16550::Io { base: IO_UART_ADDRESS },
-                _ => Uart16550::Mmio { base: mmio_base, reg_stride: get_intel_uart_reg_stride(mmio_base) },
+            unsafe {
+                match *base_register.load(Ordering::Relaxed) {
+                    UART_UNINITIALIZED => Uart16550::new_io(IO_UART_ADDRESS),
+                    _ => Uart16550::new_mmio(mmio_base, get_intel_uart_reg_stride(mmio_base)),
+                }
             }
         }
 
