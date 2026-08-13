@@ -175,6 +175,10 @@ impl Validator for FvValidator<'_> {
     }
 
     fn summary(&self) -> String {
+        if self.fv_list.is_empty() {
+            return "No FVs to validate.".to_string();
+        }
+
         let total = self.fv_list.len();
         let mut summary = format!("FV Summary:\n  Total FVs: {total}");
         for fv in self.fv_list {
@@ -580,7 +584,7 @@ mod tests {
     fn test_fv_summary_empty_list() {
         let fv_list = vec![];
         let validator = FvValidator::new(&fv_list);
-        let summary = validator.summary();
-        assert!(summary.contains("Total FVs: 0"), "got: {summary}");
+
+        assert_eq!(validator.summary(), "No FVs to validate.");
     }
 }

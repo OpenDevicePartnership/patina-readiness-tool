@@ -368,6 +368,10 @@ impl Validator for HobValidator<'_> {
     }
 
     fn summary(&self) -> String {
+        if self.hob_list.is_empty() {
+            return "No HOBs to validate.".to_string();
+        }
+
         let mut counts: std::collections::BTreeMap<&str, usize> = std::collections::BTreeMap::new();
         for hob in self.hob_list {
             let kind = match hob {
@@ -972,5 +976,13 @@ mod tests {
         assert!(summary.contains("Total HOBs: 1"), "got: {summary}");
         assert!(summary.contains("ResourceDescriptor (V1): 1"), "got: {summary}");
         assert!(!summary.contains("MemoryAllocation"), "got: {summary}");
+    }
+
+    #[test]
+    fn test_hob_summary_empty_list() {
+        let hob_list = vec![];
+        let validator = HobValidator::new(&hob_list);
+
+        assert_eq!(validator.summary(), "No HOBs to validate.");
     }
 }

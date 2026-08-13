@@ -61,11 +61,17 @@ impl ValidationApp {
 
         let hob_validator = HobValidator::new(&data.hob_list);
         validation_report.add_summary(hob_validator.summary());
-        validation_report.append_report(hob_validator.validate()?);
+
+        if let Ok(report) = hob_validator.validate() {
+            validation_report.append_report(report);
+        }
 
         let fv_validator = FvValidator::new(&data.fv_list);
         validation_report.add_summary(fv_validator.summary());
-        validation_report.append_report(fv_validator.validate()?);
+
+        if let Ok(report) = fv_validator.validate() {
+            validation_report.append_report(report);
+        }
 
         validation_report.show_results();
 
@@ -159,17 +165,24 @@ mod tests {
     }
 
     #[test]
-    fn test_validate_empty_hob_list_propagates() {
+    fn test_validate_empty_hob_list_is_ok() {
         let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list: vec![clean_fv()] };
         let app = app_with_data(Some(data));
-        assert_eq!(app.validate().unwrap_err(), ValidationAppError::EmptyHobList);
+        assert!(app.validate().is_ok());
     }
 
     #[test]
-    fn test_validate_empty_fv_list_propagates() {
+    fn test_validate_empty_fv_list_is_ok() {
         let data = DxeReadinessCaptureSerDe { hob_list: vec![clean_v2_hob()], fv_list: vec![] };
         let app = app_with_data(Some(data));
-        assert_eq!(app.validate().unwrap_err(), ValidationAppError::EmptyFvList);
+        assert!(app.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_empty_hob_and_fv_lists_is_ok() {
+        let data = DxeReadinessCaptureSerDe { hob_list: vec![], fv_list: vec![] };
+        let app = app_with_data(Some(data));
+        assert!(app.validate().is_ok());
     }
 
     #[test]
