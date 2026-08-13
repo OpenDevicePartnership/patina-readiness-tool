@@ -66,6 +66,10 @@ impl<'a> HobValidator<'a> {
     /// Checks for overlapping address ranges in memory and I/O resource
     /// descriptor HOBs. Reports each overlapping pair as a validation
     /// violation.
+    ///
+    /// Resource descriptors whose `owner` is `MEMORY_TYPE_INFO_HOB_GUID` are
+    /// skipped because the PEI memory bin HOB is expected to overlap with the
+    /// resource descriptors describing the system memory backing those bins.
     fn validate_memory_overlap(&self) -> ValidationResult<'_> {
         let mut validation_report = ValidationReport::new();
         let mut overlaps = Vec::new();
@@ -76,6 +80,11 @@ impl<'a> HobValidator<'a> {
 
         for hob in self.hob_list {
             match hob {
+                // The Memory Type Information (PEI memory bins) resource descriptor HOB is expected
+                // to overlap the system-memory resource descriptor that backs the bins, so exclude
+                // it from the overlap check. See DXE Core CoreInitializeMemoryServices.
+                HobSerDe::ResourceDescriptor(resource) if Self::is_memory_type_info(resource) => (),
+                HobSerDe::ResourceDescriptorV2 { v1: resource, .. } if Self::is_memory_type_info(resource) => (),
                 HobSerDe::ResourceDescriptor(resource) if !Self::is_io(resource.resource_type) => {
                     v1_memory_hobs.push(resource)
                 }
@@ -458,6 +467,47 @@ mod tests {
         assert!(result.is_ok());
         let validation_report = result.unwrap();
         assert_eq!(validation_report.violation_count(), 0);
+    }
+
+    #[test]
+    fn test_memory_type_info_v1_overlap_within_system_memory_is_not_flagged() {
+        // The Memory Type Information bin HOB is carved out of the system memory
+        // resource descriptor, so its range is contained within it. This overlap
+        // is expected and must not be flagged.
+        let system_memory = create_v1_hob(0x5b23c000, 0x14dc4000, 0, 0x3c07, &zero_owner());
+        let mem_type_info = create_v1_hob(0x6e439000, 0xdc4000, 0, 0x7, &mem_info_owner());
+        let hob_list = vec![system_memory, mem_type_info];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_overlap();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    #[test]
+    fn test_memory_type_info_v2_overlap_within_system_memory_is_not_flagged() {
+        let system_memory = create_v2_hob(0x5b23c000, 0x14dc4000, 0, 0x3c07, &zero_owner(), 0);
+        let mem_type_info = create_v2_hob(0x6e439000, 0xdc4000, 0, 0x7, &mem_info_owner(), 0);
+        let hob_list = vec![system_memory, mem_type_info];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_overlap();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    #[test]
+    fn test_non_memory_type_info_overlap_is_still_flagged() {
+        // Two overlapping system-memory HOBs that are not the Memory Type
+        // Information bin HOB must still be reported.
+        let hob1 = create_v1_hob(0x5b23c000, 0x14dc4000, 0, 0x3c07, &zero_owner());
+        let hob2 = create_v1_hob(0x6e439000, 0xdc4000, 0, 0x3c07, "owner-x");
+        let hob_list = vec![hob1, hob2];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_memory_overlap();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 1);
     }
 
     #[test]
