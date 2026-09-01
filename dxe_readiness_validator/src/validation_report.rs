@@ -71,7 +71,7 @@ impl<'a> ValidationReport<'a> {
             println!("❌ {}", violations.first().unwrap().header().green().bold());
             let mut table = Table::new();
             table
-                .load_preset(UTF8_FULL)
+                .load_style(UTF8_FULL)
                 .set_content_arrangement(ContentArrangement::Dynamic)
                 .set_header(violations.first().unwrap().table_header());
 

@@ -40,7 +40,7 @@ cfg_if::cfg_if! {
             )
         }
 
-        fn get_intel_uart_reg_stride(mmio_base: usize) -> usize {
+        fn get_intel_uart_reg_stride(mmio_base: usize) -> u8 {
             // Get the component register at the assumed register stride
             let component_register: AtomicPtr<u32> = AtomicPtr::new(
                 (mmio_base + (UART_COMPONENT_REG * ASSUMED_REGISTER_STRIDE)) as *mut u32,
@@ -49,8 +49,8 @@ cfg_if::cfg_if! {
             // Read the component register. If the component ID is correct, the assumed register stride
             // must be correct. Otherwise, use the alternative register stride
             match unsafe { core::ptr::read_volatile(component_register.load(Ordering::Relaxed)) } {
-                UART_COMPONENT_IDENTIFICATION_CODE => ASSUMED_REGISTER_STRIDE,
-                _ => ALTERNATIVE_REGISTER_STRIDE,
+                UART_COMPONENT_IDENTIFICATION_CODE => ASSUMED_REGISTER_STRIDE as u8,
+                _ => ALTERNATIVE_REGISTER_STRIDE as u8,
             }
         }
 
