@@ -208,14 +208,13 @@ dependencies = [
 
 [[package]]
 name = "dxe_readiness_capture"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "cfg-if",
  "linked_list_allocator",
  "log",
  "patina",
  "patina_stacktrace",
- "r-efi",
  "serde",
  "serde_json",
  "spin",
@@ -224,7 +223,7 @@ dependencies = [
 
 [[package]]
 name = "dxe_readiness_validator"
-version = "0.3.1"
+version = "0.4.0"
 dependencies = [
  "clap",
  "colored",
@@ -233,7 +232,6 @@ dependencies = [
  "goblin",
  "log",
  "patina",
- "r-efi",
  "serde",
  "serde_json",
  "uuid",
@@ -396,9 +394,9 @@ dependencies = [
 
 [[package]]
 name = "patina"
-version = "23.1.0"
+version = "23.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "01e2fa519906ecf97ff680d736f5c76ce4addf640ac3e0b29e9db85b9fbef09e"
+checksum = "3c2583009825e02b931fbfbf98d9925be15c4226463412f5aa16f2977f87c236"
 dependencies = [
  "bitvec",
  "cfg-if",
@@ -423,9 +421,9 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "23.1.0"
+version = "23.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f0bcb1bf128677ef7ddc992e6acfe105ca2d697ead59b2dd7ce903b1a497d29"
+checksum = "32063ffb944b781e42ba07f8174b55309c86239ac7ed93918b48962e2cfbc9f7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -435,9 +433,9 @@ dependencies = [
 
 [[package]]
 name = "patina_stacktrace"
-version = "23.1.0"
+version = "23.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f49411500f21ec50eb3ba99ee3fd28b3744f03a0426ff36280f86add6ef5675f"
+checksum = "9b0be7b55a3106d18791bb94e3b9e888257b88012c49780e7545049fa55a3990"
 dependencies = [
  "cfg-if",
  "log",
