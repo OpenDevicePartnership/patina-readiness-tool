@@ -5,15 +5,21 @@ This serves as a living document to track and evolve the set of validations impl
 <!-- markdownlint-disable MD013 : Disable line limit.-->
 ## HOB Validations
 
-| Validation Kind                              | Description                                                                                              |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Inconsistent Memory Attributes**           | Identifies V1 and V2 HOBs describing the same range(s) with inconsistent memory attributes (prohibited). |
-| **Overlapping Memory Ranges**                | Identifies HOBs with overlapping memory ranges (prohibited).                                             |
-| **Page Zero Memory Allocated**               | Identifies HOBs that describe page zero memory allocation (prohibited).                                  |
-| **V1 Memory Range Not Contained In V2**      | Identifies V1 HOBs with memory ranges not covered by V2 (prohibited).                                    |
-| **V2 Contains UCE Attribute**                | Identifies V2 HOBs that use the prohibited `EFI_MEMORY_UCE` cacheability attribute.                      |
-| **V2 Missing Valid Cacheability Attributes** | Identifies V2 HOBs have valid cacheability attribute set(at most one).                                   |
-| **V2 Invalid IO Cacheability Attributes**    | Identifies V2 HOBs for IO resource types with non-zero attributes. Zero is expected at this time.        |
+| Validation Kind                                                     | Description                                                                                                                                                                   |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Inconsistent Memory Attributes**                                  | Identifies V1 and V2 HOBs describing the same range(s) with inconsistent memory attributes (prohibited).                                                                      |
+| **Overlapping Memory Ranges**                                       | Identifies HOBs with overlapping memory ranges (prohibited).                                                                                                                  |
+| **Page Zero Memory Allocated**                                      | Identifies HOBs that describe page zero memory allocation (prohibited).                                                                                                       |
+| **V1 Memory Range Not Contained In V2**                             | Identifies V1 HOBs with memory ranges not covered by V2 (prohibited).                                                                                                         |
+| **V2 Contains UCE Attribute**                                       | Identifies V2 HOBs that use the prohibited `EFI_MEMORY_UCE` cacheability attribute.                                                                                           |
+| **V2 Missing Valid Cacheability Attributes**                        | Identifies V2 HOBs have valid cacheability attribute set(at most one).                                                                                                        |
+| **V2 Invalid IO Cacheability Attributes**                           | Identifies V2 HOBs for IO resource types with non-zero attributes. Zero is expected at this time.                                                                             |
+| **Multiple Memory Type Info Resource Descriptor HOBs**              | Identifies more than one Resource Descriptor HOB owned by the Memory Type Information GUID (prohibited).                                                                      |
+| **Memory Type Info Resource Descriptor HOB Length Too Small**       | Identifies a Memory Type Info Resource Descriptor HOB whose length cannot hold the sum of the bin sizes reported by the Memory Type Information GUID HOB.                     |
+| **Memory Allocation Ranges Overlap**                                | Identifies overlapping Memory Allocation HOB ranges (prohibited).                                                                                                             |
+| **Memory Allocation Range Not Page Aligned**                        | Identifies Memory Allocation HOBs whose base address or length is not page aligned.                                                                                           |
+| **Resource Descriptor Range Not Page Aligned**                      | Identifies Resource Descriptor HOBs whose base address or length is not page aligned.                                                                                         |
+| **Firmware Volume Not Within Memory Allocation**                    | Identifies Firmware Volume HOB ranges that are not contained within an allocated Memory Allocation HOB range.                                                                 |
 
 ## Firmware Volume (FV) Validations
 

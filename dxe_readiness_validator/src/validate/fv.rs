@@ -17,8 +17,8 @@ use goblin::pe::{header::COFF_MACHINE_ARM64, subsystem::IMAGE_SUBSYSTEM_EFI_RUNT
 use patina::{
     UEFI_PAGE_SIZE,
     pi::serializable::{format_guid, serializable_fv::FirmwareVolumeSerDe},
+    standard::efi::Guid,
 };
-use r_efi::efi::Guid;
 
 /// Performs validation on a list of firmware volumes to check for violations of
 /// Patina requirements.

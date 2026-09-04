@@ -9,7 +9,7 @@
 use patina::pi::serializable::{
     Interval,
     serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, FirmwareVolumeSerDe},
-    serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
+    serializable_hob::{FvHobSerDe, MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
 };
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -40,6 +40,18 @@ pub enum HobValidationKind<'a> {
 
     // Memory Type Info Resource Descriptor HOB ResourceLength is smaller than the sum of bin sizes
     MemoryTypeInfoResourceLengthTooSmall { hob1: &'a ResourceDescriptorSerDe, required_bytes: u64, actual_bytes: u64 },
+
+    // Memory allocation HOBs must not overlap
+    MemoryAllocationOverlap { hob1: &'a MemAllocDescriptorSerDe, hob2: &'a MemAllocDescriptorSerDe },
+
+    // Memory allocation HOBs must be page aligned
+    MemoryAllocationNotPageAligned { hob: &'a MemAllocDescriptorSerDe },
+
+    // Resource descriptor HOBs must be page aligned
+    ResourceDescriptorNotPageAligned { hob: &'a ResourceDescriptorSerDe },
+
+    // FV HOBs must fall within memory allocation HOBs
+    FvNotWithinMemoryAllocation { fv: &'a FvHobSerDe },
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -105,6 +117,16 @@ impl ValidationKind<'_> {
                 HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { .. } => {
                     "HOB: Memory Type Info Resource Descriptor HOB Length Too Small"
                 }
+                HobValidationKind::MemoryAllocationOverlap { .. } => "HOB: Memory Allocation Ranges Overlap",
+                HobValidationKind::MemoryAllocationNotPageAligned { .. } => {
+                    "HOB: Memory Allocation Range Not Page Aligned"
+                }
+                HobValidationKind::ResourceDescriptorNotPageAligned { .. } => {
+                    "HOB: Resource Descriptor Range Not Page Aligned"
+                }
+                HobValidationKind::FvNotWithinMemoryAllocation { .. } => {
+                    "HOB: Firmware Volume Not Within Memory Allocation"
+                }
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "FV: Combined Drivers Present",
@@ -140,6 +162,10 @@ impl ValidationKind<'_> {
                                                                                     to hold the sum of bin sizes reported in the Memory Type Information GUID HOB.\n   \
                                                                                     Note: the check uses the raw page-count sum. Platforms may need additional space\n   \
                                                                                     for per-bin alignment padding.",
+                HobValidationKind::MemoryAllocationOverlap { .. } => "   Memory Allocation HOB ranges must not overlap.",
+                HobValidationKind::MemoryAllocationNotPageAligned { .. } => "   Memory Allocation HOB base addresses and lengths must be page aligned.",
+                HobValidationKind::ResourceDescriptorNotPageAligned { .. } => "   Resource Descriptor HOB base addresses and lengths must be page aligned.",
+                HobValidationKind::FvNotWithinMemoryAllocation { .. } => "   Firmware Volume HOB ranges must be contained within a Memory Allocation HOB range.",
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "   Firmware volume contains prohibited combined drivers. \nBelow file types are prohibited\n- COMBINED_MM_DXE(0x0C)\n- COMBINED_PEIM_DRIVER(0x08).\n   \
@@ -186,6 +212,14 @@ impl ValidationKind<'_> {
                 HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { .. } => {
                     "MemoryTypeInfoResourceLengthTooSmall".to_string()
                 }
+                HobValidationKind::MemoryAllocationOverlap { .. } => "MemoryAllocationOverlap".to_string(),
+                HobValidationKind::MemoryAllocationNotPageAligned { .. } => {
+                    "MemoryAllocationNotPageAligned".to_string()
+                }
+                HobValidationKind::ResourceDescriptorNotPageAligned { .. } => {
+                    "ResourceDescriptorNotPageAligned".to_string()
+                }
+                HobValidationKind::FvNotWithinMemoryAllocation { .. } => "FvNotWithinMemoryAllocation".to_string(),
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { .. } => "CombinedDriversPresent".to_string(),
@@ -229,6 +263,18 @@ impl PrettyPrintTable for ValidationKind<'_> {
                 }
                 HobValidationKind::MemoryTypeInfoResourceLengthTooSmall { .. } => {
                     vec!["#", "Resource Descriptor Hob", "Violation/Resolution"]
+                }
+                HobValidationKind::MemoryAllocationOverlap { .. } => {
+                    vec!["#", "Memory Allocation HOB 1", "Memory Allocation HOB 2", "Violation/Resolution"]
+                }
+                HobValidationKind::MemoryAllocationNotPageAligned { .. } => {
+                    vec!["#", "Memory Allocation HOB", "Violation/Resolution"]
+                }
+                HobValidationKind::ResourceDescriptorNotPageAligned { .. } => {
+                    vec!["#", "Resource Descriptor HOB", "Violation/Resolution"]
+                }
+                HobValidationKind::FvNotWithinMemoryAllocation { .. } => {
+                    vec!["#", "Firmware Volume HOB", "Violation/Resolution"]
                 }
             },
             ValidationKind::Fv(fv) => match fv {
@@ -341,6 +387,39 @@ impl PrettyPrintTable for ValidationKind<'_> {
                     );
                     vec![row_num, hob_column, resolution]
                 }
+                HobValidationKind::MemoryAllocationOverlap { hob1, hob2 } => {
+                    let hob1_column =
+                        serde_json::to_string_pretty(hob1).unwrap_or("HOB 1 serialization failed!".to_string());
+                    let hob2_column =
+                        serde_json::to_string_pretty(hob2).unwrap_or("HOB 2 serialization failed!".to_string());
+                    let resolution = format!(
+                        "Memory allocation ranges must not overlap\nHOB 1 range({:#x}, {:#x}) | HOB 2 range({:#x}, {:#x})",
+                        hob1.start(),
+                        hob1.end(),
+                        hob2.start(),
+                        hob2.end()
+                    );
+                    vec![row_num, hob1_column, hob2_column, resolution]
+                }
+                HobValidationKind::MemoryAllocationNotPageAligned { hob } => {
+                    let hob_column =
+                        serde_json::to_string_pretty(hob).unwrap_or("HOB serialization failed!".to_string());
+                    let resolution = "Memory allocation base address and length must be page aligned.".to_string();
+                    vec![row_num, hob_column, resolution]
+                }
+                HobValidationKind::ResourceDescriptorNotPageAligned { hob } => {
+                    let hob_column =
+                        serde_json::to_string_pretty(hob).unwrap_or("HOB serialization failed!".to_string());
+                    let resolution = "Resource descriptor base address and length must be page aligned.".to_string();
+                    vec![row_num, hob_column, resolution]
+                }
+                HobValidationKind::FvNotWithinMemoryAllocation { fv } => {
+                    let fv_column =
+                        serde_json::to_string_pretty(fv).unwrap_or("FV HOB serialization failed!".to_string());
+                    let resolution =
+                        "Firmware volume range must be contained within a memory allocation HOB range.".to_string();
+                    vec![row_num, fv_column, resolution]
+                }
             },
             ValidationKind::Fv(fv) => match fv {
                 FvValidationKind::CombinedDriversPresent { fv, file } => {
@@ -396,7 +475,7 @@ impl PrettyPrintTable for ValidationKind<'_> {
 mod tests {
     use super::*;
     use patina::pi::serializable::serializable_fv::{FirmwareFileSerDe, FirmwareSectionSerDe, PeHeaderInfo};
-    use patina::pi::serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
+    use patina::pi::serializable::serializable_hob::{FvHobSerDe, MemAllocDescriptorSerDe, ResourceDescriptorSerDe};
 
     fn resource(start: u64, length: u64, resource_type: u32, resource_attribute: u32) -> ResourceDescriptorSerDe {
         ResourceDescriptorSerDe {
@@ -452,6 +531,8 @@ mod tests {
         let r_attr = resource(0x1000, 0x1000, 0, 1);
         let r_type = resource(0x1000, 0x1000, 5, 0);
         let ma = mem_alloc(0x2000, 0x1000);
+        let ma2 = mem_alloc(0x2800, 0x1000);
+        let fv_hob = FvHobSerDe { base_address: 0x8000, length: 0x1000 };
         let fv = fv();
         let file = file();
         let section = section();
@@ -473,6 +554,10 @@ mod tests {
                 required_bytes: 0x2000,
                 actual_bytes: 0x1000,
             }),
+            ValidationKind::Hob(HobValidationKind::MemoryAllocationOverlap { hob1: &ma, hob2: &ma2 }),
+            ValidationKind::Hob(HobValidationKind::MemoryAllocationNotPageAligned { hob: &ma }),
+            ValidationKind::Hob(HobValidationKind::ResourceDescriptorNotPageAligned { hob: &r1 }),
+            ValidationKind::Hob(HobValidationKind::FvNotWithinMemoryAllocation { fv: &fv_hob }),
             ValidationKind::Fv(FvValidationKind::CombinedDriversPresent { fv: &fv, file: &file }),
             ValidationKind::Fv(FvValidationKind::LzmaCompressedSections { fv: &fv, file: &file, section: &section }),
             ValidationKind::Fv(FvValidationKind::ProhibitedAprioriFile { fv: &fv, file: &file }),

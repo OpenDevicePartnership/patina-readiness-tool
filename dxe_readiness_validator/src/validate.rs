@@ -91,7 +91,7 @@ mod tests {
         serializable_fv::FirmwareVolumeSerDe,
         serializable_hob::{HobSerDe, ResourceDescriptorSerDe},
     };
-    use r_efi::efi;
+    use patina::standard::efi;
 
     fn app_with_data(data: Option<DxeReadinessCaptureSerDe>) -> ValidationApp {
         ValidationApp { args: CommandLine { filename: None }, data }
