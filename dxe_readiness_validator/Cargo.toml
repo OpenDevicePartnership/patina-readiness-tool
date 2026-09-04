@@ -13,7 +13,6 @@ dxe_readiness_capture = { path = "../dxe_readiness_capture" }
 goblin = { workspace = true }
 log = { workspace = true }
 patina = { workspace = true }
-r-efi = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 uuid = { workspace = true }

@@ -12,11 +12,13 @@ use patina::{
         hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED, MEMORY_TYPE_INFO_HOB_GUID},
         serializable::{
             Interval,
-            serializable_hob::{HobSerDe, MemoryTypeInfoEntrySerDe, ResourceDescriptorSerDe},
+            serializable_hob::{
+                FvHobSerDe, HobSerDe, MemAllocDescriptorSerDe, MemoryTypeInfoEntrySerDe, ResourceDescriptorSerDe,
+            },
         },
     },
+    standard::efi,
 };
-use r_efi::efi;
 
 use crate::{
     ValidationAppError,
@@ -355,6 +357,115 @@ impl<'a> HobValidator<'a> {
         }
         Ok(validation_report)
     }
+
+    // Returns all memory allocation HOBs
+    fn memory_allocation_hobs(&self) -> Vec<&MemAllocDescriptorSerDe> {
+        self.hob_list
+            .iter()
+            .filter_map(|hob| match hob {
+                HobSerDe::MemoryAllocation { alloc_descriptor } => Some(alloc_descriptor),
+                _ => None,
+            })
+            .collect()
+    }
+
+    // Returns all resource descriptor HOBs
+    fn resource_descriptor_hobs(&self) -> Vec<&ResourceDescriptorSerDe> {
+        self.hob_list
+            .iter()
+            .filter_map(|hob| match hob {
+                HobSerDe::ResourceDescriptor(resource) | HobSerDe::ResourceDescriptorV2 { v1: resource, .. } => {
+                    Some(resource)
+                }
+                _ => None,
+            })
+            .collect()
+    }
+
+    // Returns all FV, FV2, and FV3 HOBs
+    fn fv_hobs(&self) -> Vec<&FvHobSerDe> {
+        self.hob_list
+            .iter()
+            .filter_map(|hob| match hob {
+                HobSerDe::FirmwareVolume { fv } => Some(fv),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Validates there are no overlapping memory allocation HOBs
+    fn validate_allocation_overlap(&self) -> ValidationResult<'_> {
+        let mut validation_report = ValidationReport::new();
+        let memory_allocation_hobs = self.memory_allocation_hobs();
+        for (i, hob1) in memory_allocation_hobs.iter().enumerate() {
+            for hob2 in memory_allocation_hobs.iter().skip(i + 1) {
+                if hob1.memory_base_address < hob2.memory_base_address + hob2.memory_length
+                    && hob2.memory_base_address < hob1.memory_base_address + hob1.memory_length
+                {
+                    validation_report
+                        .add_violation(ValidationKind::Hob(HobValidationKind::MemoryAllocationOverlap { hob1, hob2 }));
+                }
+            }
+        }
+        Ok(validation_report)
+    }
+
+    /// Validates all memory allocation HOBs and resource descriptor HOBs are page aligned base addresses
+    /// and lengths
+    fn validate_page_alignment(&self) -> ValidationResult<'_> {
+        let mut validation_report = ValidationReport::new();
+        let memory_allocation_hobs = self.memory_allocation_hobs();
+        for hob in memory_allocation_hobs {
+            if hob.memory_base_address % UEFI_PAGE_SIZE as u64 != 0 {
+                validation_report
+                    .add_violation(ValidationKind::Hob(HobValidationKind::MemoryAllocationNotPageAligned { hob }));
+            }
+            if hob.memory_length % UEFI_PAGE_SIZE as u64 != 0 {
+                validation_report
+                    .add_violation(ValidationKind::Hob(HobValidationKind::MemoryAllocationNotPageAligned { hob }));
+            }
+        }
+
+        let resource_descriptor_hobs = self.resource_descriptor_hobs();
+        for hob in resource_descriptor_hobs {
+            if hob.physical_start % UEFI_PAGE_SIZE as u64 != 0 {
+                validation_report
+                    .add_violation(ValidationKind::Hob(HobValidationKind::ResourceDescriptorNotPageAligned { hob }));
+            }
+            if hob.resource_length % UEFI_PAGE_SIZE as u64 != 0 {
+                validation_report
+                    .add_violation(ValidationKind::Hob(HobValidationKind::ResourceDescriptorNotPageAligned { hob }));
+            }
+        }
+
+        Ok(validation_report)
+    }
+
+    /// Validates all FV HOBs have fall within memory allocation HOBs
+    fn validate_fv_within_memory_allocation(&self) -> ValidationResult<'_> {
+        let mut validation_report = ValidationReport::new();
+        let memory_allocation_hobs = self.memory_allocation_hobs();
+        let fv_hobs = self.fv_hobs();
+        for fv_hob in fv_hobs {
+            let mut contained = false;
+            for mem_hob in &memory_allocation_hobs {
+                if mem_hob.memory_type == efi::CONVENTIONAL_MEMORY {
+                    continue;
+                }
+                if fv_hob.base_address >= mem_hob.memory_base_address
+                    && fv_hob.base_address + fv_hob.length <= mem_hob.memory_base_address + mem_hob.memory_length
+                {
+                    contained = true;
+                    break;
+                }
+            }
+            if !contained {
+                validation_report
+                    .add_violation(ValidationKind::Hob(HobValidationKind::FvNotWithinMemoryAllocation { fv: fv_hob }));
+            }
+        }
+        Ok(validation_report)
+    }
 }
 
 impl Validator for HobValidator<'_> {
@@ -373,6 +484,9 @@ impl Validator for HobValidator<'_> {
         validation_report.append_report(self.validate_memory_cacheability_attribute_io_resource_hob()?);
         validation_report.append_report(self.validate_memory_type_info_single_resource_hob()?);
         validation_report.append_report(self.validate_memory_type_info_resource_length()?);
+        validation_report.append_report(self.validate_allocation_overlap()?);
+        validation_report.append_report(self.validate_page_alignment()?);
+        validation_report.append_report(self.validate_fv_within_memory_allocation()?);
         Ok(validation_report)
     }
 
@@ -410,7 +524,7 @@ mod tests {
     use super::*;
     use patina::pi::{
         hob::{EFI_RESOURCE_IO, EFI_RESOURCE_IO_RESERVED, EfiPhysicalAddress},
-        serializable::serializable_hob::{MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
+        serializable::serializable_hob::{FvHobSerDe, MemAllocDescriptorSerDe, ResourceDescriptorSerDe},
     };
 
     fn create_v1_hob(
@@ -453,6 +567,36 @@ mod tests {
         HobSerDe::MemoryAllocation {
             alloc_descriptor: MemAllocDescriptorSerDe { name, memory_base_address, memory_length, memory_type },
         }
+    }
+
+    fn create_fv_hob(base_address: u64, length: u64) -> HobSerDe {
+        HobSerDe::FirmwareVolume { fv: FvHobSerDe { base_address, length } }
+    }
+
+    #[test]
+    fn test_fv_within_memory_allocation_is_valid() {
+        let allocation = create_memory_hob("allocation".to_string(), 0x1000, 0x4000, 1);
+        let fv = create_fv_hob(0x2000, 0x2000);
+        let hob_list = vec![allocation, fv];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_fv_within_memory_allocation();
+
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 0);
+    }
+
+    #[test]
+    fn test_fv_outside_memory_allocation_is_flagged() {
+        let allocation = create_memory_hob("allocation".to_string(), 0x1000, 0x2000, 1);
+        let fv = create_fv_hob(0x2000, 0x2000);
+        let hob_list = vec![allocation, fv];
+
+        let validator = HobValidator::new(&hob_list);
+        let result = validator.validate_fv_within_memory_allocation();
+
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap().violation_count(), 1);
     }
 
     #[test]
