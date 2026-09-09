@@ -39,7 +39,12 @@ validator/
 Pick **one** of the two capture methods below. Both produce the same JSON
 schema, but they observe the platform at different points in the boot flow.
 
-#### **Option A: DXE-Phase Capture**
+**Option A is strongly preferred.** It captures the system state exactly as
+Patina would receive it at DXE Core handoff, whereas that state can change
+drastically by the time the UEFI Shell is reached. Use Option B only when
+modifying the firmware image is not practical.
+
+#### **Option A: DXE-Phase Capture (Preferred)**
 
 The `*_dxe_readiness_capture.efi` binaries replace the DXE Core in the firmware
 image, so PEI hands the HOB list directly to the tool.
