@@ -6,6 +6,92 @@ The workspace consists of two packages:
 1. **DXE Readiness Capture** – An EFI application
 2. **DXE Readiness Validator** – A standard Rust binary
 
+## **Quick Start (Prebuilt Binaries)**
+
+Every release ships prebuilt binaries.
+
+### **1. Download the Release**
+
+1. Go to the [Releases page](https://github.com/OpenDevicePartnership/patina-readiness-tool/releases).
+2. Download `patina_readiness_tool.zip` from the latest release.
+3. Extract it. The archive is laid out as follows:
+
+```txt
+capture/
+├── x86_64/
+│   ├── intel_dxe_readiness_capture.efi      # DXE-phase capture (Intel LNL/PTL)
+│   ├── qemu_dxe_readiness_capture.efi       # DXE-phase capture (QEMU Q35)
+│   └── uefishell_dxe_readiness_capture.efi  # UEFI Shell capture (any platform)
+└── aarch64/
+    ├── qemu_dxe_readiness_capture.efi       # DXE-phase capture (QEMU)
+    ├── arm_virt_dxe_readiness_capture.efi   # DXE-phase capture (ARM virt)
+    └── uefishell_dxe_readiness_capture.efi  # UEFI Shell capture (any platform)
+validator/
+├── windows/
+│   ├── dxe_readiness_validator_x86_64.exe
+│   └── dxe_readiness_validator_aarch64.exe
+└── linux/
+    └── dxe_readiness_validator_x86_64
+```
+
+### **2. Capture the Platform State**
+
+Pick **one** of the two capture methods below. Both produce the same JSON
+schema, but they observe the platform at different points in the boot flow.
+
+#### **Option A: DXE-Phase Capture**
+
+The `*_dxe_readiness_capture.efi` binaries replace the DXE Core in the firmware
+image, so PEI hands the HOB list directly to the tool.
+
+1. Choose the binary matching your platform and architecture from
+   `capture/<arch>/`.
+2. Replace the DXE Core in your firmware volume with this binary and flash/boot
+   the resulting image. For QEMU, see [Launching QEMU](#launching-qemu).
+3. Capture the serial output of the boot. The tool prints a banner
+   (`Dxe Readiness Capture Tool`) followed by the JSON capture, then dead loops.
+4. Save the JSON portion of the serial log to a file, e.g. `capture.json`
+   (strip the log prefixes and any non-JSON lines - the file must start with `{`
+   and end with `}`).
+
+If your platform is not listed, it only needs a small platform-specific binary
+that configures a logger. See the [Platform Onboarding
+Guide](docs/capture/platform_onboarding_guide.md).
+
+#### **Option B: UEFI Shell Capture**
+
+`uefishell_dxe_readiness_capture.efi` requires no firmware modification.
+
+1. Copy `capture/<arch>/uefishell_dxe_readiness_capture.efi` to a FAT-formatted
+   USB drive or the EFI System Partition.
+2. Boot the target platform to the UEFI Shell.
+3. Select the volume and run the application, redirecting the output to a file:
+
+   ```sh
+   fs0:
+   uefishell_dxe_readiness_capture.efi capture.json
+   ```
+
+4. Copy `capture.json` back to your development machine and remove any non-JSON
+   lines (banner/log lines) from the top and bottom of the file.
+
+### **3. Validate the Capture**
+
+Run the validator for your host OS against the captured JSON:
+
+```sh
+# Windows
+dxe_readiness_validator_x86_64.exe -f capture.json
+
+# Linux
+chmod +x dxe_readiness_validator_x86_64
+./dxe_readiness_validator_x86_64 -f capture.json
+```
+
+The validator prints a report of every requirement that passed or was violated.
+See [Sample Validation Report](#sample-validation-report) below and the
+[validation list](docs/validator/validations.md) for what is checked.
+
 ## **Building the Packages**
 
 Running `cargo make build` compiles both packages for all supported
