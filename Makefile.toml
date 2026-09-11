@@ -20,6 +20,11 @@ NO_STD_FLAGS = "--timings"
 DXE_READINESS_PKG = "-p dxe_readiness_capture"
 CAPTURE_BIN_FLAGS = "${NO_STD_FLAGS} ${DXE_READINESS_PKG}"
 CAPTURE_UEFI_SHELL_FLAGS = "${DXE_READINESS_PKG} --features uefishell --bin uefishell_dxe_readiness_capture"
+# Selects the nextest `ci` profile (defined in .config/nextest.toml) automatically when the `CI`
+# variable is set (e.g. GitHub Actions sets this for every job).
+# `NEXTEST_PROFILE` is read natively by `cargo nextest run` and by `cargo llvm-cov ... nextest`.
+# Note: Passing `--profile`/`-P` explicitly on the command line takes precedence over this env var.
+NEXTEST_PROFILE = { value = "ci", condition = { env_set = ["CI"] } }
 
 [tasks.install-tools]
 description = """Installs the project tools pinned in the `[tools]` section of
@@ -217,7 +222,10 @@ clear = true
 # Note: RUSTFLAGS replaces build.rustflags.
 env = { RUSTFLAGS = "-Z allow-features=c_variadic,allocator_api,coverage_attribute" }
 command = "cargo"
-args = ["llvm-cov", "--profile", "test", "--ignore-filename-regex", ".*test.*", "--no-report", "--doctests", "-p", "dxe_readiness_capture", "-p", "dxe_readiness_validator"]
+# Note: `--profile test` has been set here in the past. Cargo already defaults to test builds
+# with the test profile, so it is removed. cargo-llvm-cov will forward it to `cargo nextest run`
+# where `--profile` is used to incorrectly select a nextest config profile (not a Cargo build profile).
+args = ["llvm-cov", "--ignore-filename-regex", ".*test.*", "--no-report", "nextest", "-p", "dxe_readiness_capture", "-p", "dxe_readiness_validator"]
 dependencies = ["llvm-cov-clean"]
 
 [tasks.coverage-lcov]
@@ -240,10 +248,10 @@ dependencies = ["coverage-test", "coverage-lcov", "coverage-html"]
 clear = true
 
 [tasks.test]
-description = "Runs tests with native cargo test behavior. Example `cargo make test` or `cargo make test -p dxe_readiness_validator -- --nocapture`"
+description = "Runs tests via cargo-nextest. Example `cargo make test` or `cargo make test -p dxe_readiness_validator -- --nocapture`."
 clear = true
 command = "cargo"
-args = ["test", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
+args = ["nextest", "run", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 [tasks.test-asan]
 description = "Run tests with AddressSanitizer enabled. Example `cargo make test-asan`. Use `cargo make test-asan --print-dll-path` to print the ASan runtime DLL directory."
@@ -294,7 +302,9 @@ end
 set_env RUSTFLAGS "-Zsanitizer=address"
 set_env RUSTDOCFLAGS "-Zsanitizer=address"
 target = get_env CARGO_MAKE_RUST_TARGET_TRIPLE
-exec --fail-on-error cargo test --target ${target} --workspace
+exec --fail-on-error cargo nextest run --target ${target} --workspace
+# nextest cannot run doctests, so run them separately to keep ASan coverage of doctests too.
+exec --fail-on-error cargo test --doc --target ${target} --workspace
 '''
 
 [tasks.clippy]
@@ -358,7 +368,7 @@ args = ["check", "--target", "aarch64-unknown-uefi", "--features", "ci_features"
 description = "Checks rust test code for build errors with results."
 private = true
 command = "cargo"
-args = ["test", "--no-run", "--all-targets", "--all-features", "@@split(CARGO_MAKE_TASK_ARGS, )",]
+args = ["nextest", "run", "--no-run", "--all-targets", "--all-features", "@@split(CARGO_MAKE_TASK_ARGS, )",]
 
 [tasks.check]
 description = "Checks rust code for errors. Example `cargo make check`"
