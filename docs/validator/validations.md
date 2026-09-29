@@ -20,6 +20,7 @@ This serves as a living document to track and evolve the set of validations impl
 | **Memory Allocation Range Not Page Aligned**                        | Identifies Memory Allocation HOBs whose base address or length is not page aligned.                                                                                           |
 | **Resource Descriptor Range Not Page Aligned**                      | Identifies Resource Descriptor HOBs whose base address or length is not page aligned.                                                                                         |
 | **Firmware Volume Not Within Memory Allocation**                    | Identifies Firmware Volume HOB ranges that are not contained within an allocated Memory Allocation HOB range.                                                                 |
+| ** Memory Allocation HOB Must Not Start at Page 0                   | Identifies Memory Allocation HOBs whose base address is 0.                                                                                                                    |
 
 ## Firmware Volume (FV) Validations
 
