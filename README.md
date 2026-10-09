@@ -102,6 +102,13 @@ See [Sample Validation Report](#sample-validation-report) below and the
 Running `cargo make build` compiles both packages for all supported
 architectures and targets.
 
+Every `cargo make` task forwards its arguments to the cargo command underneath,
+so any flag that cargo accepts can be added after the task name:
+
+```sh
+cargo make build --release
+```
+
 | Target               | x86_64                                                               | AArch64                                                               |
 | -------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | **UEFI Dxe Phase**   | target\x86_64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi      | target\aarch64-unknown-uefi\debug\qemu_dxe_readiness_capture.efi      |
@@ -123,6 +130,16 @@ platform-specific binaries:
 
 Executing `cargo make test` builds and runs the test binaries for both packages,
 matching the host architecture(x86_64-pc-windows-msvc|aarch64-pc-windows-msvc).
+
+To test a single package, pass `-p` after the task name:
+
+```sh
+cargo make test -p dxe_readiness_validator
+```
+
+The same works for `coverage`, `fmt`, `fmt-check`, `doc` and `doc-test`. Note
+that `-p` before the task name still selects the cargo-make profile, and `-p`
+after it is passed to cargo as the package selector.
 
 ## **Launching QEMU**
 

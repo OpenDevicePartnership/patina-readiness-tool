@@ -16,10 +16,9 @@ X86_64_STD_LINUX_TARGET = "--target x86_64-unknown-linux-gnu"
 AARCH64_UEFI_TARGET = "--target aarch64-unknown-uefi"
 X86_64_UEFI_TARGET = "--target x86_64-unknown-uefi"
 
-NO_STD_FLAGS = "--timings"
-DXE_READINESS_PKG = "-p dxe_readiness_capture"
-CAPTURE_BIN_FLAGS = "${NO_STD_FLAGS} ${DXE_READINESS_PKG}"
-CAPTURE_UEFI_SHELL_FLAGS = "${DXE_READINESS_PKG} --features uefishell --bin uefishell_dxe_readiness_capture"
+# Every cargo backed task forwards its arguments to the underlying cargo command with
+# `@@split(CARGO_MAKE_TASK_ARGS,;)`. cargo-make joins task arguments into CARGO_MAKE_TASK_ARGS
+# separated by a semicolon, so the separator must be `;` and not a space.
 # Selects the nextest `ci` profile (defined in .config/nextest.toml) automatically when the `CI`
 # variable is set (e.g. GitHub Actions sets this for every job).
 # `NEXTEST_PROFILE` is read natively by `cargo nextest run` and by `cargo llvm-cov ... nextest`.
@@ -109,77 +108,77 @@ end
 
 # DXE Readiness Capture UEFI binaries to run from UEFI Shell.
 [tasks.build-x64-uefishell]
-description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell."
+description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_application -C link-arg=/PDBALTPATH:uefishell_dxe_readiness_capture.pdb" }
 command = "cargo"
-args = [ "build", "@@split(CAPTURE_UEFI_SHELL_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "${@}", ]
+args = [ "build", "-p", "dxe_readiness_capture", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(X86_64_UEFI_TARGET, )", "@@split(CARGO_MAKE_TASK_ARGS,;)", ]
 
 [tasks.build-aarch64-uefishell]
-description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell."
+description = "Builds the DXE Readiness Capture UEFI binary to run in UEFI Shell. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_application -C link-arg=/PDBALTPATH:uefishell_dxe_readiness_capture.pdb" }
 command = "cargo"
-args = [ "build", "@@split(CAPTURE_UEFI_SHELL_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "${@}", ]
+args = [ "build", "-p", "dxe_readiness_capture", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(AARCH64_UEFI_TARGET, )", "@@split(CARGO_MAKE_TASK_ARGS,;)", ]
 
 # Right now, both Intel Lunar Lake and Panther Lake can use the same binary.
 # They are available as separate commands, so they can implement different behavior
 # in the future if needed without impacting callers.
 [tasks.build-intel-common]
-description = "Builds the Intel DXE Readiness Capture UEFI binary."
+description = "Builds the Intel DXE Readiness Capture UEFI binary. Arguments are forwarded to `cargo build`."
 private = true
 env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:intel_dxe_readiness_capture.pdb" }
 command = "cargo"
-args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "--bin", "intel_dxe_readiness_capture", "${@}"]
+args = ["build", "--timings", "-p", "dxe_readiness_capture", "@@split(X86_64_UEFI_TARGET, )", "--bin", "intel_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 # Builds EFI binaries for virtual platform (QEMU).
 [tasks.build-x64-uefi]
-description = "Builds the x64 DXE Readiness Capture UEFI binary."
+description = "Builds the x64 DXE Readiness Capture UEFI binary. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:qemu_dxe_readiness_capture.pdb" }
 command = "cargo"
-args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
+args = ["build", "--timings", "-p", "dxe_readiness_capture", "@@split(X86_64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 [tasks.build-aarch64-uefi]
-description = "Builds the aarch64 DXE Readiness Capture UEFI binary."
+description = "Builds the aarch64 DXE Readiness Capture UEFI binary. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:qemu_dxe_readiness_capture.pdb" }
 command = "cargo"
-args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "${@}"]
+args = ["build", "--timings", "-p", "dxe_readiness_capture", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "qemu_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 [tasks.build-aarch64-arm-virt-uefi]
-description = "Builds the aarch64 QEMU arm-virt DXE Readiness Capture UEFI binary."
+description = "Builds the aarch64 QEMU arm-virt DXE Readiness Capture UEFI binary. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:arm_virt_dxe_readiness_capture.pdb" }
 command = "cargo"
-args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "arm_virt_dxe_readiness_capture", "${@}"]
+args = ["build", "--timings", "-p", "dxe_readiness_capture", "@@split(AARCH64_UEFI_TARGET, )", "--bin", "arm_virt_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 # Builds Validation binary for the host platform.
 [tasks.build-validation-binary-windows-x64]
-description = "Builds the Windows x64 DXE Readiness Validation binary."
+description = "Builds the Windows x64 DXE Readiness Validation binary. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["windows"]}
 command = "cargo"
-args = [ "build", "-p", "dxe_readiness_validator", "@@split(X86_64_STD_WINDOWS_TARGET, )", "${@}", ]
+args = [ "build", "-p", "dxe_readiness_validator", "@@split(X86_64_STD_WINDOWS_TARGET, )", "@@split(CARGO_MAKE_TASK_ARGS,;)", ]
 
 [tasks.build-validation-binary-windows-aarch64]
-description = "Builds the Windows aarch64 DXE Readiness Validation binary."
+description = "Builds the Windows aarch64 DXE Readiness Validation binary. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["windows"]}
 command = "cargo"
-args = [ "build", "-p", "dxe_readiness_validator", "@@split(AARCH64_STD_WINDOWS_TARGET, )", "${@}", ]
+args = [ "build", "-p", "dxe_readiness_validator", "@@split(AARCH64_STD_WINDOWS_TARGET, )", "@@split(CARGO_MAKE_TASK_ARGS,;)", ]
 
 [tasks.build-validation-binary-linux-x64]
-description = "Builds the Linux x64 DXE Readiness Validation binary."
+description = "Builds the Linux x64 DXE Readiness Validation binary. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["linux"], env = { CARGO_MAKE_RUST_TARGET_ARCH = "x86_64" }}
 command = "cargo"
-args = [ "build", "-p", "dxe_readiness_validator", "@@split(X86_64_STD_LINUX_TARGET, )", "${@}", ]
+args = [ "build", "-p", "dxe_readiness_validator", "@@split(X86_64_STD_LINUX_TARGET, )", "@@split(CARGO_MAKE_TASK_ARGS,;)", ]
 
 [tasks.build-validation-binary-linux-aarch64]
-description = "Builds the Linux aarch64 DXE Readiness Validation binary."
+description = "Builds the Linux aarch64 DXE Readiness Validation binary. Arguments are forwarded to `cargo build`."
 env = { RUSTFLAGS = "" } # Env variables are not cleaned up after execution, meaning that tasks following the executed task will inherit the variables set by the previous task.
 condition = { platforms = ["linux"], env = { CARGO_MAKE_RUST_TARGET_ARCH = "aarch64" }}
 command = "cargo"
-args = [ "build", "-p", "dxe_readiness_validator", "@@split(AARCH64_STD_LINUX_TARGET, )", "${@}", ]
+args = [ "build", "-p", "dxe_readiness_validator", "@@split(AARCH64_STD_LINUX_TARGET, )", "@@split(CARGO_MAKE_TASK_ARGS,;)", ]
 
 [tasks.build]
-description = "Build all binaries."
+description = "Build all binaries. Arguments are forwarded to each underlying `cargo build`. Example `cargo make build` or `cargo make build --release`"
 clear = true
 dependencies = [
     "build-x64-uefishell",
@@ -196,12 +195,12 @@ dependencies = [
 
 # Run validator binary for all supported targets.
 [tasks.run-validator]
-description = "Run the DXE Readiness Validation binary."
+description = "Run the DXE Readiness Validation binary. Arguments are forwarded to `cargo run`."
 command = "cargo"
-args = ["run", "-p", "dxe_readiness_validator", "${@}"]
+args = ["run", "-p", "dxe_readiness_validator", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 [tasks.run]
-description = "Run validator binary."
+description = "Run validator binary. Arguments are forwarded to `cargo run`. Example `cargo make run -- -f capture.json`"
 clear = true
 dependencies = ["run-validator"]
 
@@ -212,8 +211,23 @@ install_crate = false
 command = "cargo"
 args = ["llvm-cov", "clean", "--workspace"]
 
+[tasks.cov-workspace-flag]
+description = """Sets `COV_WORKSPACE` to `--workspace` only when no arguments were given on the
+command line. `--workspace` overrides `-p`, so it is dropped whenever any argument is given
+(for example `cargo make coverage -p dxe_readiness_validator`)."""
+private = true
+script_runner = "@duckscript"
+script = '''
+args = get_env CARGO_MAKE_TASK_ARGS
+if is_empty ${args}
+    set_env COV_WORKSPACE "--workspace"
+else
+    set_env COV_WORKSPACE ""
+end
+'''
+
 [tasks.coverage-test]
-description = "Run tests and collect coverage data without generating reports."
+description = "Run tests and collect coverage data without generating reports. Arguments are forwarded to `cargo llvm-cov nextest`."
 install_crate = false
 clear = true
 # `coverage_attribute` is deliberately excluded from the default allow-features in
@@ -225,14 +239,16 @@ command = "cargo"
 # Note: `--profile test` has been set here in the past. Cargo already defaults to test builds
 # with the test profile, so it is removed. cargo-llvm-cov will forward it to `cargo nextest run`
 # where `--profile` is used to incorrectly select a nextest config profile (not a Cargo build profile).
-args = ["llvm-cov", "--ignore-filename-regex", ".*test.*", "--no-report", "nextest", "-p", "dxe_readiness_capture", "-p", "dxe_readiness_validator"]
-dependencies = ["llvm-cov-clean"]
+args = ["llvm-cov", "@@split(COV_WORKSPACE, )", "--ignore-filename-regex", ".*test.*", "--no-report", "nextest", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
+dependencies = ["cov-workspace-flag", "llvm-cov-clean"]
 
 [tasks.coverage-lcov]
 description = "Generate an LCOV coverage report from collected data."
 install_crate = false
 clear = true
 command = "cargo"
+# Arguments are deliberately not forwarded here. `cargo llvm-cov report` rejects the package
+# selectors that the parent `coverage` task forwards to `coverage-test`.
 args = ["llvm-cov", "report", "--lcov", "--output-path", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target/lcov.info"]
 
 [tasks.coverage-html]
@@ -240,15 +256,16 @@ description = "Generate an HTML coverage report from collected data."
 install_crate = false
 clear = true
 command = "cargo"
+# Arguments are deliberately not forwarded here. See the note on `coverage-lcov`.
 args = ["llvm-cov", "report", "--html", "--output-dir", "${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/target/coverage"]
 
 [tasks.coverage]
-description = "Build and run all tests and calculate coverage (runs test once and generates LCOV and HTML reports)."
+description = "Build and run all tests and calculate coverage (runs test once and generates LCOV and HTML reports). Arguments are forwarded to `cargo llvm-cov nextest`. Example `cargo make coverage` or `cargo make coverage -p dxe_readiness_validator`"
 dependencies = ["coverage-test", "coverage-lcov", "coverage-html"]
 clear = true
 
 [tasks.test]
-description = "Runs tests via cargo-nextest. Example `cargo make test` or `cargo make test -p dxe_readiness_validator -- --nocapture`."
+description = "Runs tests via cargo-nextest. Arguments are forwarded to `cargo nextest run`. Example `cargo make test` or `cargo make test -p dxe_readiness_validator --no-capture`."
 clear = true
 command = "cargo"
 args = ["nextest", "run", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
@@ -308,7 +325,7 @@ exec --fail-on-error cargo test --doc --target ${target} --workspace
 '''
 
 [tasks.clippy]
-description = "Run cargo clippy for the host target and both UEFI cross-compilation targets."
+description = "Run cargo clippy for the host target and both UEFI cross-compilation targets. Arguments are forwarded to `cargo clippy`. The UEFI runs are pinned to `dxe_readiness_capture` and its per target binaries, so a `-p` of your own will conflict with them. Example `cargo make clippy` or `cargo make clippy --release`"
 clear = true
 run_task = [{ name = ["clippy-x64", "clippy-aarch64", "clippy-std"], parallel = true }]
 
@@ -321,13 +338,13 @@ run_task = [{ name = ["clippy-x64-core", "clippy-x64-uefishell"] }]
 description = "Run cargo clippy for x86_64-unknown-uefi core binaries."
 private = true
 command = "cargo"
-args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "x86_64-unknown-uefi", "--lib", "--bin", "intel_dxe_readiness_capture", "--bin", "qemu_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+args = ["clippy", "-p", "dxe_readiness_capture", "--target", "x86_64-unknown-uefi", "--lib", "--bin", "intel_dxe_readiness_capture", "--bin", "qemu_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings", "--", "-D", "warnings"]
 
 [tasks.clippy-x64-uefishell]
 description = "Run cargo clippy for x86_64-unknown-uefi uefishell binary."
 private = true
 command = "cargo"
-args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "x86_64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+args = ["clippy", "-p", "dxe_readiness_capture", "--target", "x86_64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings", "--", "-D", "warnings"]
 
 [tasks.clippy-aarch64]
 description = "Run cargo clippy for aarch64-unknown-uefi."
@@ -338,77 +355,128 @@ run_task = [{ name = ["clippy-aarch64-core", "clippy-aarch64-uefishell"] }]
 description = "Run cargo clippy for aarch64-unknown-uefi core binaries."
 private = true
 command = "cargo"
-args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--lib", "--bin", "qemu_dxe_readiness_capture", "--bin", "arm_virt_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+args = ["clippy", "-p", "dxe_readiness_capture", "--target", "aarch64-unknown-uefi", "--lib", "--bin", "qemu_dxe_readiness_capture", "--bin", "arm_virt_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings", "--", "-D", "warnings"]
 
 [tasks.clippy-aarch64-uefishell]
 description = "Run cargo clippy for aarch64-unknown-uefi uefishell binary."
 private = true
 command = "cargo"
-args = ["clippy", "@@split(DXE_READINESS_PKG, )", "--target", "aarch64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(NO_STD_FLAGS, )", "--", "-D", "warnings"]
+args = ["clippy", "-p", "dxe_readiness_capture", "--target", "aarch64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings", "--", "-D", "warnings"]
 
 [tasks.clippy-std]
 description = "Run cargo clippy for the host target (library and tests only)."
 private = true
 command = "cargo"
-args = ["clippy", "--tests", "--", "-D", "warnings"]
+args = ["clippy", "--tests", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--", "-D", "warnings"]
 
+# The UEFI check tasks mirror the clippy tasks above. Only `dxe_readiness_capture` builds for the
+# UEFI targets, and its binaries have to be named one by one, because `arm_virt_dxe_readiness_capture`
+# is aarch64 only and `uefishell_dxe_readiness_capture` needs the `uefishell` feature. Checking the
+# whole workspace for a UEFI target instead fails to compile the host only validator dependencies.
 [tasks.check_code_x64]
 description = "Checks rust code for x64 build errors with results."
 private = true
+run_task = [{ name = ["check_code_x64_core", "check_code_x64_uefishell"] }]
+
+[tasks.check_code_x64_core]
+description = "Checks x86_64-unknown-uefi core binaries for build errors."
+private = true
 command = "cargo"
-args = ["check", "--target", "x86_64-unknown-uefi", "--features", "ci_features", "@@split(CARGO_MAKE_TASK_ARGS, )", "@@split(NO_STD_FLAGS, )",]
+args = ["check", "-p", "dxe_readiness_capture", "--target", "x86_64-unknown-uefi", "--features", "dxe_readiness_capture/ci_features", "--lib", "--bin", "intel_dxe_readiness_capture", "--bin", "qemu_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings",]
+
+[tasks.check_code_x64_uefishell]
+description = "Checks the x86_64-unknown-uefi uefishell binary for build errors."
+private = true
+command = "cargo"
+args = ["check", "-p", "dxe_readiness_capture", "--target", "x86_64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings",]
 
 [tasks.check_code_aarch64]
 description = "Checks rust code for aarch64 build errors with results."
 private = true
+run_task = [{ name = ["check_code_aarch64_core", "check_code_aarch64_uefishell"] }]
+
+[tasks.check_code_aarch64_core]
+description = "Checks aarch64-unknown-uefi core binaries for build errors."
+private = true
 command = "cargo"
-args = ["check", "--target", "aarch64-unknown-uefi", "--features", "ci_features", "@@split(CARGO_MAKE_TASK_ARGS, )", "@@split(NO_STD_FLAGS, )",]
+args = ["check", "-p", "dxe_readiness_capture", "--target", "aarch64-unknown-uefi", "--features", "dxe_readiness_capture/ci_features", "--lib", "--bin", "qemu_dxe_readiness_capture", "--bin", "arm_virt_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings",]
+
+[tasks.check_code_aarch64_uefishell]
+description = "Checks the aarch64-unknown-uefi uefishell binary for build errors."
+private = true
+command = "cargo"
+args = ["check", "-p", "dxe_readiness_capture", "--target", "aarch64-unknown-uefi", "--features", "uefishell", "--bin", "uefishell_dxe_readiness_capture", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--timings",]
 
 [tasks.check_tests]
 description = "Checks rust test code for build errors with results."
 private = true
 command = "cargo"
-args = ["nextest", "run", "--no-run", "--all-targets", "--all-features", "@@split(CARGO_MAKE_TASK_ARGS, )",]
+args = ["nextest", "run", "--no-run", "--all-targets", "--all-features", "@@split(CARGO_MAKE_TASK_ARGS,;)",]
 
 [tasks.check]
-description = "Checks rust code for errors. Example `cargo make check`"
+description = "Checks rust code for errors. Arguments are forwarded to `cargo check`/`cargo nextest`. The UEFI checks are pinned to `dxe_readiness_capture` and its per target binaries, so a `-p` of your own will conflict with them. Example `cargo make check` or `cargo make check --release`"
 clear = true
 run_task = [{ name = ["check_code_x64", "check_code_aarch64", "check_tests"], parallel = true }]
 
 [tasks.doc]
 env = { RUSTDOCFLAGS = "-D warnings" }
-description = "Builds all rust documentation in the workspace. Example `cargo make doc`"
+description = "Builds all rust documentation in the workspace. Arguments are forwarded to `cargo doc`. Example `cargo make doc` or `cargo make doc -p dxe_readiness_validator`"
+clear = true
 command = "cargo"
-args = ["doc", "@@split(INDIVIDUAL_PACKAGE_TARGETS, )", "--open", "--no-deps"]
+args = ["doc", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--no-deps"]
+
+[tasks.doc-open]
+env = { RUSTDOCFLAGS = "-D warnings" }
+description = "Builds all rust documentation in the workspace and opens the documentation. Arguments are forwarded to `cargo doc`. Example `cargo make doc-open` or `cargo make doc-open -p dxe_readiness_validator`"
+clear = true
+command = "cargo"
+args = ["doc", "@@split(CARGO_MAKE_TASK_ARGS,;)", "--no-deps", "--open"]
+
+[tasks.fmt-all-flag]
+description = """Sets `FMT_ALL` to `--all` only when no arguments were given on the command line.
+`--all` overrides `-p`, so it is dropped whenever any argument is given (for example
+`cargo make fmt -p dxe_readiness_validator`)."""
+private = true
+script_runner = "@duckscript"
+script = '''
+args = get_env CARGO_MAKE_TASK_ARGS
+if is_empty ${args}
+    set_env FMT_ALL "--all"
+else
+    set_env FMT_ALL ""
+end
+'''
 
 [tasks.fmt]
-description = "Run cargo format."
+description = "Run cargo format. Arguments are forwarded to `cargo fmt`. Example `cargo make fmt` or `cargo make fmt -p dxe_readiness_validator`"
 clear = true
 command = "cargo"
-args = ["fmt", "--all"]
+args = ["fmt", "@@split(FMT_ALL, )", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
+dependencies = ["fmt-all-flag"]
 
 [tasks.fmt-check]
-description = "Check cargo format without modifying files."
+description = "Check cargo format without modifying files. Arguments are forwarded to `cargo fmt`. Example `cargo make fmt-check` or `cargo make fmt-check -p dxe_readiness_validator`"
 clear = true
 command = "cargo"
-args = ["fmt", "--all", "--check"]
+args = ["fmt", "@@split(FMT_ALL, )", "--check", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
+dependencies = ["fmt-all-flag"]
 
 [tasks.doc-test]
-description = "Run documentation tests."
+description = "Run documentation tests. Arguments are forwarded to `cargo test`."
 clear = true
 command = "cargo"
-args = ["test", "--doc"]
+args = ["test", "--doc", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 [tasks.cspell]
 description = "Run cspell for spell checking." # npm install -g cspell@latest
 script = "cspell --quiet  --no-progress --no-summary  --dot --gitignore -e \"{.git/**,.github/**,.vscode/**,.azurepipelines/**,dxe_readiness_validator/src/tests/data/*.json}\" ."
 
 [tasks.deny]
-description = "Run cargo deny."
+description = "Run cargo deny. Arguments are forwarded to `cargo deny check`."
 install_crate = false
 clear = true
 command = "cargo"
-args = ["deny", "check"]
+args = ["deny", "check", "@@split(CARGO_MAKE_TASK_ARGS,;)"]
 
 [tasks.all-preflight]
 private = true
