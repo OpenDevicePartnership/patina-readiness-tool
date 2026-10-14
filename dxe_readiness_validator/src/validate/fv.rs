@@ -97,8 +97,9 @@ impl<'a> FvValidator<'a> {
         Ok(validation_report)
     }
 
-    /// Validates sections within firmware volumes for LZMA compression.
-    /// For PE images, validates that the section alignment is correct.
+    /// Validates sections within firmware volumes for LZMA compression and
+    /// unsupported TE images. For PE images, validates that the section
+    /// alignment is correct.
     /// Reports violations if any are found.
     pub(super) fn validate_fv_file_sections(&self) -> ValidationResult<'_> {
         const FV_ARM64_RUNTIME_DRIVER_ALIGNMENT: usize = 0x10000;
@@ -114,6 +115,14 @@ impl<'a> FvValidator<'a> {
                 for section in &file.sections {
                     if section.compression_type.starts_with("LZMA ") {
                         validation_report.add_violation(ValidationKind::Fv(FvValidationKind::LzmaCompressedSections {
+                            fv,
+                            file,
+                            section,
+                        }));
+                    }
+
+                    if section.section_type == "Te" {
+                        validation_report.add_violation(ValidationKind::Fv(FvValidationKind::UnsupportedTeImage {
                             fv,
                             file,
                             section,
@@ -415,6 +424,38 @@ mod tests {
         assert!(result.is_ok());
         let validation_report = result.unwrap();
         assert_eq!(validation_report.violation_count(), 0);
+    }
+
+    #[test]
+    fn test_te_images_in_dxe_phase_modules_are_rejected() {
+        let files = ["Driver", "Application", "DxeCore", "Peim"]
+            .into_iter()
+            .enumerate()
+            .map(|(index, file_type)| FirmwareFileSerDe {
+                name: format!("File{index}"),
+                file_type: file_type.to_string(),
+                length: 512,
+                attributes: 0,
+                sections: vec![FirmwareSectionSerDe {
+                    section_type: "Te".to_string(),
+                    length: 256,
+                    compression_type: "uncompressed".to_string(),
+                    pe_info: None,
+                }],
+            })
+            .collect();
+        let fv_list = vec![FirmwareVolumeSerDe {
+            fv_name: "FV1".to_string(),
+            fv_length: 4096,
+            fv_base_address: 0x1000,
+            fv_attributes: 0,
+            files,
+        }];
+
+        let validator = FvValidator::new(&fv_list);
+        let validation_report = validator.validate_fv_file_sections().unwrap();
+
+        assert_eq!(validation_report.violation_count(), 3);
     }
 
     // Helper function to run alignment validation and return violation count

@@ -81,6 +81,13 @@ pub enum FvValidationKind<'a> {
         file: &'a FirmwareFileSerDe,
     },
 
+    // DXE phase images must not use the TE image format
+    UnsupportedTeImage {
+        fv: &'a FirmwareVolumeSerDe,
+        file: &'a FirmwareFileSerDe,
+        section: &'a FirmwareSectionSerDe,
+    },
+
     // PE images must have page-aligned section alignments
     InvalidSectionAlignment {
         fv: &'a FirmwareVolumeSerDe,
@@ -133,6 +140,7 @@ impl ValidationKind<'_> {
                 FvValidationKind::LzmaCompressedSections { .. } => "FV: LZMA Compressed Sections Present",
                 FvValidationKind::ProhibitedAprioriFile { .. } => "FV: Prohibited Apriori File Present",
                 FvValidationKind::UsesTraditionalSmm { .. } => "FV: Uses Traditional SMM Driver",
+                FvValidationKind::UnsupportedTeImage { .. } => "FV: Unsupported TE Image",
                 FvValidationKind::InvalidSectionAlignment { .. } => "FV: PE Image Invalid Section Alignment",
             },
         }
@@ -184,6 +192,13 @@ impl ValidationKind<'_> {
                                                                    using the provided guidance. All combined modules must be dropped in favor of\n   \
                                                                    single phase modules.\n   \
                                                                    Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
+                FvValidationKind::UnsupportedTeImage { .. } => "   Patina DXE Core does not support Terse Executable (TE) images. TE removes unnecessary\n   \
+                                                                   PE/COFF header information to reduce image size, but requires section and file\n   \
+                                                                   alignment to match. Patina's 4 KB section-alignment requirement can therefore\n   \
+                                                                   make a TE image larger than a PE/COFF image with a smaller file alignment,\n   \
+                                                                   defeating the purpose of TE in DXE. LoadImage() rejects TE images with\n   \
+                                                                   EFI_UNSUPPORTED; rebuild DXE phase drivers and applications as PE32+ images.\n   \
+                                                                   Ref: https://opendevicepartnership.github.io/patina/integrate/patina_dxe_core_requirements_checklist.html",
                 FvValidationKind::InvalidSectionAlignment { .. } => "   All PE images must have section alignment that is a multiple of page size. \n   \
                                                                         This is not a PI spec requirement, but is a Patina requirement.\n    \
                                                                         Platforms should drop unaligned images or re-build images to ensure section alignment is page-aligned.    \n
@@ -226,6 +241,7 @@ impl ValidationKind<'_> {
                 FvValidationKind::LzmaCompressedSections { .. } => "LzmaCompressedSections".to_string(),
                 FvValidationKind::ProhibitedAprioriFile { .. } => "ProhibitedAprioriFile".to_string(),
                 FvValidationKind::UsesTraditionalSmm { .. } => "UsesTraditionalSmm".to_string(),
+                FvValidationKind::UnsupportedTeImage { .. } => "UnsupportedTeImage".to_string(),
                 FvValidationKind::InvalidSectionAlignment { .. } => "InvalidSectionAlignment".to_string(),
             },
         }
@@ -283,6 +299,9 @@ impl PrettyPrintTable for ValidationKind<'_> {
                 FvValidationKind::ProhibitedAprioriFile { .. } => vec!["#", "A Priori File", "Violation/Resolution"],
                 FvValidationKind::UsesTraditionalSmm { .. } => {
                     vec!["#", "Traditional SMM Driver", "Violation/Resolution"]
+                }
+                FvValidationKind::UnsupportedTeImage { .. } => {
+                    vec!["#", "TE Image", "Violation/Resolution"]
                 }
                 FvValidationKind::InvalidSectionAlignment { .. } => {
                     vec!["#", "PE Image Section Alignment", "Violation/Resolution"]
@@ -453,6 +472,18 @@ impl PrettyPrintTable for ValidationKind<'_> {
                             .to_string();
                     vec![row_num, file_column, resolution]
                 }
+                FvValidationKind::UnsupportedTeImage { fv, file, section } => {
+                    let section_json =
+                        serde_json::to_string_pretty(section).unwrap_or("section serialization failed!".to_string());
+                    let section_column = format!(
+                        "FV: {}\nFile: {}\nFile Type: {}\nSection: {}",
+                        fv.fv_name, file.name, file.file_type, section_json
+                    );
+                    let resolution =
+                        "DXE phase drivers and applications must use PE32+ images; TE images are not supported."
+                            .to_string();
+                    vec![row_num, section_column, resolution]
+                }
                 FvValidationKind::InvalidSectionAlignment { fv, file, section, required_alignment } => {
                     let file_column = format!(
                         "FV: {}\nFile: {}\nSection Alignment: {}\nRequired Alignment:{}\n",
@@ -535,6 +566,10 @@ mod tests {
         let fv_hob = FvHobSerDe { base_address: 0x8000, length: 0x1000 };
         let fv = fv();
         let file = file();
+        let mut te_section = section();
+        te_section.section_type = "Te".to_string();
+        te_section.compression_type = "uncompressed".to_string();
+        te_section.pe_info = None;
         let section = section();
 
         let kinds = vec![
@@ -562,6 +597,7 @@ mod tests {
             ValidationKind::Fv(FvValidationKind::LzmaCompressedSections { fv: &fv, file: &file, section: &section }),
             ValidationKind::Fv(FvValidationKind::ProhibitedAprioriFile { fv: &fv, file: &file }),
             ValidationKind::Fv(FvValidationKind::UsesTraditionalSmm { fv: &fv, file: &file }),
+            ValidationKind::Fv(FvValidationKind::UnsupportedTeImage { fv: &fv, file: &file, section: &te_section }),
             ValidationKind::Fv(FvValidationKind::InvalidSectionAlignment {
                 fv: &fv,
                 file: &file,
