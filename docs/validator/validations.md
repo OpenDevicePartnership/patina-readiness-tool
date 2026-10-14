@@ -29,5 +29,5 @@ This serves as a living document to track and evolve the set of validations impl
 | **Lzma Compressed Sections**  | Firmware volumes must not contain LZMA-compressed sections (prohibited).                            |
 | **Prohibited Apriori File**   | Firmware volumes must not contain an A Priori file (prohibited).                                    |
 | **Uses Traditional Smm**      | Firmware volumes must not contain traditional SMM (prohibited).                                     |
-| **Unsupported TE Image**      | Patina rejects TE images in DXE phase drivers and applications; rebuild them as PE32+ images.       |
+| **Unsupported TE Image**      | TE images must not be used in DXE phase drivers and applications.       |
 | **Invalid Section Alignment** | PE images in firmware volumes must have section alignment that is a positive multiple of page size. |
