@@ -14,7 +14,7 @@ repository = "https://github.com/OpenDevicePartnership/patina-readiness-tool"
 [workspace.dependencies]
 
 # Patina Dependencies
-patina = { version = "23", features = ["serde"] }
+patina = { version = "24", features = ["serde"] }
 patina_stacktrace = { version = "23" }
 
 # Other Dependencies
