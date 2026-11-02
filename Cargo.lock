@@ -71,18 +71,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b588b76d00fde79687d7646a9b5bdf3cc0f655e0bbd080335a95d7e96f3587da"
 
 [[package]]
-name = "bitvec"
-version = "1.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ddcec3d12c579d40898fe0a9a358a803c23e9c52ca3c425707f81c9436211837"
-dependencies = [
- "funty",
- "radium",
- "tap",
- "wyz",
-]
-
-[[package]]
 name = "cfg-if"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -166,15 +154,6 @@ dependencies = [
  "rustc_version",
  "semver",
  "time",
-]
-
-[[package]]
-name = "crc32fast"
-version = "1.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "01a7799fd6b852db0e61728dde9a204c423b44d689dbd432522543614b490e78"
-dependencies = [
- "cfg-if",
 ]
 
 [[package]]
@@ -267,12 +246,6 @@ name = "fixedbitset"
 version = "0.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d674e81391d1e1ab681a28d99df07927c6d4aa5b027d7da16ba32d1d21ecd99"
-
-[[package]]
-name = "funty"
-version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
 name = "goblin"
@@ -403,14 +376,12 @@ dependencies = [
 
 [[package]]
 name = "patina"
-version = "23.3.1"
+version = "24.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54cdd5682a12b79d2e5ab37efb98b052415c4b6ad5f7dfdcbdd7c6f1d17bb278"
+checksum = "b74cc062f012724c32aa176a3d84f993d59ef49c13fa929c46069b02015d7cdf"
 dependencies = [
- "bitvec",
  "cfg-if",
  "compile-time",
- "crc32fast",
  "fallible-streaming-iterator",
  "fixedbitset",
  "goblin",
@@ -431,9 +402,9 @@ dependencies = [
 
 [[package]]
 name = "patina_macro"
-version = "23.3.1"
+version = "24.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93c70d2952b5ff6fdce91fb4b3c21b3e4614a1b95c653016d7325ceefcb0669b"
+checksum = "69c8c5f65c15b67ee3d9607218644bf559c03370e8556056842d021c75d08535"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -506,12 +477,6 @@ name = "r-efi"
 version = "7.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b0ff379dd174eec5b2cab797063a2e7592dfcf0bf0323a50eeee724ee3537f13"
-
-[[package]]
-name = "radium"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc33ff2d4973d518d823d61aa239014831e521c75da58e3df4840d3f47749d09"
 
 [[package]]
 name = "redox_syscall"
@@ -681,12 +646,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tap"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
-
-[[package]]
 name = "time"
 version = "0.3.55"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -842,15 +801,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc"
 dependencies = [
  "windows-link",
-]
-
-[[package]]
-name = "wyz"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05f360fc0b24296329c78fda852a1e9ae82de9cf7b27dae4b7f62f118f77b9ed"
-dependencies = [
- "tap",
 ]
 
 [[package]]
