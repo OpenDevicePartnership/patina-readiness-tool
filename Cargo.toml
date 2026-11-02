@@ -15,7 +15,7 @@ repository = "https://github.com/OpenDevicePartnership/patina-readiness-tool"
 
 # Patina Dependencies
 patina = { version = "24", features = ["serde"] }
-patina_stacktrace = { version = "23" }
+patina_stacktrace = { version = "24" }
 
 # Other Dependencies
 cfg-if = "1.0.4"
