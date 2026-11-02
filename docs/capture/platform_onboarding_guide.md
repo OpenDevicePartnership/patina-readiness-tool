@@ -191,7 +191,7 @@ Add a build task for your platform in the root [Makefile.toml](../Makefile.toml)
 description = "Builds the sample DXE Readiness Capture UEFI binary."
 env = { RUSTFLAGS = "-C force-unwind-tables -C link-arg=/base:0x0 -C link-arg=/subsystem:efi_boot_service_driver -C link-arg=/PDBALTPATH:sample_dxe_readiness_capture.pdb" }
 command = "cargo"
-args = ["build", "@@split(CAPTURE_BIN_FLAGS, )", "@@split(X86_64_UEFI_TARGET, )", "--bin", "sample_dxe_readiness_capture", "${@}"]
+args = ["build", "--timings", "-p", "dxe_readiness_capture", "@@split(X86_64_UEFI_TARGET, )", "--bin", "sample_dxe_readiness_capture", "${@}"]
 ```
 
 Then add the new task to the `[tasks.build]` dependencies list:
@@ -266,9 +266,3 @@ A: No. The shared library is platform-agnostic. Your binary only provides a logg
 
 A: Implement the `patina` serial trait for your device. The logger just needs a
 type that implements the appropriate serial trait(`SerialIO`).
-
-**Q: What does `NO_STD_FLAGS` in `Makefile.toml` do?**
-
-A: It tells Cargo to build `core`, `compiler_builtins`, and `alloc` from source
-since `no_std` UEFI targets don't have a pre-built standard library. This is
-only needed for DXE driver binaries, not UEFI Shell apps.
